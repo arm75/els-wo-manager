@@ -1,0 +1,40 @@
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
+
+    <!-- id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Id"> Id </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- invName Column -->
+    <ng-container matColumnDef="invName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Name"> Inv Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.invName}} </td>
+    </ng-container>
+
+    <!-- invGroupId Column -->
+    <ng-container matColumnDef="invGroupId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Group"> Inv Group </th>
+      <td mat-cell *matCellDef="let element"> {{element.invGroupId}} </td>
+    </ng-container>
+
+    <!-- description Column -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Description"> Description </th>
+      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+    </ng-container>
+
+    <!-- qtyOnHand Column -->
+    <ng-container matColumnDef="qtyOnHand">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Qty on Hand"> Qty on Hand </th>
+      <td mat-cell *matCellDef="let element"> {{element.qtyOnHand}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Select # of pages">
+  </mat-paginator>
+</div>

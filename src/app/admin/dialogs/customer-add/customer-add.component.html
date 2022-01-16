@@ -1,0 +1,86 @@
+<h2 mat-dialog-title>{{formTitle}}</h2>
+
+<mat-dialog-content>
+<!--  <form (ngSubmit)="login()">-->
+<!--  <input type="text" name="username" placeholder="Username" [(ngModel)]="username">-->
+<!--  <input type="password" name="password" placeholder="Password" [(ngModel)]="password">-->
+<!--  </form>-->
+
+<form [formGroup]="addCustomerForm" class="example-form" (ngSubmit)="addCustomer()">
+    <h4 mat-dialog-title>Customer Details</h4>
+    <p>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Customer Name</mat-label>
+        <input matInput value="" formControlName="customerName">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Phone Number</mat-label>
+        <input matInput value="" formControlName="phoneNumb">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Fax Number</mat-label>
+        <input matInput value="" formControlName="faxNumb">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Email Address</mat-label>
+        <input matInput value="" formControlName="emailAddr">
+      </mat-form-field>
+    </p>
+    <h4 mat-dialog-title>Physical Address</h4>
+    <p>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Address</mat-label>
+        <input matInput value="" formControlName="physAddress">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>City</mat-label>
+        <input matInput placeholder="" formControlName="physCity">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>State</mat-label>
+        <input matInput placeholder="" formControlName="physState">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Zip Code</mat-label>
+        <input matInput #postalCode maxlength="5" placeholder="" value="" formControlName="physZipCode">
+        <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+      </mat-form-field>
+    </p>
+    <h4 mat-dialog-title>Billing Address</h4>
+    <p>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Address</mat-label>
+        <input matInput value="" formControlName="busAddress">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>City</mat-label>
+        <input matInput placeholder="" formControlName="busCity">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>State</mat-label>
+        <input matInput placeholder="" formControlName="busState">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Zip Code</mat-label>
+        <input matInput #postalCode maxlength="5" placeholder="" value="" formControlName="busZipCode">
+        <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+      </mat-form-field>
+    </p>
+    <h4 mat-dialog-title>Temporary</h4>
+    <p>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Updated Date</mat-label>
+        <input matInput value="" formControlName="updatedDate">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Created Date</mat-label>
+        <input matInput placeholder="" formControlName="createdDate">
+      </mat-form-field>
+    </p>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button class="mat-raised-button"(click)="closeMatDialog()">Close</button>
+  <button class="mat-raised-button mat-primary" (submit)="addCustomer()">Submit Event</button>
+</mat-dialog-actions>

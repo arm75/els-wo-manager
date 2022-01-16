@@ -1,0 +1,40 @@
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
+
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Id"> Id </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- userName Column -->
+    <ng-container matColumnDef="userName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by User Name"> User Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
+    </ng-container>
+
+    <!-- userGroupId Column -->
+    <ng-container matColumnDef="userGroupId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by User Group"> User Group </th>
+      <td mat-cell *matCellDef="let element"> {{element.userGroupId}} </td>
+    </ng-container>
+
+    <!-- firstName Column -->
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by First Name"> First Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+    </ng-container>
+
+    <!-- lastName Column -->
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Last Name"> Last Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Select # of pages">
+  </mat-paginator>
+</div>
