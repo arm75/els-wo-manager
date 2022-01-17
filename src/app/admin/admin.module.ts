@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminRoutingModule } from "./admin-routing.module";
 import { FormsModule } from "@angular/forms";
+import { AdminRoutingModule } from "./admin-routing/admin-routing.module";
 
 // main component of AdminModule...
 import { AdminComponent } from './admin/admin.component';
@@ -27,6 +27,9 @@ import { WorkOrdersTableComponent} from "./tables/work-orders-table/work-orders-
 
 import { ReactiveFormsModule } from "@angular/forms";
 import { CustomerAddComponent } from './dialogs/customer-add/customer-add.component';
+import { CustomerEditComponent } from './dialogs/customer-edit/customer-edit.component';
+import { CustomerDeleteComponent } from './dialogs/customer-delete/customer-delete.component';
+import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from "@angular/material/snack-bar";
 
 // table components
 const AdminModuleTableComponents = [
@@ -53,15 +56,19 @@ const AdminModuleTableComponents = [
     AdminComponent,
     AdminModuleTableComponents,
     CustomerAddComponent,
+    CustomerEditComponent,
+    CustomerDeleteComponent,
   ],
   // modules that this module needs to use
   imports: [
     CommonModule,
     MaterialKitModule,
     FormsModule,
-  //  RouterModule,
-    AdminRoutingModule,
     ReactiveFormsModule,
+    AdminRoutingModule,
+  ],
+  providers:[
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } }
   ],
   entryComponents: [
     CustomerAddComponent,

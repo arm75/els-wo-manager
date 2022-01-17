@@ -1,4 +1,4 @@
-<button class="mat-raised-button mat-primary" (click)="openDialog()">New Customer</button>
+<button class="mat-raised-button mat-primary" (click)="openAddDialog()">Add Customer</button>
 
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
@@ -27,8 +27,16 @@
       <td mat-cell *matCellDef="let element"> {{element.emailAddr}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="">
+    <td mat-cell *matCellDef="let element">
+        <button aria-hidden="false" aria-label="Example home icon" (click)="openEditDialog(element.id)">Edit</button>
+        <button aria-hidden="false" aria-label="Example home icon">Delete</button>
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
   </table>
 
   <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Select # of pages">

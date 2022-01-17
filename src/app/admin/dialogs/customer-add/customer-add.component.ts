@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { CustomerService } from "../../../core/services/customer.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-customer-add',
@@ -12,9 +13,14 @@ export class CustomerAddComponent implements OnInit {
   formTitle: string = "Add Customer";
   addCustomerForm: FormGroup = new FormGroup({});
 
-  constructor(private customerService: CustomerService,
-              private formBuilder: FormBuilder,
-              private matDialogRef: MatDialogRef<CustomerAddComponent>) {
+  constructor( private matDialogRef: MatDialogRef<CustomerAddComponent>,
+               private customerService: CustomerService,
+               private formBuilder: FormBuilder,
+               private matSnackBar: MatSnackBar
+  ) { }
+
+  ngOnInit() {
+
     this.addCustomerForm = this.formBuilder.group({
       'busAddress': new FormControl(''),
       'busCity': new FormControl(''),
@@ -30,23 +36,25 @@ export class CustomerAddComponent implements OnInit {
       'physState': new FormControl(''),
       'physZipCode': new FormControl(''),
       'updatedDate': new FormControl(''),
-    })
-  }
+    });
 
-  ngOnInit() { }
+  }
 
   addCustomer() {
     console.log(this.addCustomerForm.value);
     this.customerService.create(this.addCustomerForm.value)
       .subscribe(data => {
-        console.log("Customer Created");
+        this.matSnackBar.open("Customer added successfully.")
+        console.log("Customer added successfully.");
       }, error => {
+        this.matSnackBar.open("An error has occurred. Customer not added.")
         console.log(error);
       });
     this.matDialogRef.close();
   }
 
   closeMatDialog() {
+
     this.matDialogRef.close();
   }
 

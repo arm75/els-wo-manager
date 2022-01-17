@@ -48,20 +48,29 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
   }
 
   // opens Dialog box
-  openDialog() {
+  openAddDialog() {
     const dialogConfig = new MatDialogConfig();
-
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-
-    //this.dialog.open(CustomerAddComponent, dialogConfig);
-
-    const dialogRef = this.dialog.open(CustomerAddComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(
-      data => console.log("Dialog output:", data)
-    );
+    this.dialog.open(CustomerAddComponent, dialogConfig);
+    // const dialogRef = this.dialog.open(CustomerAddComponent, dialogConfig);
+    // dialogRef.afterClosed().subscribe(
+    //   data => console.log("Dialog output:", data)
+    // );
   }
+
+  // opens Dialog box
+  openEditDialog( _id: number) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    this.dialog.open(CustomerAddComponent, dialogConfig);
+    // const dialogRef = this.dialog.open(CustomerAddComponent, dialogConfig);
+    // dialogRef.afterClosed().subscribe(
+    //   data => console.log("Dialog output:", data)
+    // );
+  }
+
 
   /** Announce the change in sort state for assistive technology. */
   announceSortChange(sortState: Sort) {

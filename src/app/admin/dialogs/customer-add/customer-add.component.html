@@ -1,15 +1,9 @@
-<h2 mat-dialog-title>{{formTitle}}</h2>
-
-<mat-dialog-content>
-<!--  <form (ngSubmit)="login()">-->
-<!--  <input type="text" name="username" placeholder="Username" [(ngModel)]="username">-->
-<!--  <input type="password" name="password" placeholder="Password" [(ngModel)]="password">-->
-<!--  </form>-->
-
 <form [formGroup]="addCustomerForm" class="example-form" (ngSubmit)="addCustomer()">
+<h2 mat-dialog-title>{{formTitle}}</h2>
+<mat-dialog-content>
     <h4 mat-dialog-title>Customer Details</h4>
     <p>
-      <mat-form-field class="example-full-width" appearance="outline">
+    <mat-form-field class="example-full-width" appearance="outline">
         <mat-label>Customer Name</mat-label>
         <input matInput value="" formControlName="customerName">
       </mat-form-field>
@@ -77,10 +71,9 @@
         <input matInput placeholder="" formControlName="createdDate">
       </mat-form-field>
     </p>
-  </form>
 </mat-dialog-content>
-
 <mat-dialog-actions>
-  <button class="mat-raised-button"(click)="closeMatDialog()">Close</button>
-  <button class="mat-raised-button mat-primary" (submit)="addCustomer()">Submit Event</button>
+  <button class="mat-raised-button" (click)="closeMatDialog()">Close</button>
+  <button class="mat-raised-button mat-primary" type="submit">Submit Event</button>
 </mat-dialog-actions>
+</form>
