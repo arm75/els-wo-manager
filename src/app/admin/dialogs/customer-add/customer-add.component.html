@@ -1,4 +1,4 @@
-<form [formGroup]="addCustomerForm" class="example-form" (ngSubmit)="addCustomer()">
+<form [formGroup]="addCustomerForm" class="example-form" (submit)="addCustomer()">
 <h2 mat-dialog-title>{{formTitle}}</h2>
 <mat-dialog-content>
     <h4 mat-dialog-title>Customer Details</h4>
@@ -73,7 +73,7 @@
     </p>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button class="mat-raised-button" (click)="closeMatDialog()">Close</button>
+  <button mat-button class="mat-raised-button" mat-dialog-close>Close</button>
   <button class="mat-raised-button mat-primary" type="submit">Submit Event</button>
 </mat-dialog-actions>
 </form>
