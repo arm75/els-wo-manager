@@ -23,7 +23,7 @@ export class CustomerService {
   }
 
   get(id: any): Observable<Customer> {
-    return this.http.get<Customer>(`${this.baseUrl}/${id}`);
+    return this.http.get<Customer>(`${this.baseUrl}/find/${id}`);
   }
 
   create(data: any): Observable<any> {

@@ -2,6 +2,11 @@ table {
   width: 100%;
 }
 
-button {
+button.aqm-add-entity-button {
   margin: 10px 20px 10px 20px;
 }
+
+button.aqm-edit-entity-button, button.aqm-delete-entity-button  {
+  margin: 0px 20px 0px 0px;
+}
+

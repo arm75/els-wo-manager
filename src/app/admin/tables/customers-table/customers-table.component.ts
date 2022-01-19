@@ -7,8 +7,11 @@ import { MatPaginator } from "@angular/material/paginator";
 
 import { CustomerService } from "../../../core/services/customer.service";
 import { Customer } from "../../../core/models/customer";
-import { CustomerAddComponent } from "../../dialogs/customer-add/customer-add.component";
+
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+
+import { CustomerAddComponent } from "../../dialogs/customer-add/customer-add.component";
+import { CustomerEditComponent } from "../../dialogs/customer-edit/customer-edit.component";
 
 @Component({
   selector: 'app-customers-table',
@@ -17,9 +20,7 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 })
 export class CustomersTableComponent implements OnInit, AfterViewInit {
 
-  // title = "OurTitle";
-  displayedColumns: string[] = ['id', 'customerName', 'phoneNumb', 'emailAddr'];
-
+  displayedColumns: string[] = ['id', 'customerName', 'phoneNumb', 'emailAddr', 'actions'];
   dataSource!: MatTableDataSource<Customer>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -61,10 +62,12 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
 
   // opens Dialog box
   openEditDialog( _id: number) {
+    console.log("UserId passed from click: " + _id);
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    this.dialog.open(CustomerAddComponent, dialogConfig);
+    dialogConfig.data = { customerId: _id };
+    this.dialog.open(CustomerEditComponent, dialogConfig);
     // const dialogRef = this.dialog.open(CustomerAddComponent, dialogConfig);
     // dialogRef.afterClosed().subscribe(
     //   data => console.log("Dialog output:", data)
