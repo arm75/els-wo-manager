@@ -56,44 +56,70 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
         this.dataSource.paginator = this.paginator; });
   }
 
+  applyCustomerFilter(event: Event) {
+    const filterTarget = event.target as HTMLButtonElement;
+    if (filterTarget) { this.dataSource.filter = filterTarget.value.trim().toLowerCase() }
+  }
+
   // opens Dialog box
   openAddDialog() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
+    const addDialogConfig = new MatDialogConfig();
+    addDialogConfig.disableClose = true;
+    addDialogConfig.autoFocus = true;
     // this.dialog.open(CustomerAddComponent, dialogConfig);
-    const dialogRef = this.dialog.open(CustomerAddComponent, dialogConfig);
-    // dialogRef.afterClosed().subscribe(
-    //   data => console.log("After Add Dialog Closed Output: ", data)
-    // );
+    const addDialogRef = this.dialog.open(CustomerAddComponent, addDialogConfig);
+    addDialogRef.afterClosed().subscribe(
+      addData => {
+        this.customerService.getCustomers()
+          .subscribe(afterAddData => {
+            this.dataSource = new MatTableDataSource(afterAddData);
+            //this.dataSource = data;
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+          }, addData);
+      });
   }
 
   // opens Dialog box
   openEditDialog( _id: number) {
     console.log("UserId passed from click: " + _id);
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = { customerId: _id };
+    const editDialogConfig = new MatDialogConfig();
+    editDialogConfig.disableClose = true;
+    editDialogConfig.autoFocus = true;
+    editDialogConfig.data = { customerId: _id };
     // this.dialog.open(CustomerEditComponent, dialogConfig)
-    const dialogRef = this.dialog.open(CustomerEditComponent, dialogConfig);
-    // dialogRef.afterClosed().subscribe(
-    //   data => console.log("After Edit Dialog Closed Output: ", data)
-    // );
+    const editDialogRef = this.dialog.open(CustomerEditComponent, editDialogConfig);
+    editDialogRef.afterClosed().subscribe(
+      editData => {
+        this.customerService.getCustomers()
+          .subscribe(afterEditData => {
+            this.dataSource = new MatTableDataSource(afterEditData);
+            //this.dataSource = data;
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+          }, editData);
+      });
   }
 
   // opens Dialog box
   openDeleteDialog( _id: number) {
     console.log("UserId passed from click: " + _id);
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = { customerId: _id };
+    const deleteDialogConfig = new MatDialogConfig();
+    deleteDialogConfig.disableClose = true;
+    deleteDialogConfig.autoFocus = true;
+    deleteDialogConfig.data = { customerId: _id };
     // this.dialog.open(CustomerDeleteComponent, dialogConfig)
-    const dialogRef = this.dialog.open(CustomerDeleteComponent, dialogConfig);
-    // dialogRef.afterClosed().subscribe(
-    //   data => console.log("After Delete Dialog Closed Output: ", data)
-    // );
+    const deleteDialogRef = this.dialog.open(CustomerDeleteComponent, deleteDialogConfig);
+    deleteDialogRef.afterClosed().subscribe(
+      deleteData => {
+        this.customerService.getCustomers()
+          .subscribe(afterDeleteData => {
+            this.dataSource = new MatTableDataSource(afterDeleteData);
+            //this.dataSource = data;
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+          }, deleteData);
+      });
   }
 
   /** Announce the change in sort state for assistive technology. */
