@@ -30,20 +30,20 @@ export class CustomerService {
     return this.http.post(`${this.baseUrl}/add`, data);
   }
 
-  update(id: any, data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/${id}`, data);
+  update(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/update`, data);
   }
 
   delete(id: any): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/${id}`);
+    return this.http.delete(`${this.baseUrl}/delete/${id}`);
   }
 
-  deleteAll(): Observable<any> {
-    return this.http.delete(this.baseUrl);
-  }
-
-  findByTitle(title: any): Observable<Customer[]> {
-    return this.http.get<Customer[]>(`${this.baseUrl}?title=${title}`);
-  }
+  // deleteAll(): Observable<any> {
+  //   return this.http.delete(this.baseUrl);
+  // }
+  //
+  // findByTitle(title: any): Observable<Customer[]> {
+  //   return this.http.get<Customer[]>(`${this.baseUrl}?title=${title}`);
+  // }
 
 }

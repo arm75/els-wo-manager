@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 
 import { LiveAnnouncer } from "@angular/cdk/a11y";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatTable, MatTableDataSource} from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
 
@@ -12,6 +12,8 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 
 import { CustomerAddComponent } from "../../dialogs/customer-add/customer-add.component";
 import { CustomerEditComponent } from "../../dialogs/customer-edit/customer-edit.component";
+import { CustomerDeleteComponent } from "../../dialogs/customer-delete/customer-delete.component";
+import {InventoryGroup} from "../../../core/models/inventory-group";
 
 @Component({
   selector: 'app-customers-table',
@@ -21,10 +23,14 @@ import { CustomerEditComponent } from "../../dialogs/customer-edit/customer-edit
 export class CustomersTableComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['id', 'customerName', 'phoneNumb', 'emailAddr', 'actions'];
-  dataSource!: MatTableDataSource<Customer>;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort = new MatSort;
+  dataSource: any;
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
+  @ViewChild(MatSort)
+  sort: MatSort = new MatSort;
 
   constructor(
     private customerService: CustomerService,
@@ -33,6 +39,7 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
   ) {
     this.customerService.getCustomers().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
+      // this.dataSource = data;
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     })
@@ -41,11 +48,12 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
   ngOnInit() { }
 
   ngAfterViewInit() {
-    this.customerService.getCustomers().subscribe(data => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-    })
+    this.customerService.getCustomers()
+      .subscribe(data => {
+        this.dataSource = new MatTableDataSource(data);
+        //this.dataSource = data;
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator; });
   }
 
   // opens Dialog box
@@ -53,10 +61,10 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    this.dialog.open(CustomerAddComponent, dialogConfig);
-    // const dialogRef = this.dialog.open(CustomerAddComponent, dialogConfig);
+    // this.dialog.open(CustomerAddComponent, dialogConfig);
+    const dialogRef = this.dialog.open(CustomerAddComponent, dialogConfig);
     // dialogRef.afterClosed().subscribe(
-    //   data => console.log("Dialog output:", data)
+    //   data => console.log("After Add Dialog Closed Output: ", data)
     // );
   }
 
@@ -67,13 +75,26 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = { customerId: _id };
-    this.dialog.open(CustomerEditComponent, dialogConfig);
-    // const dialogRef = this.dialog.open(CustomerAddComponent, dialogConfig);
+    // this.dialog.open(CustomerEditComponent, dialogConfig)
+    const dialogRef = this.dialog.open(CustomerEditComponent, dialogConfig);
     // dialogRef.afterClosed().subscribe(
-    //   data => console.log("Dialog output:", data)
+    //   data => console.log("After Edit Dialog Closed Output: ", data)
     // );
   }
 
+  // opens Dialog box
+  openDeleteDialog( _id: number) {
+    console.log("UserId passed from click: " + _id);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = { customerId: _id };
+    // this.dialog.open(CustomerDeleteComponent, dialogConfig)
+    const dialogRef = this.dialog.open(CustomerDeleteComponent, dialogConfig);
+    // dialogRef.afterClosed().subscribe(
+    //   data => console.log("After Delete Dialog Closed Output: ", data)
+    // );
+  }
 
   /** Announce the change in sort state for assistive technology. */
   announceSortChange(sortState: Sort) {

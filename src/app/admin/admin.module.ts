@@ -30,6 +30,8 @@ import { CustomerAddComponent } from './dialogs/customer-add/customer-add.compon
 import { CustomerEditComponent } from './dialogs/customer-edit/customer-edit.component';
 import { CustomerDeleteComponent } from './dialogs/customer-delete/customer-delete.component';
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from "@angular/material/snack-bar";
+import { TestPageComponent } from './test-page/test-page.component';
+import { TestDialogComponent } from './test-dialog/test-dialog.component';
 
 // table components
 const AdminModuleTableComponents = [
@@ -58,6 +60,8 @@ const AdminModuleTableComponents = [
     CustomerAddComponent,
     CustomerEditComponent,
     CustomerDeleteComponent,
+    TestPageComponent,
+    TestDialogComponent,
   ],
   // modules that this module needs to use
   imports: [

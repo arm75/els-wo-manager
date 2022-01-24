@@ -43,6 +43,8 @@ export class CustomerEditComponent implements OnInit {
           // console.log('data var: ' + data.customerName);
           // Object.assign(this.customerData, data);
           //
+          console.log('data: ');
+          console.log(this.customerData);
           console.log('Before form assignments');
           //
           // console.log(this.customerData)
@@ -63,6 +65,7 @@ export class CustomerEditComponent implements OnInit {
           //   updatedDate: new FormControl(data.updatedDate),
           // });
           this.editCustomerForm = this.formBuilder.group({
+            'id': new FormControl(this.customerData.id),
             'emailAddr': new FormControl(this.customerData.emailAddr),
             'busAddress': new FormControl(this.customerData.busAddress),
             'busCity': new FormControl(this.customerData.busCity),
@@ -90,17 +93,19 @@ export class CustomerEditComponent implements OnInit {
 
   editCustomer() {
     console.log('Edit clicked');
-    //console.log(this.editCustomerForm.value);
-    // this.customerService.create(this.editCustomerForm.value)
-    //   .subscribe(data => {
-    //     this.matSnackBar.open("Customer edited successfully.")
-    //     console.log("Customer edited successfully.");
-    //     this.matDialogRef.close();
-    //   }, error => {
-    //     this.matSnackBar.open("An error has occurred. Customer not edited.")
-    //     console.log(error);
-    //     this.matDialogRef.close();
-    //   });
+    console.log("From Log Again: ");
+    console.log(this.editCustomerForm.value);
+
+    this.customerService.update(this.editCustomerForm.value)
+      .subscribe(data => {
+         this.matSnackBar.open("Customer edited successfully.")
+         console.log("Customer edited successfully.");
+         this.matDialogRef.close();
+       }, error => {
+         this.matSnackBar.open("An error has occurred. Customer not edited.")
+         console.log(error);
+         this.matDialogRef.close();
+       });
   }
 
 }
