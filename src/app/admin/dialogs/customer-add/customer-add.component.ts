@@ -41,22 +41,16 @@ export class CustomerAddComponent implements OnInit {
   }
 
   addCustomer() {
-    console.log(this.addCustomerForm.value);
     this.customerService.create(this.addCustomerForm.value)
       .subscribe(data => {
-        this.matSnackBar.open("Customer added successfully.")
+        this.matSnackBar.open("Customer added successfully.");
         console.log("Customer added successfully.");
         this.matDialogRef.close();
       }, error => {
-        this.matSnackBar.open("An error has occurred. Customer not added.")
-        console.log(error);
+        console.log("An error has occurred. Customer not added: " + error);
+        this.matSnackBar.open("An error has occurred. Customer not added: " + error);
         this.matDialogRef.close();
       });
-
   }
-
-  // closeMatDialog() {
-  //   this.matDialogRef.close();
-  // }
 
 }

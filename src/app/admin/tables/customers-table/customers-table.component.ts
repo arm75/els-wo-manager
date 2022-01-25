@@ -13,7 +13,6 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { CustomerAddComponent } from "../../dialogs/customer-add/customer-add.component";
 import { CustomerEditComponent } from "../../dialogs/customer-edit/customer-edit.component";
 import { CustomerDeleteComponent } from "../../dialogs/customer-delete/customer-delete.component";
-import {InventoryGroup} from "../../../core/models/inventory-group";
 
 @Component({
   selector: 'app-customers-table',
@@ -25,6 +24,9 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['id', 'customerName', 'phoneNumb', 'emailAddr', 'actions'];
 
   dataSource: any;
+
+  @ViewChild(MatTable)
+  customerTable!: MatTable<Customer>;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -42,10 +44,12 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
       // this.dataSource = data;
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
-    })
+    });
+
   }
 
   ngOnInit() { }
+
 
   ngAfterViewInit() {
     this.customerService.getCustomers()
@@ -53,7 +57,8 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
         this.dataSource = new MatTableDataSource(data);
         //this.dataSource = data;
         this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator; });
+        this.dataSource.paginator = this.paginator;
+      });
   }
 
   applyCustomerFilter(event: Event) {
@@ -82,7 +87,6 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
 
   // opens Dialog box
   openEditDialog( _id: number) {
-    console.log("UserId passed from click: " + _id);
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
     editDialogConfig.autoFocus = true;
@@ -103,7 +107,6 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
 
   // opens Dialog box
   openDeleteDialog( _id: number) {
-    console.log("UserId passed from click: " + _id);
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
     deleteDialogConfig.autoFocus = true;
