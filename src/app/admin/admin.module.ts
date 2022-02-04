@@ -11,15 +11,15 @@ import { MaterialKitModule} from "../shared/material-kit/material-kit.module";
 // table Components declared by this module
 import { CustomersTableComponent } from './tables/customers-table/customers-table.component';
 import { InventoryGroupsTableComponent} from "./tables/inventory-groups-table/inventory-groups-table.component";
-import { InventoryItemsTableComponent} from "./tables/inventory-items-table/inventory-items-table.component";
+// import { InventoryItemsTableComponent} from "./tables/inventory-items-table/inventory-items-table.component";
 import { InventoryLocationsTableComponent} from "./tables/inventory-locations-table/inventory-locations-table.component";
 import { InventoryTableComponent } from "./tables/inventory-table/inventory-table.component";
-import { LaborItemsTableComponent} from "./tables/labor-items-table/labor-items-table.component";
+// import { LaborItemsTableComponent} from "./tables/labor-items-table/labor-items-table.component";
 import { LaborTableComponent} from "./tables/labor-table/labor-table.component";
 import { LocationsTableComponent} from "./tables/locations-table/locations-table.component";
-import { SubcontractorItemsTableComponent} from "./tables/subcontractor-items-table/subcontractor-items-table.component";
+// import { SubcontractorItemsTableComponent} from "./tables/subcontractor-items-table/subcontractor-items-table.component";
 import { SubcontractorsTableComponent} from "./tables/subcontractors-table/subcontractors-table.component";
-import { ToolEquipmentItemsTableComponent} from "./tables/tool-equipment-items-table/tool-equipment-items-table.component";
+// import { ToolEquipmentItemsTableComponent} from "./tables/tool-equipment-items-table/tool-equipment-items-table.component";
 import { ToolsEquipmentTableComponent} from "./tables/tools-equipment-table/tools-equipment-table.component";
 import { UserGroupsTableComponent } from "./tables/user-groups-table/user-groups-table.component";
 import { UsersTableComponent} from "./tables/users-table/users-table.component";
@@ -32,21 +32,24 @@ import { CustomerDeleteComponent } from './dialogs/customer-delete/customer-dele
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from "@angular/material/snack-bar";
 import { TestPageComponent } from './test-page/test-page.component';
 import { TestDialogComponent } from './test-dialog/test-dialog.component';
+import { LocationAddComponent } from './dialogs/location-add/location-add.component';
+import { LocationEditComponent } from './dialogs/location-edit/location-edit.component';
+import { LocationDeleteComponent } from './dialogs/location-delete/location-delete.component';
 
 // table components
 const AdminModuleTableComponents = [
   CustomersTableComponent,
   InventoryTableComponent,
   InventoryGroupsTableComponent,
-  InventoryItemsTableComponent,
+
   InventoryLocationsTableComponent,
   LaborTableComponent,
-  LaborItemsTableComponent,
+
   LocationsTableComponent,
   SubcontractorsTableComponent,
-  SubcontractorItemsTableComponent,
+
   ToolsEquipmentTableComponent,
-  ToolEquipmentItemsTableComponent,
+
   UsersTableComponent,
   UserGroupsTableComponent,
   WorkOrdersTableComponent,
@@ -62,6 +65,9 @@ const AdminModuleTableComponents = [
     CustomerDeleteComponent,
     TestPageComponent,
     TestDialogComponent,
+    LocationAddComponent,
+    LocationEditComponent,
+    LocationDeleteComponent,
   ],
   // modules that this module needs to use
   imports: [

@@ -39,9 +39,8 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
     private _liveAnnouncer: LiveAnnouncer,
     private dialog: MatDialog
   ) {
-    this.customerService.getCustomers().subscribe(data => {
+    this.customerService.getAll().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
-      // this.dataSource = data;
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     });
@@ -52,18 +51,20 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit() {
-    this.customerService.getCustomers()
-      .subscribe(data => {
+    this.customerService.getAll().subscribe(data => {
         this.dataSource = new MatTableDataSource(data);
-        //this.dataSource = data;
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       });
   }
 
+  buildCustomerTable() {
+
+  }
+
   applyCustomerFilter(event: Event) {
-    const filterTarget = event.target as HTMLButtonElement;
-    if (filterTarget) { this.dataSource.filter = filterTarget.value.trim().toLowerCase() }
+    const filterTarget = (event.target as HTMLInputElement).value;
+    if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
   }
 
   // opens Dialog box
@@ -73,16 +74,16 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
     addDialogConfig.autoFocus = true;
     // this.dialog.open(CustomerAddComponent, dialogConfig);
     const addDialogRef = this.dialog.open(CustomerAddComponent, addDialogConfig);
-    addDialogRef.afterClosed().subscribe(
-      addData => {
-        this.customerService.getCustomers()
-          .subscribe(afterAddData => {
-            this.dataSource = new MatTableDataSource(afterAddData);
-            //this.dataSource = data;
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
-          }, addData);
-      });
+    addDialogRef.afterClosed().subscribe(addData => {
+      this.customerService.getAll().subscribe(afterAddData => {
+        this.dataSource = new MatTableDataSource(afterAddData);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+      }
+
+
+      );
+    })
   }
 
   // opens Dialog box
@@ -93,12 +94,9 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
     editDialogConfig.data = { customerId: _id };
     // this.dialog.open(CustomerEditComponent, dialogConfig)
     const editDialogRef = this.dialog.open(CustomerEditComponent, editDialogConfig);
-    editDialogRef.afterClosed().subscribe(
-      editData => {
-        this.customerService.getCustomers()
-          .subscribe(afterEditData => {
+    editDialogRef.afterClosed().subscribe(editData => {
+        this.customerService.getAll().subscribe(afterEditData => {
             this.dataSource = new MatTableDataSource(afterEditData);
-            //this.dataSource = data;
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
           }, editData);
@@ -115,10 +113,8 @@ export class CustomersTableComponent implements OnInit, AfterViewInit {
     const deleteDialogRef = this.dialog.open(CustomerDeleteComponent, deleteDialogConfig);
     deleteDialogRef.afterClosed().subscribe(
       deleteData => {
-        this.customerService.getCustomers()
-          .subscribe(afterDeleteData => {
+        this.customerService.getAll().subscribe(afterDeleteData => {
             this.dataSource = new MatTableDataSource(afterDeleteData);
-            //this.dataSource = data;
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
           }, deleteData);

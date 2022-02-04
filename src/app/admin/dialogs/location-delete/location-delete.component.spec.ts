@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LaborItemsTableComponent } from './labor-items-table.component';
+import { LocationDeleteComponent } from './location-delete.component';
 
-describe('LaborItemsTableComponent', () => {
-  let component: LaborItemsTableComponent;
-  let fixture: ComponentFixture<LaborItemsTableComponent>;
+describe('LocationDeleteComponent', () => {
+  let component: LocationDeleteComponent;
+  let fixture: ComponentFixture<LocationDeleteComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LaborItemsTableComponent ]
+      declarations: [ LocationDeleteComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LaborItemsTableComponent);
+    fixture = TestBed.createComponent(LocationDeleteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

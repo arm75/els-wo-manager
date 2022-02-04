@@ -10,7 +10,9 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   styleUrls: ['./customer-add.component.css']
 })
 export class CustomerAddComponent implements OnInit {
+
   formTitle: string = "Add Customer";
+
   addCustomerForm: FormGroup = new FormGroup({});
 
   constructor( private matDialogRef: MatDialogRef<CustomerAddComponent>,

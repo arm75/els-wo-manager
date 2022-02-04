@@ -2,14 +2,11 @@ export interface Location {
 
   id: number;
   locationName: string;
-  bAddress: string;
-  bCity: string;
-  bState: string;
-  bZipCode: string;
-  pAddress: string;
-  pCity: string;
-  pState: string;
-  pZipCode: string;
+  //customerId: number;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
   phoneNumb: string;
   faxNumb: string;
   emailAddr: string;
