@@ -3,8 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { CustomerService } from "../../../core/services/customer.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Customer } from "../../../core/models/customer";
-import {FormControl} from "@angular/forms";
-import {MatTableDataSource} from "@angular/material/table";
+
 
 @Component({
   selector: 'app-customer-delete',

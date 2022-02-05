@@ -83,7 +83,7 @@ export class LocationsTableComponent implements OnInit, AfterViewInit {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
     editDialogConfig.autoFocus = true;
-    editDialogConfig.data = { customerId: _id };
+    editDialogConfig.data = { locationId: _id };
     // this.dialog.open(CustomerEditComponent, dialogConfig)
     const editDialogRef = this.dialog.open(LocationEditComponent, editDialogConfig);
     editDialogRef.afterClosed().subscribe(editData => {
@@ -100,7 +100,7 @@ export class LocationsTableComponent implements OnInit, AfterViewInit {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
     deleteDialogConfig.autoFocus = true;
-    deleteDialogConfig.data = { customerId: _id };
+    deleteDialogConfig.data = { locationId: _id };
     // this.dialog.open(CustomerDeleteComponent, dialogConfig)
     const deleteDialogRef = this.dialog.open(LocationDeleteComponent, deleteDialogConfig);
     deleteDialogRef.afterClosed().subscribe(
