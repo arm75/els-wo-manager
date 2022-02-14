@@ -1,10 +1,8 @@
 export interface Labor {
-
   id: number;
-  laborTypeName: string;
+  entityName: string;
   description: string;
   ratePerHour: number;
   createdDate: string;
   updatedDate: string;
-
 }

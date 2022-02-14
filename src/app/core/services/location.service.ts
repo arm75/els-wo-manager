@@ -13,12 +13,7 @@ export class LocationService {
 
   constructor( private http: HttpClient ) { }
 
-  // getLocations(): Observable<Location[]> {
-  //   return this.http.get<Location[]>(this.baseUrl);
-  // }
-
   getAll(): Observable<Location[]> {
-    // return this.http.get<Customer[]>(this.baseUrl);
     return this.http.get<Location[]>(`${this.baseUrl}/all`);
   }
 
@@ -37,13 +32,10 @@ export class LocationService {
   delete(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrl}/delete/${id}`);
   }
-
+   
   // deleteAll(): Observable<any> {
   //   return this.http.delete(this.baseUrl);
   // }
   //
-  // findByTitle(title: any): Observable<Location[]> {
-  //   return this.http.get<Location[]>(`${this.baseUrl}?title=${title}`);
-  // }
-
 }
+  

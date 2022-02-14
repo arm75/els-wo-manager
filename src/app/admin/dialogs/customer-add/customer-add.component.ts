@@ -13,37 +13,36 @@ export class CustomerAddComponent implements OnInit {
 
   formTitle: string = "Add Customer";
 
-  addCustomerForm: FormGroup = new FormGroup({});
+  addForm: FormGroup = new FormGroup({});
 
   constructor( private matDialogRef: MatDialogRef<CustomerAddComponent>,
-               private customerService: CustomerService,
+               private entityService: CustomerService,
                private formBuilder: FormBuilder,
                private matSnackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
 
-    this.addCustomerForm = this.formBuilder.group({
-      'busAddress': new FormControl(''),
-      'busCity': new FormControl(''),
-      'busState': new FormControl(''),
-      'busZipCode': new FormControl(''),
-      'createdDate': new FormControl(''),
-      'customerName': new FormControl(''),
-      'emailAddr': new FormControl(''),
-      'faxNumb': new FormControl(''),
-      'phoneNumb': new FormControl(''),
+    this.addForm = this.formBuilder.group({
+      'entityName': new FormControl(''),
       'physAddress': new FormControl(''),
+      'physUnit': new FormControl(''),
       'physCity': new FormControl(''),
       'physState': new FormControl(''),
       'physZipCode': new FormControl(''),
-      'updatedDate': new FormControl(''),
+      'billAddress': new FormControl(''),
+      'billUnit': new FormControl(''),
+      'billCity': new FormControl(''),
+      'billState': new FormControl(''),
+      'billZipCode': new FormControl(''),
+      'phoneNumb': new FormControl(''),
+      'altPhoneNumb': new FormControl(''),
+      'emailAddress': new FormControl('')
     });
-
   }
 
-  addCustomer() {
-    this.customerService.create(this.addCustomerForm.value)
+  addEntity() {
+    this.entityService.create(this.addForm.value)
       .subscribe(data => {
         this.matSnackBar.open("Customer added successfully.");
         console.log("Customer added successfully.");
@@ -54,5 +53,4 @@ export class CustomerAddComponent implements OnInit {
         this.matDialogRef.close();
       });
   }
-
 }

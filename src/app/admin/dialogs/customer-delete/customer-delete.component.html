@@ -1,14 +1,11 @@
 <div *ngIf="dataLoaded">
-  <h2 mat-dialog-title>{{formTitle}}: {{customerId}}</h2>
+  <h2 mat-dialog-title>{{formTitle}}: {{entityId}}</h2>
   <mat-dialog-content>
-    <h4 mat-dialog-title>Are you sure you want to delete Customer ID: {{customerId}}</h4>
-<!--    <p>Customer Name: {{}}</p>-->
-<!--    <p>Phone Number: {{}}</p>-->
-<!--    <p>Fax Number: {{}}</p>-->
-<!--    <p>Email Address: {{}}</p>-->
+    <h4 mat-dialog-title>Are you sure you want to delete Customer ID: {{entityId}}</h4>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>
-    <button class="mat-raised-button mat-primary" (click)="deleteCustomer()">Delete Customer</button>
+    <button class="mat-raised-button mat-primary" (click)="deleteEntity()">Delete Customer</button>
   </mat-dialog-actions>
 </div>
+

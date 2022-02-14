@@ -14,13 +14,13 @@ export class CustomerEditComponent implements OnInit {
 
   dataLoaded: boolean = false;
   formTitle: string = "Edit Customer";
-  customerId: null;
-  customerData!: Customer;
-  editCustomerForm: FormGroup = new FormGroup({});
+  entityId: null;
+  entityData!: Customer;
+  editForm: FormGroup = new FormGroup({});
 
   constructor( private matDialogRef: MatDialogRef<CustomerEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
-               private customerService: CustomerService,
+               private entityService: CustomerService,
                private formBuilder: FormBuilder,
                private matSnackBar: MatSnackBar
   ) { }
@@ -28,29 +28,29 @@ export class CustomerEditComponent implements OnInit {
   ngOnInit(): void {
 
     this.dataLoaded = false;
-    this.customerId = this.data.customerId;
+    this.entityId = this.data.entityId;
 
-    if (this.customerId != null) {
-      this.customerService.get(this.customerId)
+    if (this.entityId != null) {
+      this.entityService.get(this.entityId)
         .toPromise()
         .then(data => {
-          this.customerData = data;
-          this.editCustomerForm = this.formBuilder.group({
-            'id': new FormControl(this.customerData.id),
-            'emailAddr': new FormControl(this.customerData.emailAddr),
-            'busAddress': new FormControl(this.customerData.busAddress),
-            'busCity': new FormControl(this.customerData.busCity),
-            'busState': new FormControl(this.customerData.busState),
-            'busZipCode': new FormControl(this.customerData.busZipCode),
-            'physAddress': new FormControl(this.customerData.physAddress),
-            'physCity': new FormControl(this.customerData.physCity),
-            'physState': new FormControl(this.customerData.physState),
-            'physZipCode': new FormControl(this.customerData.physZipCode),
-            'createdDate': new FormControl(this.customerData.createdDate),
-            'updatedDate': new FormControl(this.customerData.updatedDate),
-            'customerName': new FormControl(this.customerData.customerName),
-            'phoneNumb': new FormControl(this.customerData.phoneNumb),
-            'faxNumb': new FormControl(this.customerData.faxNumb),
+          this.entityData = data;
+          this.editForm = this.formBuilder.group({
+            'id': new FormControl(this.entityData.id),
+	          'entityName': new FormControl(this.entityData.entityName),
+            'physAddress': new FormControl(this.entityData.physAddress),
+            'physUnit': new FormControl(this.entityData.physUnit),
+            'physCity': new FormControl(this.entityData.physCity),
+            'physState': new FormControl(this.entityData.physState),
+            'physZipCode': new FormControl(this.entityData.physZipCode),
+            'billAddress': new FormControl(this.entityData.billAddress),
+            'billUnit': new FormControl(this.entityData.billUnit),
+            'billCity': new FormControl(this.entityData.billCity),
+            'billState': new FormControl(this.entityData.billState),
+            'billZipCode': new FormControl(this.entityData.billZipCode),
+            'phoneNumb': new FormControl(this.entityData.phoneNumb),
+            'altPhoneNumb': new FormControl(this.entityData.altPhoneNumb),
+            'emailAddress': new FormControl(this.entityData.emailAddress)
           })
           this.dataLoaded = true;
         })
@@ -60,11 +60,11 @@ export class CustomerEditComponent implements OnInit {
     }
   }
 
-  editCustomer() {
-    this.customerService.update(this.editCustomerForm.value)
+  editEntity() {
+    this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Customer " + this.editCustomerForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Customer " + this.editCustomerForm.value.id + " edited successfully.")
+        console.log("Customer " + this.editForm.value.id + " edited successfully.");
+        this.matSnackBar.open("Customer " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
       }, error => {
         console.log("An error has occurred. Customer not edited: " + error);
@@ -72,5 +72,4 @@ export class CustomerEditComponent implements OnInit {
         this.matDialogRef.close();
       });
   }
-
 }

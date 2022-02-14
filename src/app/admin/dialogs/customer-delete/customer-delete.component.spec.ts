@@ -23,3 +23,4 @@ describe('CustomerDeleteComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

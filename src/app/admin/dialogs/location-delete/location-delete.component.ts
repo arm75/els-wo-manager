@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Location } from "../../../core/models/location";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { LocationService } from "../../../core/services/location.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { Location } from "../../../core/models/location";
 
 
 @Component({
@@ -14,25 +14,25 @@ export class LocationDeleteComponent implements OnInit {
 
   dataLoaded: boolean = false;
   formTitle: string = "Delete Location";
-  locationId: null;
-  locationData!: Location;
+  entityId: null;
+  entityData!: Location;
 
   constructor( private matDialogRef: MatDialogRef<LocationDeleteComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
-               private locationService: LocationService,
+               private entityService: LocationService,
                private matSnackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
 
     this.dataLoaded = false;
-    this.locationId = this.data.locationId;
+    this.entityId = this.data.entityId;
 
-    if (this.locationId != null) {
-      this.locationService.get(this.locationId)
+    if (this.entityId != null) {
+      this.entityService.get(this.entityId)
         .toPromise()
         .then(data => {
-          this.locationData = data;
+          this.entityData = data;
           this.dataLoaded = true;
         })
         .catch(error => {
@@ -41,11 +41,11 @@ export class LocationDeleteComponent implements OnInit {
     }
   }
 
-  deleteLocation(): void {
-    this.locationService.delete(this.locationId)
+  deleteEntity(): void {
+    this.entityService.delete(this.entityId)
       .subscribe(data => {
-        console.log("Location " + this.locationId  + " deleted successfully.");
-        this.matSnackBar.open("Location " + this.locationId  + " deleted successfully.")
+        console.log("Location " + this.entityId  + " deleted successfully.");
+        this.matSnackBar.open("Location " + this.entityId  + " deleted successfully.")
         this.matDialogRef.close();
       }, error => {
         console.log("An error has occurred. Location not deleted: " + error);
@@ -55,3 +55,4 @@ export class LocationDeleteComponent implements OnInit {
   }
 
 }
+

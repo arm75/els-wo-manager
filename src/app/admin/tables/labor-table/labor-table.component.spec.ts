@@ -23,3 +23,4 @@ describe('LaborTableComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

@@ -23,3 +23,4 @@ describe('LocationDeleteComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { LocationService } from "../../../core/services/location.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-location-add',
@@ -13,34 +13,31 @@ export class LocationAddComponent implements OnInit {
 
   formTitle: string = "Add Location";
 
-  addLocationForm: FormGroup = new FormGroup({});
+  addForm: FormGroup = new FormGroup({});
 
   constructor( private matDialogRef: MatDialogRef<LocationAddComponent>,
-               private locationService: LocationService,
+               private entityService: LocationService,
                private formBuilder: FormBuilder,
                private matSnackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
 
-    this.addLocationForm = this.formBuilder.group({
-      'locationName': new FormControl(''),
-      //'customerId': new FormControl(''),
+    this.addForm = this.formBuilder.group({
+      'entityName': new FormControl(''),
       'address': new FormControl(''),
+      'unit': new FormControl(''),
       'city': new FormControl(''),
       'state': new FormControl(''),
       'zipCode': new FormControl(''),
       'phoneNumb': new FormControl(''),
-      'faxNumb': new FormControl(''),
-      'emailAddr': new FormControl(''),
-      'createdDate': new FormControl(''),
-      'updatedDate': new FormControl('')
+      'altPhoneNumb': new FormControl(''),
+      'emailAddress': new FormControl('')
     });
-
   }
 
-  addLocation() {
-    this.locationService.create(this.addLocationForm.value)
+  addEntity() {
+    this.entityService.create(this.addForm.value)
       .subscribe(data => {
         this.matSnackBar.open("Location added successfully.");
         console.log("Location added successfully.");
@@ -51,5 +48,4 @@ export class LocationAddComponent implements OnInit {
         this.matDialogRef.close();
       });
   }
-
 }

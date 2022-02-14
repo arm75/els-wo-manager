@@ -23,3 +23,4 @@ describe('LocationAddComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

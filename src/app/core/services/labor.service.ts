@@ -3,19 +3,39 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Labor } from '../models/labor';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class LaborService {
 
-  private _url: string = "http://127.0.0.1:8090/labor/all";
+  private baseUrl: string = "http://127.0.0.1:8090/labor";
 
   constructor( private http: HttpClient ) { }
 
-  getLabor(): Observable<Labor[]> {
-
-    return this.http.get<Labor[]>(this._url);
-
+  getAll(): Observable<Labor[]> {
+    return this.http.get<Labor[]>(`${this.baseUrl}/all`);
   }
 
+  get(id: any): Observable<Labor> {
+    return this.http.get<Labor>(`${this.baseUrl}/find/${id}`);
+  }
+
+  create(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/add`, data);
+  }
+
+  update(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/update`, data);
+  }
+
+  delete(id: any): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/delete/${id}`);
+  }
+   
+  // deleteAll(): Observable<any> {
+  //   return this.http.delete(this.baseUrl);
+  // }
+  //
 }
+  

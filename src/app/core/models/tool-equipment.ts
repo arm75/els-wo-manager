@@ -1,10 +1,8 @@
 export interface ToolEquipment {
-
   id: number;
-  toolEquipName: string;
+  entityName: string;
   description: string;
-  rentalCost: number;
+  costPerDay: number;
   createdDate: string;
   updatedDate: string;
-
 }

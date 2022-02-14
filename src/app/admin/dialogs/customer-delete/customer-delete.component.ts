@@ -14,25 +14,25 @@ export class CustomerDeleteComponent implements OnInit {
 
   dataLoaded: boolean = false;
   formTitle: string = "Delete Customer";
-  customerId: null;
-  customerData!: Customer;
+  entityId: null;
+  entityData!: Customer;
 
   constructor( private matDialogRef: MatDialogRef<CustomerDeleteComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
-               private customerService: CustomerService,
+               private entityService: CustomerService,
                private matSnackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
 
     this.dataLoaded = false;
-    this.customerId = this.data.customerId;
+    this.entityId = this.data.entityId;
 
-    if (this.customerId != null) {
-      this.customerService.get(this.customerId)
+    if (this.entityId != null) {
+      this.entityService.get(this.entityId)
         .toPromise()
         .then(data => {
-          this.customerData = data;
+          this.entityData = data;
           this.dataLoaded = true;
         })
         .catch(error => {
@@ -41,11 +41,11 @@ export class CustomerDeleteComponent implements OnInit {
     }
   }
 
-  deleteCustomer(): void {
-    this.customerService.delete(this.customerId)
+  deleteEntity(): void {
+    this.entityService.delete(this.entityId)
       .subscribe(data => {
-        console.log("Customer " + this.customerId  + " deleted successfully.");
-        this.matSnackBar.open("Customer " + this.customerId  + " deleted successfully.")
+        console.log("Customer " + this.entityId  + " deleted successfully.");
+        this.matSnackBar.open("Customer " + this.entityId  + " deleted successfully.")
         this.matDialogRef.close();
       }, error => {
         console.log("An error has occurred. Customer not deleted: " + error);
@@ -55,3 +55,4 @@ export class CustomerDeleteComponent implements OnInit {
   }
 
 }
+

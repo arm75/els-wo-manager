@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Location } from "../../../core/models/location";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { LocationService } from "../../../core/services/location.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Location } from "../../../core/models/location";
 
 @Component({
   selector: 'app-location-edit',
@@ -14,13 +14,13 @@ export class LocationEditComponent implements OnInit {
 
   dataLoaded: boolean = false;
   formTitle: string = "Edit Location";
-  locationId: null;
-  locationData!: Location;
-  editLocationForm: FormGroup = new FormGroup({});
+  entityId: null;
+  entityData!: Location;
+  editForm: FormGroup = new FormGroup({});
 
   constructor( private matDialogRef: MatDialogRef<LocationEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
-               private locationService: LocationService,
+               private entityService: LocationService,
                private formBuilder: FormBuilder,
                private matSnackBar: MatSnackBar
   ) { }
@@ -28,26 +28,24 @@ export class LocationEditComponent implements OnInit {
   ngOnInit(): void {
 
     this.dataLoaded = false;
-    this.locationId = this.data.locationId;
+    this.entityId = this.data.entityId;
 
-    if (this.locationId != null) {
-      this.locationService.get(this.locationId)
+    if (this.entityId != null) {
+      this.entityService.get(this.entityId)
         .toPromise()
         .then(data => {
-          this.locationData = data;
-          this.editLocationForm = this.formBuilder.group({
-            'id': new FormControl(this.locationData.id),
-            'locationName': new FormControl(this.locationData.locationName),
-            //'customerId': new FormControl(this.customerData.),
-            'address': new FormControl(this.locationData.address),
-            'city': new FormControl(this.locationData.city),
-            'state': new FormControl(this.locationData.state),
-            'zipCode': new FormControl(this.locationData.zipCode),
-            'phoneNumb': new FormControl(this.locationData.phoneNumb),
-            'faxNumb': new FormControl(this.locationData.faxNumb),
-            'emailAddr': new FormControl(this.locationData.emailAddr),
-            'createdDate': new FormControl(this.locationData.createdDate),
-            'updatedDate': new FormControl(this.locationData.updatedDate)
+          this.entityData = data;
+          this.editForm = this.formBuilder.group({
+            'id': new FormControl(this.entityData.id),
+            'entityName': new FormControl(this.entityData.entityName),
+            'address': new FormControl(this.entityData.address),
+            'unit': new FormControl(this.entityData.unit),
+            'city': new FormControl(this.entityData.city),
+            'state': new FormControl(this.entityData.state),
+            'zipCode': new FormControl(this.entityData.zipCode),
+            'phoneNumb': new FormControl(this.entityData.phoneNumb),
+            'altPhoneNumb': new FormControl(this.entityData.altPhoneNumb),
+            'emailAddress': new FormControl(this.entityData.emailAddress)
           })
           this.dataLoaded = true;
         })
@@ -57,11 +55,11 @@ export class LocationEditComponent implements OnInit {
     }
   }
 
-  editLocation() {
-    this.locationService.update(this.editLocationForm.value)
+  editEntity() {
+    this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Location " + this.editLocationForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Location " + this.editLocationForm.value.id + " edited successfully.")
+        console.log("Location " + this.editForm.value.id + " edited successfully.");
+        this.matSnackBar.open("Location " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
       }, error => {
         console.log("An error has occurred. Location not edited: " + error);
@@ -69,5 +67,4 @@ export class LocationEditComponent implements OnInit {
         this.matDialogRef.close();
       });
   }
-
 }

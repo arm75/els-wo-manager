@@ -1,16 +1,14 @@
 export interface Location {
-
   id: number;
-  locationName: string;
-  //customerId: number;
+  entityName: string;
   address: string;
+  unit: string;
   city: string;
   state: string;
   zipCode: string;
   phoneNumb: string;
-  faxNumb: string;
-  emailAddr: string;
+  altPhoneNumb: string;
+  emailAddress: string;
   createdDate: string;
   updatedDate: string;
-
 }

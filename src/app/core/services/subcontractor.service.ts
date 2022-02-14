@@ -3,19 +3,39 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Subcontractor } from '../models/subcontractor';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class SubcontractorService {
 
-  private _url: string = "http://127.0.0.1:8090/subcontractor/all";
+  private baseUrl: string = "http://127.0.0.1:8090/subcontractor";
 
   constructor( private http: HttpClient ) { }
 
-  getSubcontractors(): Observable<Subcontractor[]> {
-
-    return this.http.get<Subcontractor[]>(this._url);
-
+  getAll(): Observable<Subcontractor[]> {
+    return this.http.get<Subcontractor[]>(`${this.baseUrl}/all`);
   }
 
+  get(id: any): Observable<Subcontractor> {
+    return this.http.get<Subcontractor>(`${this.baseUrl}/find/${id}`);
+  }
+
+  create(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/add`, data);
+  }
+
+  update(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/update`, data);
+  }
+
+  delete(id: any): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/delete/${id}`);
+  }
+   
+  // deleteAll(): Observable<any> {
+  //   return this.http.delete(this.baseUrl);
+  // }
+  //
 }
+  

@@ -13,12 +13,7 @@ export class CustomerService {
 
   constructor( private http: HttpClient ) { }
 
-  // getCustomers(): Observable<Customer[]> {
-  //   return this.http.get<Customer[]>(`${this.baseUrl}/all`);
-  // }
-
   getAll(): Observable<Customer[]> {
-    // return this.http.get<Customer[]>(this.baseUrl);
     return this.http.get<Customer[]>(`${this.baseUrl}/all`);
   }
 
@@ -37,13 +32,10 @@ export class CustomerService {
   delete(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrl}/delete/${id}`);
   }
-
+   
   // deleteAll(): Observable<any> {
   //   return this.http.delete(this.baseUrl);
   // }
   //
-  // findByTitle(title: any): Observable<Customer[]> {
-  //   return this.http.get<Customer[]>(`${this.baseUrl}?title=${title}`);
-  // }
-
 }
+  

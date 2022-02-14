@@ -1,64 +1,52 @@
-<form [formGroup]="addLocationForm" class="example-form" (submit)="addLocation()">
-
+<form [formGroup]="addForm" class="example-form" (submit)="addEntity()">
     <h2 mat-dialog-title>{{formTitle}}</h2>
     <mat-dialog-content>
-
-    <h4 mat-dialog-title>Location Details</h4>
-    <p>
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>Customer Name</mat-label>
-        <input matInput value="" formControlName="locationName">
-      </mat-form-field>
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>Phone Number</mat-label>
-        <input matInput value="" formControlName="phoneNumb">
-      </mat-form-field>
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>Fax Number</mat-label>
-        <input matInput value="" formControlName="faxNumb">
-      </mat-form-field>
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>Email Address</mat-label>
-        <input matInput value="" formControlName="emailAddr">
-      </mat-form-field>
-    </p>
-
-    <h4 mat-dialog-title>Address</h4>
-    <p>
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>Address</mat-label>
-        <input matInput value="" formControlName="address">
-      </mat-form-field>
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>City</mat-label>
-        <input matInput placeholder="" formControlName="city">
-      </mat-form-field>
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>State</mat-label>
-        <input matInput placeholder="" formControlName="state">
-      </mat-form-field>
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>Zip Code</mat-label>
-        <input matInput #postalCode maxlength="5" placeholder="" value="" formControlName="zipCode">
-        <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
-      </mat-form-field>
-    </p>
-
-    <h4 mat-dialog-title>Temporary</h4>
-    <p>
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>Updated Date</mat-label>
-        <input matInput value="" formControlName="updatedDate">
-      </mat-form-field>
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>Created Date</mat-label>
-        <input matInput placeholder="" formControlName="createdDate">
-      </mat-form-field>
-    </p>
-
+      <h4 mat-dialog-title>Location Details</h4>
+      <p>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Location Name</mat-label>
+          <input matInput formControlName="entityName">
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Phone Number</mat-label>
+          <input matInput value="" formControlName="phoneNumb">
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Alt Phone Number</mat-label>
+          <input matInput value="" formControlName="altPhoneNumb">
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Email Address</mat-label>
+          <input matInput value="" formControlName="emailAddress">
+        </mat-form-field>
+      </p>
+      <h4 mat-dialog-title>Address</h4>
+      <p>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Address</mat-label>
+          <input matInput value="" formControlName="address">
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Unit</mat-label>
+          <input matInput value="" formControlName="unit">
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>City</mat-label>
+          <input matInput placeholder="" formControlName="city">
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>State</mat-label>
+          <input matInput placeholder="" formControlName="state">
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Zip Code</mat-label>
+          <input matInput #postalCode maxlength="5" placeholder="" value="" formControlName="zipCode">
+          <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+        </mat-form-field>
+      </p>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>
-    <button class="mat-raised-button mat-primary" type="submit">Add Location</button>
+    <button class="mat-raised-button mat-primary" type="submit">Save Location</button>
   </mat-dialog-actions>
 </form>

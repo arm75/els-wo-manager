@@ -1,19 +1,19 @@
 export interface Customer {
-
   id: number;
-  customerName: string;
-  busAddress: string;
-  busCity: string;
-  busState: string;
-  busZipCode: string;
+  entityName: string;
+  billAddress: string;
+  billUnit: string;
+  billCity: string;
+  billState: string;
+  billZipCode: string;
   physAddress: string;
+  physUnit: string;
   physCity: string;
   physState: string;
   physZipCode: string;
-  emailAddr: string;
   phoneNumb: string;
-  faxNumb: string;
+  altPhoneNumb: string;
+  emailAddress: string;
   createdDate: string;
   updatedDate: string;
-
 }

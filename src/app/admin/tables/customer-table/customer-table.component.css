@@ -1,0 +1,28 @@
+table {
+  width: 100%;
+  margin: 0px 0px 0px 0px;
+}
+
+.table-toolbar {
+  margin: 10px 20px 0px 20px;
+}
+
+.table-search-box {
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+}
+
+button.customer-table-add-button {
+}
+
+button.customer-table-edit-button, button.customer-table-delete-button  {
+  margin: 0px 20px 0px 0px;
+}
+
+.table-toolbar {
+  display: flex;
+}
+
+.example-fill-remaining-space {
+  flex: 1 1 auto;
+}

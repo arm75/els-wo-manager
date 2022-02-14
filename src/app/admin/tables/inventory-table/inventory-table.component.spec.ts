@@ -23,3 +23,4 @@ describe('InventoryTableComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

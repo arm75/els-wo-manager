@@ -1,40 +1,95 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-
 import { LiveAnnouncer } from "@angular/cdk/a11y";
-import { MatTableDataSource } from "@angular/material/table";
+import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
-
 import { InventoryService } from "../../../core/services/inventory.service";
 import { Inventory } from "../../../core/models/inventory";
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+import { InventoryAddComponent } from "../../dialogs/inventory-add/inventory-add.component";
+import { InventoryEditComponent } from "../../dialogs/inventory-edit/inventory-edit.component";
+import { InventoryDeleteComponent } from "../../dialogs/inventory-delete/inventory-delete.component";
 
 @Component({
   selector: 'app-inventory-table',
   templateUrl: './inventory-table.component.html',
   styleUrls: ['./inventory-table.component.css']
 })
-export class InventoryTableComponent implements AfterViewInit {
+export class InventoryTableComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'invName', 'invGroupId', 'description', 'qtyOnHand'];
-  dataSource!: MatTableDataSource<Inventory>;
+  displayedColumns: string[] = ['id', 'entityName', 'actions'];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort = new MatSort;
+  dataSource: any;
 
-  constructor(private inventoryService: InventoryService, private _liveAnnouncer: LiveAnnouncer) {
-    this.inventoryService.getInventory().subscribe(data => {
+  @ViewChild(MatTable)
+  entityTable!: MatTable<Inventory>;
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
+  @ViewChild(MatSort)
+  sort: MatSort = new MatSort;
+
+  constructor(
+    private entityService: InventoryService,
+    private _liveAnnouncer: LiveAnnouncer,
+    private dialog: MatDialog
+  ) {
+    this.buildTable();
+  }
+
+  ngOnInit() { }
+
+  ngAfterViewInit() {
+    this.buildTable(); 
+  }
+
+ buildTable() {
+    this.entityService.getAll().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     })
   }
 
-  ngAfterViewInit() {
-    this.inventoryService.getInventory().subscribe(data => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-    })
+  applyFilter(event: Event) {
+    const filterTarget = (event.target as HTMLInputElement).value;
+    if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
+  }
+
+  // opens Dialog box
+  openAddDialog() {
+    const addDialogConfig = new MatDialogConfig();
+    addDialogConfig.disableClose = true;
+    addDialogConfig.autoFocus = true;
+    const addDialogRef = this.dialog.open(InventoryAddComponent, addDialogConfig);
+    addDialogRef.afterClosed().subscribe(addData => {
+      this.buildTable();
+    });
+  }
+
+  // opens Dialog box
+  openEditDialog( _id: number) {
+    const editDialogConfig = new MatDialogConfig();
+    editDialogConfig.disableClose = true;
+    editDialogConfig.autoFocus = true;
+    editDialogConfig.data = { entityId: _id };
+    const editDialogRef = this.dialog.open(InventoryEditComponent, editDialogConfig);
+    editDialogRef.afterClosed().subscribe(editData => {
+      this.buildTable();
+    });
+  }
+
+  // opens Dialog box
+  openDeleteDialog( _id: number) {
+    const deleteDialogConfig = new MatDialogConfig();
+    deleteDialogConfig.disableClose = true;
+    deleteDialogConfig.autoFocus = true;
+    deleteDialogConfig.data = { entityId: _id };
+    const deleteDialogRef = this.dialog.open(InventoryDeleteComponent, deleteDialogConfig);
+    deleteDialogRef.afterClosed().subscribe(deleteData => {
+      this.buildTable();
+    });
   }
 
   /** Announce the change in sort state for assistive technology. */
@@ -49,5 +104,5 @@ export class InventoryTableComponent implements AfterViewInit {
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
-
 }
+

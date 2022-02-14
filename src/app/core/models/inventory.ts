@@ -1,16 +1,12 @@
 export interface Inventory {
-
   id: number;
-  invGroupId: number;
-  invLocationId: number;
-  invName: string;
+  entityName: string;
   description: string;
-  ourCost: number;
-  price: number;
-  qtyOnHand: number;
+  unitCost: number;
+  unitPrice: number;
+  qtyInStock: number;
   taxable: boolean;
   taxRateId: number;
   createdDate: string;
   updatedDate: string;
-
 }
