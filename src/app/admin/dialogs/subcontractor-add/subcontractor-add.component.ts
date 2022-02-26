@@ -3,6 +3,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { SubcontractorService } from "../../../core/services/subcontractor.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
 
 @Component({
   selector: 'app-subcontractor-add',
@@ -12,8 +13,8 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 export class SubcontractorAddComponent implements OnInit {
 
   formTitle: string = "Add Subcontractor";
-
   addForm: FormGroup = new FormGroup({});
+  usStates = ElsWoManagerConstants.usStatesSelectArray;
 
   constructor( private matDialogRef: MatDialogRef<SubcontractorAddComponent>,
                private entityService: SubcontractorService,

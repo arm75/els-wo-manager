@@ -3,19 +3,39 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ToolEquipmentItem } from '../models/tool-equipment-item';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class ToolEquipmentItemService {
 
-  private _url: string = "http://127.0.0.1:8090/tool-equipment-item/all";
+  private baseUrl: string = "http://127.0.0.1:8090/tool-equipment-item";
 
   constructor( private http: HttpClient ) { }
 
-  getToolsEquipmentItems(): Observable<ToolEquipmentItem[]> {
-
-    return this.http.get<ToolEquipmentItem[]>(this._url);
-
+  getAll(): Observable<ToolEquipmentItem[]> {
+    return this.http.get<ToolEquipmentItem[]>(`${this.baseUrl}/all`);
   }
 
+  get(id: any): Observable<ToolEquipmentItem> {
+    return this.http.get<ToolEquipmentItem>(`${this.baseUrl}/find/${id}`);
+  }
+
+  create(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/add`, data);
+  }
+
+  update(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/update`, data);
+  }
+
+  delete(id: any): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/delete/${id}`);
+  }
+   
+  // deleteAll(): Observable<any> {
+  //   return this.http.delete(this.baseUrl);
+  // }
+  //
 }
+  

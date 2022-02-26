@@ -1,14 +1,18 @@
-export interface ToolEquipmentItem {
+import { WorkOrder } from "./work-order";
+import { ToolEquipment } from "./tool-equipment";
 
+export interface ToolEquipmentItem {
   id: number;
   workOrderId: number;
+  workOrder: WorkOrder;
   toolsEquipId: number;
+  toolsEquip: ToolEquipment;
+  entityName: string,
   status: string;
   notes: string;
-  usageDays: number;
-  unitPrice: number;
+  days: number;
+  pricePerDay: number;
   totalPrice: number;
   createdDate: string;
   updatedDate: string;
-
 }

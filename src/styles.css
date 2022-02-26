@@ -3,9 +3,54 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.width-100 {
+  width: 100%;
+}
 .width-99 {
   width: 99%;
 }
+.width-80 {
+  width: 80%;
+}
+.width-75 {
+  width: 75%;
+}
+.width-70 {
+  width: 70%;
+}
+.width-50 {
+  width: 50%;
+}
+.width-47 {
+  width: 47%;
+}
+.width-34 {
+  width: 34%;
+}
+.width-33 {
+  width: 33%;
+}
+.width-32 {
+  width: 32%;
+}
+.width-31 {
+  width: 31%;
+}
+.width-30 {
+  width: 30%;
+}
+.width-20 {
+  width: 20%;
+}
+.width-21 {
+  width: 21%;
+}
+.width-10 {
+  width: 10%;
+}
+
+
+
 
 .description-box {
   height: 60px;

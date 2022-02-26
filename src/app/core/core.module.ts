@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from "@angular/common/http";
+import { ElsWoManagerConstants } from "./els-wo-manager-constants";
 
 // Model Services
 import { CustomerService } from "./services/customer.service";
@@ -44,6 +45,7 @@ const ModelServiceProviders = [
     HttpClientModule,
   ],
   providers: [
+    ElsWoManagerConstants,
     ModelServiceProviders,
     HttpClientModule
   ],

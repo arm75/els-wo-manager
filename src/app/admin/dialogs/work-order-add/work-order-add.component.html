@@ -3,10 +3,57 @@
     <mat-dialog-content>
     <h4 mat-dialog-title>Work Order Details</h4>
       <p>
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>Status</mat-label>
-        <input matInput formControlName="status">
+      <mat-form-field class="example-full-width width-99" appearance="outline">
+        <mat-label>Quick Description</mat-label>
+        <input matInput formControlName="quickDescription">
       </mat-form-field>
+      </p>
+      <p>
+      <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Customer PO</mat-label>
+          <input matInput formControlName="customerPo">
+      </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput class="description-box" value="" formControlName="description"></textarea>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Entry Instructions</mat-label>
+          <textarea matInput class="description-box" value="" formControlName="entryInstruct"></textarea>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Notes</mat-label>
+          <textarea matInput class="description-box" value="" formControlName="notes"></textarea>
+        </mat-form-field>
+      </p>
+      <h4 mat-dialog-title>Inventory Association</h4>
+      <p>
+        <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Customer</mat-label>
+          <mat-select #customerSelect [(value)]="customerSelected" (selectionChange)="customerSelectChange()" formControlName="customerId">
+            <mat-option *ngFor="let customer of customerLoaded"
+                        [value]="customer.id">
+              {{customer.entityName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Location</mat-label>
+          <mat-select #locationSelect [(value)]="locationSelected" (selectionChange)="locationSelectChange()" formControlName="locationId">
+            <mat-option *ngFor="let location of locationLoaded"
+                        [value]="location.id">
+              {{location.entityName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </p>
   </mat-dialog-content>
   <mat-dialog-actions>
@@ -14,4 +61,3 @@
     <button class="mat-raised-button mat-primary" type="submit">Save Work Order</button>
   </mat-dialog-actions>
 </form>
-

@@ -11,7 +11,79 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-tab-group class="work-order-details-tab-group">
-  <mat-tab label="Reserved1">RESERVED</mat-tab>
-  <mat-tab label="Reserved2">RESERVED</mat-tab>
-</mat-tab-group>
+<!--<mat-grid-list cols="4" rowHeight="40px">-->
+<!--  <mat-grid-tile>ID:</mat-grid-tile>-->
+<!--  <mat-grid-tile>Status:</mat-grid-tile>-->
+<!--  <mat-grid-tile>Work Order PO:</mat-grid-tile>-->
+<!--  <mat-grid-tile>Created:</mat-grid-tile>-->
+<!--</mat-grid-list>-->
+
+<div>
+  <div class="row">
+    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h4>Work Order ID</h4>
+    </div>
+    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h4>Work Order Status</h4>
+    </div>
+    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h4>Work Order PO</h4>
+    </div>
+    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h4>Created Date/Time</h4>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="row">
+    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h2>{{entity.id}}</h2>
+    </div>
+    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h2>{{entity.status}}</h2>
+    </div>
+    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h2>{{entity.customerPo}}</h2>
+    </div>
+    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h2>{{entity.createdDate|date:'MMM d, y, h:mm a'}}</h2>
+    </div>
+  </div>
+</div>
+
+<!--<mat-grid-list cols="4" cols-xs="2" rowHeight="80px">-->
+<!--  <mat-grid-tile><h2>{{entity.id}}</h2></mat-grid-tile>-->
+<!--  <mat-grid-tile><h2>{{entity.status}}</h2></mat-grid-tile>-->
+<!--  <mat-grid-tile><h2>{{entity.customerPo}}</h2></mat-grid-tile>-->
+<!--  <mat-grid-tile><h2>{{entity.createdDate|date:'MMM d, y, h:mm a'}}</h2></mat-grid-tile>-->
+<!--</mat-grid-list>-->
+
+<div>
+  <div class="row">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <app-inventory-item-table [passedWorkOrderId]=entity.id></app-inventory-item-table>
+    </div>
+    <hr>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <app-labor-item-table [passedWorkOrderId]=entity.id></app-labor-item-table>
+    </div>
+    <hr>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <app-subcontractor-item-table [passedWorkOrderId]=entity.id></app-subcontractor-item-table>
+    </div>
+    <hr>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <app-tool-equipment-item-table [passedWorkOrderId]=entity.id></app-tool-equipment-item-table>
+    </div>
+  </div>
+
+<!--<mat-tab-group class="work-order-details-tab-group">-->
+<!--  <mat-tab label="Inventory Items">RESERVED</mat-tab>-->
+<!--  <mat-tab label="Labor Items">RESERVED</mat-tab>-->
+<!--  <mat-tab label="Subcontractor Items">RESERVED</mat-tab>-->
+<!--  <mat-tab label="Tool/Equipment Items">RESERVED</mat-tab>-->
+<!--</mat-tab-group>-->
+
+</div>
+

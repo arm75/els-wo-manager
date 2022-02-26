@@ -1,9 +1,13 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { WorkOrderService } from "../../../core/services/work-order.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { WorkOrder } from "../../../core/models/work-order";
+import { MatSelect } from "@angular/material/select";
+import { CustomerService } from "../../../core/services/customer.service";
+import { LocationService } from "../../../core/services/location.service";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-work-order-edit',
@@ -18,12 +22,27 @@ export class WorkOrderEditComponent implements OnInit {
   entityData!: WorkOrder;
   editForm: FormGroup = new FormGroup({});
 
+  @ViewChild('customerSelect')
+  customerSelect!: MatSelect;
+  customerLoaded: any;
+  customerSelected!: string;
+
+  @ViewChild('locationSelect')
+  locationSelect!: MatSelect;
+  locationLoaded: any;
+  locationSelected!: string;
+
   constructor( private matDialogRef: MatDialogRef<WorkOrderEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: WorkOrderService,
+               private customerService: CustomerService,
+               private locationService: LocationService,
                private formBuilder: FormBuilder,
                private matSnackBar: MatSnackBar
-  ) { }
+  ) {
+    this.loadCustomerSelect();
+    this.loadLocationSelect();
+  }
 
   ngOnInit(): void {
 
@@ -37,20 +56,14 @@ export class WorkOrderEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
+            'quickDescription': new FormControl(this.entityData.quickDescription),
             'status': new FormControl(this.entityData.status),
-	          // 'physAddress': new FormControl(this.entityData.physAddress),
-	          // 'physUnit': new FormControl(this.entityData.physUnit),
-	          // 'physCity': new FormControl(this.entityData.physCity),
-	          // 'physState': new FormControl(this.entityData.physState),
-            // 'physZipCode': new FormControl(this.entityData.physZipCode),
-	          // 'billAddress': new FormControl(this.entityData.billAddress),
-	          // 'billUnit': new FormControl(this.entityData.billUnit),
-            // 'billCity': new FormControl(this.entityData.billCity),
-	          // 'billState': new FormControl(this.entityData.billState),
-	          // 'billZipCode': new FormControl(this.entityData.billZipCode),
-	          // 'phoneNumb': new FormControl(this.entityData.phoneNumb),
-	          // 'altPhoneNumb': new FormControl(this.entityData.altPhoneNumb),
-	          // 'emailAddress': new FormControl(this.entityData.emailAddress),
+            'customerPo': new FormControl(this.entityData.customerPo),
+            'customerId': new FormControl(this.entityData.customerId),
+            'locationId': new FormControl(this.entityData.locationId),
+            'description': new FormControl(this.entityData.description),
+            'entryInstruct': new FormControl(this.entityData.entryInstruct),
+            'notes': new FormControl(this.entityData.notes)
           })
           this.dataLoaded = true;
         })
@@ -58,6 +71,53 @@ export class WorkOrderEditComponent implements OnInit {
           console.log(error);
         });
     }
+  }
+
+  customerSelectChange() {
+    // alert(this.customerSelected);
+    this.loadLocationSelect((this.customerSelected));
+    //console.log(this.selected);
+    // alert("You selected" + this.selected);
+  }
+
+  locationSelectChange() {
+    //alert(this.locationSelected);
+  }
+
+  loadCustomerSelect() {
+    this.customerService.getAll().subscribe(
+      data => {
+        console.log(data);
+        this.customerLoaded = data;
+      },error => {
+        console.log(error);
+      }
+    );
+  }
+
+  loadLocationSelect(passedCustomerId?: any) {
+    // if(passedCustomerId) {
+    this.locationService.getAll()
+      .pipe(map(items =>
+        items.filter(item => (item.customerId == passedCustomerId))))
+      .subscribe(
+        data => {
+          console.log(data);
+          this.locationLoaded = data;
+        }, error => {
+          console.log(error);
+        }
+      );
+    // } else {
+    //   this.locationService.getAll().subscribe(
+    //     data => {
+    //       console.log(data);
+    //       this.locationLoaded = data;
+    //     }, error => {
+    //       console.log(error);
+    //     }
+    //   );
+    // }
   }
 
   editEntity() {

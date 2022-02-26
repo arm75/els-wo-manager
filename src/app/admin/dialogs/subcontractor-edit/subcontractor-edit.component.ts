@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { SubcontractorService } from "../../../core/services/subcontractor.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Subcontractor } from "../../../core/models/subcontractor";
+import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
 
 @Component({
   selector: 'app-subcontractor-edit',
@@ -17,6 +18,7 @@ export class SubcontractorEditComponent implements OnInit {
   entityId: null;
   entityData!: Subcontractor;
   editForm: FormGroup = new FormGroup({});
+  usStates = ElsWoManagerConstants.usStatesSelectArray;
 
   constructor( private matDialogRef: MatDialogRef<SubcontractorEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,

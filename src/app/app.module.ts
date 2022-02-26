@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './shared/page-not-found/page-not-found.component';
 import { CoreModule } from "./core/core.module";
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +25,6 @@ import { CoreModule } from "./core/core.module";
     WorkOrderDetailsModule,
     BrowserModule,
     AppRoutingModule,
-
     BrowserAnimationsModule
   ],
   bootstrap: [

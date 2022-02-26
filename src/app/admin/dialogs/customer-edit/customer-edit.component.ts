@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { CustomerService } from "../../../core/services/customer.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Customer } from "../../../core/models/customer";
+import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
 
 @Component({
   selector: 'app-customer-edit',
@@ -17,6 +18,7 @@ export class CustomerEditComponent implements OnInit {
   entityId: null;
   entityData!: Customer;
   editForm: FormGroup = new FormGroup({});
+  usStates = ElsWoManagerConstants.usStatesSelectArray;
 
   constructor( private matDialogRef: MatDialogRef<CustomerEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,

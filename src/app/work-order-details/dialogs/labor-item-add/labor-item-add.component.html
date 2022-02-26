@@ -1,0 +1,43 @@
+<form [formGroup]="addForm" class="example-form" (submit)="addEntity()">
+    <h2 mat-dialog-title>{{formTitle}}</h2>
+    <mat-dialog-content>
+      <h4 mat-dialog-title>Labor Item Details</h4>
+      <p>
+        <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Select Labor Type</mat-label>
+          <mat-select #inventorySelect [(value)]="laborSelected" (selectionChange)="selectChange()" formControlName="laborId">
+            <mat-option *ngFor="let labor of laborLoaded"
+                        [value]="labor.id">
+              {{labor.entityName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Notes</mat-label>
+          <textarea matInput class="description-box" value="" formControlName="notes"></textarea>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Rate per Hour</mat-label>
+          <input matInput formControlName="ratePerHour">
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width width-47" appearance="outline">
+          <mat-label>Hours</mat-label>
+          <input matInput formControlName="hours">
+        </mat-form-field>
+        <mat-form-field class="example-full-width width-47" appearance="outline">
+          <mat-label>Minutes</mat-label>
+          <input matInput formControlName="minutes">
+        </mat-form-field>
+      </p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>
+    <button class="mat-raised-button mat-primary" type="submit">Save Labor Item</button>
+  </mat-dialog-actions>
+</form>

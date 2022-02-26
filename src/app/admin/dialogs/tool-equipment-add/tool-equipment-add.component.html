@@ -3,7 +3,7 @@
     <mat-dialog-content>
     <h4 mat-dialog-title>Tool/Equipment Details</h4>
       <p>
-      <mat-form-field class="example-full-width" appearance="outline">
+      <mat-form-field class="example-full-width width-99" appearance="outline">
         <mat-label>ToolEquipment Name</mat-label>
         <input matInput formControlName="entityName">
       </mat-form-field>
@@ -11,13 +11,13 @@
       <p>
         <mat-form-field class="example-full-width width-99" appearance="outline">
           <mat-label>Description</mat-label>
-          <textarea matInput class="description-box" value="" formControlName="description"></textarea>
+          <textarea matInput class="description-box" formControlName="description"></textarea>
         </mat-form-field>
       </p>
       <p>
-        <mat-form-field class="example-full-width" appearance="outline">
-          <mat-label>Cost per Day</mat-label>
-          <input matInput value="" formControlName="costPerDay">
+        <mat-form-field class="example-full-width width-47" appearance="outline">
+          <mat-label>Price per Day</mat-label>
+          <input matInput prefix="$" mask="0*.00" formControlName="pricePerDay">
         </mat-form-field>
       </p>
   </mat-dialog-content>

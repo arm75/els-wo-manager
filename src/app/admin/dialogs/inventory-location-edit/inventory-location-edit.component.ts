@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { InventoryLocationService } from "../../../core/services/inventory-location.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { InventoryLocation } from "../../../core/models/inventory-location";
+import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
 
 @Component({
   selector: 'app-inventory-location-edit',
@@ -17,6 +18,7 @@ export class InventoryLocationEditComponent implements OnInit {
   entityId: null;
   entityData!: InventoryLocation;
   editForm: FormGroup = new FormGroup({});
+  usStates = ElsWoManagerConstants.usStatesSelectArray;
 
   constructor( private matDialogRef: MatDialogRef<InventoryLocationEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,

@@ -1,4 +1,4 @@
-<div class="container table-toolbar">
+<div class="table-toolbar">
   <span>
     <mat-form-field class="table-search-box" appearance="outline">
       <input matInput type="text" class="table-filer-box" (keyup)="applyFilter($event)" placeholder="Search">
@@ -20,6 +20,21 @@
     <ng-container matColumnDef="entityName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Name">Name</th>
       <td mat-cell *matCellDef="let element">{{element.entityName}}</td>
+    </ng-container>
+    <!-- phoneNumb -->
+    <ng-container matColumnDef="phoneNumb">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Phone NUmber">Phone Number</th>
+      <td mat-cell *matCellDef="let element">{{element.phoneNumb}}</td>
+    </ng-container>
+    <!-- altPhoneNumb -->
+    <ng-container matColumnDef="altPhoneNumb">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Alt Phone Number">Alt Phone Number</th>
+      <td mat-cell *matCellDef="let element">{{element.altPhoneNumb}}</td>
+    </ng-container>
+    <!-- emailAddress -->
+    <ng-container matColumnDef="emailAddress">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Email Address">Email Address</th>
+      <td mat-cell *matCellDef="let element">{{element.emailAddress}}</td>
     </ng-container>
     <!-- actions -->
     <ng-container matColumnDef="actions">

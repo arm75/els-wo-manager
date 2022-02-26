@@ -3,6 +3,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { CustomerService } from "../../../core/services/customer.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
 
 @Component({
   selector: 'app-customer-add',
@@ -12,8 +13,8 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 export class CustomerAddComponent implements OnInit {
 
   formTitle: string = "Add Customer";
-
   addForm: FormGroup = new FormGroup({});
+  usStates = ElsWoManagerConstants.usStatesSelectArray;
 
   constructor( private matDialogRef: MatDialogRef<CustomerAddComponent>,
                private entityService: CustomerService,

@@ -1,17 +1,20 @@
 export interface User {
-
   id: number;
-  userName: string;
+  username: string;
+  password: string;
+  roles: string;
+  authorities: string;
+  accountNonLocked: boolean;
+  active: boolean;
   userGroupId: number;
   firstName: string;
-  middleInit: string;
   lastName: string;
   phoneNumb: string;
-  emailAddr: string;
-  fontSize: number;
-  themeColor: string;
-  darkTheme: boolean;
+  altPhoneNumb: string;
+  emailAddress: string;
+  // fontSize: number;
+  // themeColor: string;
+  // darkTheme: boolean;
   createdDate: string;
   updatedDate: string;
-
 }

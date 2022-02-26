@@ -17,7 +17,7 @@ import { InventoryDeleteComponent } from "../../dialogs/inventory-delete/invento
 })
 export class InventoryTableComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'entityName', 'actions'];
+  displayedColumns: string[] = ['id', 'entityName', 'inventoryGroup', 'inventoryLocation', 'qtyInStock', 'unitCost', 'unitPrice', 'actions'];
 
   dataSource: any;
 
@@ -41,7 +41,7 @@ export class InventoryTableComponent implements OnInit, AfterViewInit {
   ngOnInit() { }
 
   ngAfterViewInit() {
-    this.buildTable(); 
+    this.buildTable();
   }
 
  buildTable() {
@@ -62,6 +62,8 @@ export class InventoryTableComponent implements OnInit, AfterViewInit {
     const addDialogConfig = new MatDialogConfig();
     addDialogConfig.disableClose = true;
     addDialogConfig.autoFocus = true;
+    addDialogConfig.width = "40%";
+    addDialogConfig.position = { top:  '0' };
     const addDialogRef = this.dialog.open(InventoryAddComponent, addDialogConfig);
     addDialogRef.afterClosed().subscribe(addData => {
       this.buildTable();
@@ -73,6 +75,8 @@ export class InventoryTableComponent implements OnInit, AfterViewInit {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
     editDialogConfig.autoFocus = true;
+    editDialogConfig.width = "40%";
+    editDialogConfig.position = { top:  '0' };
     editDialogConfig.data = { entityId: _id };
     const editDialogRef = this.dialog.open(InventoryEditComponent, editDialogConfig);
     editDialogRef.afterClosed().subscribe(editData => {
@@ -85,6 +89,8 @@ export class InventoryTableComponent implements OnInit, AfterViewInit {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
     deleteDialogConfig.autoFocus = true;
+    deleteDialogConfig.width = "25%";
+    deleteDialogConfig.position = { top:  '0' };
     deleteDialogConfig.data = { entityId: _id };
     const deleteDialogRef = this.dialog.open(InventoryDeleteComponent, deleteDialogConfig);
     deleteDialogRef.afterClosed().subscribe(deleteData => {

@@ -3,29 +3,52 @@
     <mat-dialog-content>
     <h4 mat-dialog-title>Inventory Details</h4>
       <p>
-      <mat-form-field class="example-full-width" appearance="outline">
+      <mat-form-field class="example-full-width width-99" appearance="outline">
         <mat-label>Inventory Name</mat-label>
-        <input matInput formControlName="entityName">
+        <input matInput autocomplete="off" formControlName="entityName">
       </mat-form-field>
       </p>
       <p>
         <mat-form-field class="example-full-width width-99" appearance="outline">
           <mat-label>Description</mat-label>
-          <textarea matInput class="description-box" value="" formControlName="description"></textarea>
+          <textarea matInput autocomplete="off" class="description-box" formControlName="description"></textarea>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Qty in Stock</mat-label>
+          <input matInput autocomplete="off" formControlName="qtyInStock">
+        </mat-form-field>
+        <mat-form-field class="example-full-width" appearance="outline">
           <mat-label>Unit Cost</mat-label>
-          <input matInput value="" formControlName="unitCost">
+          <input matInput autocomplete="off" prefix="$" mask="0*.00" formControlName="unitCost">
         </mat-form-field>
         <mat-form-field class="example-full-width" appearance="outline">
           <mat-label>Unit Price</mat-label>
-          <input matInput value="" formControlName="unitPrice">
+          <input matInput autocomplete="off" prefix="$" mask="0*.00" formControlName="unitPrice">
         </mat-form-field>
-        <mat-form-field class="example-full-width" appearance="outline">
-          <mat-label>Qty in Stock</mat-label>
-          <input matInput value="" formControlName="qtyInStock">
+      </p>
+      <h4 mat-dialog-title>Inventory Association</h4>
+      <p>
+        <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Inventory Group</mat-label>
+          <mat-select #inventoryGroupSelect [(value)]="inventoryGroupSelected" (selectionChange)="selectChange()" formControlName="inventoryGroupId">
+            <mat-option *ngFor="let cust of inventoryGroupLoaded"
+                        [value]="cust.id">
+              {{cust.entityName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Inventory Location</mat-label>
+          <mat-select #inventoryLocationSelect [(value)]="inventoryLocationSelected" (selectionChange)="selectChange()" formControlName="inventoryLocationId">
+            <mat-option *ngFor="let cust of inventoryLocationLoaded"
+                        [value]="cust.id">
+              {{cust.entityName}}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </p>
   </mat-dialog-content>

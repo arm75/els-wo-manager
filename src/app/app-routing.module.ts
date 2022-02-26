@@ -7,7 +7,7 @@ import { PageNotFoundComponent } from "./shared/page-not-found/page-not-found.co
 
 const routes: Routes = [
   { path: 'workOrders', component: WorkOrdersComponent },
-  { path: 'workOrderDetails', component: WorkOrderDetailsComponent },
+  { path: 'workOrderDetails/:passedId', component: WorkOrderDetailsComponent },
   { path: '', redirectTo: '/workOrders', pathMatch: 'full' },
   //{ path: '', redirectTo: '/admin', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },

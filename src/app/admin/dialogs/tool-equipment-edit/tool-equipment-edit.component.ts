@@ -39,7 +39,7 @@ export class ToolEquipmentEditComponent implements OnInit {
             'id': new FormControl(this.entityData.id),
 	          'entityName': new FormControl(this.entityData.entityName),
 	          'description': new FormControl(this.entityData.description),
-	          'costPerDay': new FormControl(this.entityData.costPerDay)
+	          'pricePerDay': new FormControl(this.entityData.pricePerDay)
           })
           this.dataLoaded = true;
         })

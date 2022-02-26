@@ -2,7 +2,7 @@ export interface ToolEquipment {
   id: number;
   entityName: string;
   description: string;
-  costPerDay: number;
+  pricePerDay: number;
   createdDate: string;
   updatedDate: string;
 }

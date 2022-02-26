@@ -1,4 +1,4 @@
-<div class="container table-toolbar">
+<div class="table-toolbar">
   <span>
     <mat-form-field class="table-search-box" appearance="outline">
       <input matInput type="text" class="table-filer-box" (keyup)="applyFilter($event)" placeholder="Search">
@@ -20,6 +20,11 @@
     <ng-container matColumnDef="entityName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Name">Name</th>
       <td mat-cell *matCellDef="let element">{{element.entityName}}</td>
+    </ng-container>
+    <!-- description -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Description">Description</th>
+      <td mat-cell *matCellDef="let element">{{element.description}}</td>
     </ng-container>
     <!-- actions -->
     <ng-container matColumnDef="actions">

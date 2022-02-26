@@ -1,40 +1,37 @@
+<div class="table-toolbar">
+  <span>
+    <mat-form-field class="table-search-box" appearance="outline">
+      <input matInput type="text" class="table-filer-box" (keyup)="applyFilter($event)" placeholder="Search">
+    </mat-form-field>
+  </span>
+  <span class="example-fill-remaining-space"></span>
+  <span>
+    <button class="mat-flat-button mat-primary user-table-add-button" (click)="openAddDialog()">Add User</button>
+  </span>
+</div>
 <div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
-
-    <!-- Id Column -->
+  <table #entityTable mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
+    <!-- id -->
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Id"> Id </th>
-      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Id">Id</th>
+      <td mat-cell *matCellDef="let element">{{element.id}}</td>
     </ng-container>
-
-    <!-- userName Column -->
-    <ng-container matColumnDef="userName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by User Name"> User Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
+    <!-- name -->
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Username">Username</th>
+      <td mat-cell *matCellDef="let element">{{element.username}}</td>
     </ng-container>
-
-    <!-- userGroupId Column -->
-    <ng-container matColumnDef="userGroupId">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by User Group"> User Group </th>
-      <td mat-cell *matCellDef="let element"> {{element.userGroupId}} </td>
+    <!-- actions -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button class="user-table-edit-button mat-icon-button" (click)="openEditDialog(element.id)"><mat-icon color="primary">edit</mat-icon></button>
+        <button mat-button class="user-table-delete-button mat-icon-button" (click)="openDeleteDialog(element.id)"><mat-icon color="primary">delete</mat-icon></button>
+      </td>
     </ng-container>
-
-    <!-- firstName Column -->
-    <ng-container matColumnDef="firstName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by First Name"> First Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
-    </ng-container>
-
-    <!-- lastName Column -->
-    <ng-container matColumnDef="lastName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Last Name"> Last Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
-    </ng-container>
-
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-
-  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Select # of pages">
-  </mat-paginator>
+  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Pages"></mat-paginator>
 </div>
+

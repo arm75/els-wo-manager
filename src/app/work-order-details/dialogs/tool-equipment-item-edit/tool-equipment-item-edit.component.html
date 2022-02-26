@@ -1,0 +1,40 @@
+<div *ngIf="dataLoaded">
+<form [formGroup]="editForm" class="example-form" (submit)="editEntity()">
+  <h2 mat-dialog-title>{{formTitle}}: {{entityId}}</h2>
+  <mat-dialog-content>
+    <h4 mat-dialog-title>Tool/Equipment Item Details</h4>
+    <p>
+      <mat-form-field class="example-full-width width-99" appearance="outline">
+        <mat-label>Select Tool/Equipment</mat-label>
+        <mat-select #toolEquipmentSelect [(value)]="toolEquipmentSelected" (selectionChange)="selectChange()" formControlName="toolEquipmentId">
+          <mat-option *ngFor="let toolequip of toolEquipmentLoaded"
+                      [value]="toolequip.id">
+            {{toolequip.entityName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="example-full-width width-99" appearance="outline">
+        <mat-label>Notes</mat-label>
+        <textarea matInput class="description-box" value="" formControlName="notes"></textarea>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="example-full-width width-47" appearance="outline">
+        <mat-label>Price per Day</mat-label>
+        <input matInput formControlName="pricePerDay">
+      </mat-form-field>
+      <mat-form-field class="example-full-width width-47" appearance="outline">
+        <mat-label>Days</mat-label>
+        <input matInput formControlName="days">
+      </mat-form-field>
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>
+    <button class="mat-raised-button mat-primary" type="submit">Save Tool/Equipment Item</button>
+  </mat-dialog-actions>
+</form>
+</div>
+

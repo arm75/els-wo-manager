@@ -26,7 +26,7 @@ export class ToolEquipmentAddComponent implements OnInit {
     this.addForm = this.formBuilder.group({
       'entityName': new FormControl(''),
       'description': new FormControl(''),
-      'costPerDay': new FormControl('')
+      'pricePerDay': new FormControl('')
     });
   }
 
