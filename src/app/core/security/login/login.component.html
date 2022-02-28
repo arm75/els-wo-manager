@@ -1,17 +1,25 @@
-<mat-card>
-  <mat-card-content>
-    <form [formGroup]="loginFormGroup" (ngSubmit)="onLogin(loginFormGroup.value)">
-      <h2>Log In</h2>
-<!--      <mat-error *ngIf="loginInvalid">The username and password were not recognised</mat-error>-->
-      <mat-form-field class="full-width-input">
-        <input matInput placeholder="Username" formControlName="username" required>
-        <mat-error>Please provide a valid Username</mat-error>
-      </mat-form-field>
-      <mat-form-field class="full-width-input">
-        <input matInput type="password" placeholder="Password" formControlName="password" required>
-        <mat-error>Please provide a valid Password</mat-error>
-      </mat-form-field>
-      <button mat-raised-button color="primary" type="submit">Login</button>
-    </form>
-  </mat-card-content>
-</mat-card>
+<div class="outer">
+<div class="jumbotron vertical-center">
+  <div class="inner-div">
+    <mat-card>
+      <mat-card-content>
+        <form [formGroup]="loginFormGroup" (ngSubmit)="onLogin(loginFormGroup.value)">
+          <h4>ELS WORK ORDER MANAGER</h4>
+          <h2 class="els-login-text">Login</h2>
+          <mat-form-field class="full-width-input" appearance="outline">
+            <input class="els-input" matInput placeholder="Username" formControlName="username" required>
+            <mat-error>Please provide a valid Username</mat-error>
+          </mat-form-field>
+          <mat-form-field class="full-width-input" appearance="outline">
+            <input class="els-input" matInput type="password" placeholder="Password" formControlName="password" required>
+            <mat-error>Please provide a valid Password</mat-error>
+          </mat-form-field>
+          <button class="els-button" mat-raised-button color="primary" type="submit">Login</button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+</div>
+
+

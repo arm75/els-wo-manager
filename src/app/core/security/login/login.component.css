@@ -1,0 +1,39 @@
+.outer {
+  height:100%;
+  width: 100%;
+  background-color: slategray;
+}
+
+.inner-div {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
+}
+
+input.els-input {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+button.els-button {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+mat-form-field {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.els-login-text {
+  align: center;
+  text-align: center;
+  -ms-flex-align: center;
+}
