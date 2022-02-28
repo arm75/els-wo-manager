@@ -52,6 +52,12 @@ import { ToolEquipmentDeleteComponent } from './dialogs/tool-equipment-delete/to
 import { UserAddComponent } from './dialogs/user-add/user-add.component';
 import { UserEditComponent } from './dialogs/user-edit/user-edit.component';
 import { UserDeleteComponent } from './dialogs/user-delete/user-delete.component';
+import {AppModule} from "../app.module";
+import {AuthGuard} from "../core/security/auth.guard";
+import {AuthenticationService} from "../core/security/authentication.service";
+import {UserService} from "../core/services/user.service";
+import {HTTP_INTERCEPTORS} from "@angular/common/http";
+import {AuthInterceptor} from "../core/security/auth.interceptor";
 // table components array
 const AdminModuleTableComponents = [
   CustomerTableComponent,
@@ -124,6 +130,10 @@ const maskConfig: Partial<IConfig> = {
     NgxMaskModule.forRoot(maskConfig),
   ],
   providers:[
+    AuthInterceptor,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    AuthenticationService,
+    UserService,
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } }
   ],
   // entryComponents: [

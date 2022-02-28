@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from "@angular/common/http";
 import { ElsWoManagerConstants } from "./els-wo-manager-constants";
-
+// import { environment } from "../../environments/environment";
 // Model Services
 import { CustomerService } from "./services/customer.service";
 import { InventoryService } from "./services/inventory.service";
@@ -18,7 +18,10 @@ import { ToolEquipmentItemService } from "./services/tool-equipment-item.service
 import { UserService } from "./services/user.service";
 import { UserGroupService } from "./services/user-group.service";
 import { WorkOrderService } from "./services/work-order.service";
-
+import { LoginComponent } from './security/login/login.component';
+import { MaterialKitModule } from "../shared/material-kit/material-kit.module";
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from "@angular/material/snack-bar";
+import { ReactiveFormsModule } from "@angular/forms";
 // model services providers array
 const ModelServiceProviders = [
   CustomerService,
@@ -39,15 +42,21 @@ const ModelServiceProviders = [
 ];
 
 @NgModule({
-  declarations: []
+  declarations: [
+    LoginComponent
+  ]
   ,
   imports: [
     HttpClientModule,
+    MaterialKitModule,
+    ReactiveFormsModule,
   ],
   providers: [
     ElsWoManagerConstants,
     ModelServiceProviders,
-    HttpClientModule
+    HttpClientModule,
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } }
+
   ],
   exports: [
   ],

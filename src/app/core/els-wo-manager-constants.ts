@@ -1,5 +1,10 @@
 export class ElsWoManagerConstants {
 
+  public static userRolesSelectArray: any = [
+    { value:'ROLE_ADMIN', name:'Admin' },
+    { value:'ROLE_USER', name:'User' }
+  ];
+
   public static usStatesSelectArray: any = [
     { value:'AL', name:'Alabama' },
     { value:'AK', name:'Alaska' },

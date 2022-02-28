@@ -3,13 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
   private baseUrl: string = "http://127.0.0.1:8090/user";
+  private stringUsers!: any;
 
   constructor( private http: HttpClient ) { }
 
@@ -32,10 +32,24 @@ export class UserService {
   delete(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrl}/delete/${id}`);
   }
-   
+
+  addUsersToLocalStorage(users: User[]): void {
+    localStorage.setItem('users', JSON.stringify(users));
+  }
+
+  getUsersFromLocalStorage(): User[] | null {
+    if(localStorage.getItem('users')) {
+      this.stringUsers = localStorage.getItem('users');
+      // console.log(this.stringUsers);
+      return JSON.parse(this.stringUsers);
+    } else {
+    return null;
+    }
+  }
+
   // deleteAll(): Observable<any> {
   //   return this.http.delete(this.baseUrl);
   // }
   //
 }
-  
+

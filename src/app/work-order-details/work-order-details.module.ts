@@ -29,6 +29,11 @@ import { SubcontractorItemDeleteComponent } from './dialogs/subcontractor-item-d
 import { ToolEquipmentItemAddComponent } from './dialogs/tool-equipment-item-add/tool-equipment-item-add.component';
 import { ToolEquipmentItemEditComponent } from './dialogs/tool-equipment-item-edit/tool-equipment-item-edit.component';
 import { ToolEquipmentItemDeleteComponent } from './dialogs/tool-equipment-item-delete/tool-equipment-item-delete.component';
+import {AuthGuard} from "../core/security/auth.guard";
+import {AuthenticationService} from "../core/security/authentication.service";
+import {UserService} from "../core/services/user.service";
+import {HTTP_INTERCEPTORS} from "@angular/common/http";
+import {AuthInterceptor} from "../core/security/auth.interceptor";
 
 // table components array
 const WorkOrderDetailsModuleTableComponents = [
@@ -68,6 +73,10 @@ const WorkOrderDetailsModuleDialogComponents = [
     RouterModule,
   ],
   providers:[
+    AuthInterceptor,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    AuthenticationService,
+    UserService,
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } }
   ],
 })
