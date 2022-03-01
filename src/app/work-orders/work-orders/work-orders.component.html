@@ -1,17 +1,28 @@
-<mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <span>ELS Work Order Manager  ::  Work Orders</span>
-  </mat-toolbar-row>
-  <mat-toolbar-row>
-    <ul>
-      <li><a routerLink="/workOrders">workOrders</a></li>
-      <li><a routerLink="/workOrderDetails">workOrderDetails</a></li>
-      <li><a routerLink="/admin">admin</a></li>
-    </ul>
-  </mat-toolbar-row>
-</mat-toolbar>
+<div>
+  <div class="row top-header">
+    <div class="app-title-box col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+      <h1><a href="/workOrders">ELS Work Order Manager</a> &nbsp;&nbsp; | &nbsp;&nbsp; Work Orders</h1>
+    </div>
+    <div class="app-icon-menu-box col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+      <a href="/workOrders"><span><mat-icon aria-hidden="false" matTooltip="Home" aria-label="Home">home</mat-icon></span></a>
+      <a href="/admin"><span><mat-icon aria-hidden="false" matTooltip="Admin" aria-label="Admin">settings</mat-icon></span></a>
+      <span><mat-icon aria-hidden="false" matTooltip="Logout" aria-label="Logout">logout</mat-icon></span>
+    </div>
+  </div>
 
-<mat-tab-group class="work-orders-tab-group">
-  <mat-tab label="Reserved1">RESERVED</mat-tab>
-  <mat-tab label="Reserved2">RESERVED</mat-tab>
-</mat-tab-group>
+  <div class="row">
+    <mat-tab-group mat-stretch-tabs class="work-orders-tab-group">
+      <mat-tab label="Work Orders">RESERVED</mat-tab>
+      <mat-tab label="Tool/Equipment Return">RESERVED</mat-tab>
+    </mat-tab-group>
+  </div>
+
+</div>
+
+<div class="bottom fixed-bottom">
+  <div class="row">
+    <div class="copyright-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <p>ELS Work Order Manager - Copyright 2022 - All rights reserved.</p>
+    </div>
+  </div>
+</div>

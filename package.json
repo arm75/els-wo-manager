@@ -22,6 +22,7 @@
     "@angular/router": "~12.2.0",
     "@auth0/angular-jwt": "^5.0.2",
     "angular-forms-input-masks": "^1.0.3",
+    "bootstrap-icons": "^1.8.1",
     "ngx-mask": "^13.1.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",

@@ -1,89 +1,122 @@
-<mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <span>ELS Work Order Manager  ::  Work Order Details</span>
-  </mat-toolbar-row>
-  <mat-toolbar-row>
-    <ul>
-      <li><a routerLink="/workOrders">workOrders</a></li>
-      <li><a routerLink="/workOrderDetails">workOrderDetails</a></li>
-      <li><a routerLink="/admin">admin</a></li>
-    </ul>
-  </mat-toolbar-row>
-</mat-toolbar>
-
-<!--<mat-grid-list cols="4" rowHeight="40px">-->
-<!--  <mat-grid-tile>ID:</mat-grid-tile>-->
-<!--  <mat-grid-tile>Status:</mat-grid-tile>-->
-<!--  <mat-grid-tile>Work Order PO:</mat-grid-tile>-->
-<!--  <mat-grid-tile>Created:</mat-grid-tile>-->
-<!--</mat-grid-list>-->
-
 <div>
+  <div class="row top-header">
+    <div class="app-title-box col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+      <h1><a href="/workOrders">ELS Work Order Manager</a> &nbsp;&nbsp; | &nbsp;&nbsp; Work Order Details</h1>
+    </div>
+    <div class="app-icon-menu-box col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+      <a href="/workOrders"><span><mat-icon aria-hidden="false" matTooltip="Home" aria-label="Home">home</mat-icon></span></a>
+      <a href="/admin"><span><mat-icon aria-hidden="false" matTooltip="Admin" aria-label="Admin">settings</mat-icon></span></a>
+      <span><mat-icon aria-hidden="false" matTooltip="Logout" aria-label="Logout">logout</mat-icon></span>
+    </div>
+  </div>
+
   <div class="row">
-    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+    <div class="wo-info-field-title col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
       <h4>Work Order ID</h4>
     </div>
-    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+    <div class="wo-info-field-title col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
       <h4>Work Order Status</h4>
     </div>
-    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+    <div class="wo-info-field-title col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h4>Created Date/Time</h4>
+    </div>
+    <div class="wo-info-field-title col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h4>Updated Date/Time</h4>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="wo-info-field-content col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h3>{{entity.id}}</h3>
+    </div>
+    <div class="wo-info-field-content col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h3>{{entity.status}}</h3>
+    </div>
+    <div class="wo-info-field-content col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h3>{{entity.createdDate|date:'MMM d, y, h:mm a'}}</h3>
+    </div>
+    <div class="wo-info-field-content col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h3>{{entity.updatedDate|date:'MMM d, y, h:mm a'}}</h3>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="wo-info-field-title col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+      <h4>Customer</h4>
+    </div>
+    <div class="wo-info-field-title col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+      <h4>Location</h4>
+    </div>
+    <div class="wo-info-field-title col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
       <h4>Work Order PO</h4>
     </div>
-    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+  </div>
+
+  <div class="row">
+    <div class="wo-info-field-content col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+      <h3>{{entity.customer.entityName}}</h3>
+    </div>
+    <div class="wo-info-field-content col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+      <h3>{{entity.location.entityName}}</h3>
+    </div>
+    <div class="wo-info-field-content col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+      <h3>{{entity.customerPo}}</h3>
+    </div>
+  </div>
+
+<div class="row">
+<mat-tab-group mat-stretch-tabs class="work-order-details-tab-group">
+  <mat-tab label="Inventory Items"><app-inventory-item-table [passedWorkOrderId]=entity.id></app-inventory-item-table></mat-tab>
+  <mat-tab label="Labor Items"><app-labor-item-table [passedWorkOrderId]=entity.id></app-labor-item-table></mat-tab>
+  <mat-tab label="Subcontractor Items"><app-subcontractor-item-table [passedWorkOrderId]=entity.id></app-subcontractor-item-table></mat-tab>
+  <mat-tab label="Tool/Equipment Items"><app-tool-equipment-item-table [passedWorkOrderId]=entity.id></app-tool-equipment-item-table></mat-tab>
+</mat-tab-group>
+</div>
+
+</div>
+
+<div class="bottom fixed-bottom">
+
+  <div class="row">
+    <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <div><button class="mat-flat-button mat-primary">Save Work Order</button></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="wo-info-field-title col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h4>Work Order ID</h4>
+    </div>
+    <div class="wo-info-field-title col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h4>Work Order Status</h4>
+    </div>
+    <div class="wo-info-field-title col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h4>Work Order PO</h4>
+    </div>
+    <div class="wo-info-field-title col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
       <h4>Created Date/Time</h4>
     </div>
   </div>
-</div>
 
-<div>
   <div class="row">
-    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
-      <h2>{{entity.id}}</h2>
+    <div class="wo-info-field-content col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h3>{{entity.id}}</h3>
     </div>
-    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
-      <h2>{{entity.status}}</h2>
+    <div class="wo-info-field-content col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h3>{{entity.status}}</h3>
     </div>
-    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
-      <h2>{{entity.customerPo}}</h2>
+    <div class="wo-info-field-content col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h3>{{entity.customerPo}}</h3>
     </div>
-    <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
-      <h2>{{entity.createdDate|date:'MMM d, y, h:mm a'}}</h2>
-    </div>
-  </div>
-</div>
-
-<!--<mat-grid-list cols="4" cols-xs="2" rowHeight="80px">-->
-<!--  <mat-grid-tile><h2>{{entity.id}}</h2></mat-grid-tile>-->
-<!--  <mat-grid-tile><h2>{{entity.status}}</h2></mat-grid-tile>-->
-<!--  <mat-grid-tile><h2>{{entity.customerPo}}</h2></mat-grid-tile>-->
-<!--  <mat-grid-tile><h2>{{entity.createdDate|date:'MMM d, y, h:mm a'}}</h2></mat-grid-tile>-->
-<!--</mat-grid-list>-->
-
-<div>
-  <div class="row">
-    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-      <app-inventory-item-table [passedWorkOrderId]=entity.id></app-inventory-item-table>
-    </div>
-    <hr>
-    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-      <app-labor-item-table [passedWorkOrderId]=entity.id></app-labor-item-table>
-    </div>
-    <hr>
-    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-      <app-subcontractor-item-table [passedWorkOrderId]=entity.id></app-subcontractor-item-table>
-    </div>
-    <hr>
-    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-      <app-tool-equipment-item-table [passedWorkOrderId]=entity.id></app-tool-equipment-item-table>
+    <div class="wo-info-field-content col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
+      <h3>{{entity.createdDate|date:'MMM d, y, h:mm a'}}</h3>
     </div>
   </div>
 
-<!--<mat-tab-group class="work-order-details-tab-group">-->
-<!--  <mat-tab label="Inventory Items">RESERVED</mat-tab>-->
-<!--  <mat-tab label="Labor Items">RESERVED</mat-tab>-->
-<!--  <mat-tab label="Subcontractor Items">RESERVED</mat-tab>-->
-<!--  <mat-tab label="Tool/Equipment Items">RESERVED</mat-tab>-->
-<!--</mat-tab-group>-->
+  <div class="row">
+    <div class="copyright-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <p>ELS Work Order Manager - Copyright 2022 - All rights reserved.</p>
+    </div>
+  </div>
 
 </div>
-
