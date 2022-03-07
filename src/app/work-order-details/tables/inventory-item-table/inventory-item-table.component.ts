@@ -1,4 +1,4 @@
-import {Component, OnInit, AfterViewInit, ViewChild, Input} from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, Input, EventEmitter, Output } from '@angular/core';
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
@@ -9,7 +9,7 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { InventoryItemAddComponent } from "../../dialogs/inventory-item-add/inventory-item-add.component";
 import { InventoryItemEditComponent } from "../../dialogs/inventory-item-edit/inventory-item-edit.component";
 import { InventoryItemDeleteComponent } from "../../dialogs/inventory-item-delete/inventory-item-delete.component";
-import {map} from "rxjs/operators";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: 'app-inventory-item-table',
@@ -21,7 +21,12 @@ export class InventoryItemTableComponent implements OnInit, AfterViewInit {
   @Input()
   passedWorkOrderId: any;
 
-  displayedColumns: string[] = ['inventory', 'notes', 'createdDate', 'updatedDate', 'unitPrice', 'qty', 'totalPrice', 'actions'];
+  @Output()
+  totalChangedEvent: EventEmitter<number> = new EventEmitter();
+
+  componentTotal: number = 0;
+
+  displayedColumns: string[] = ['createdDate', 'inventory', 'notes', 'unitPrice', 'qty', 'totalPrice', 'actions'];
   dataSource: any;
 
   @ViewChild(MatTable)
@@ -38,7 +43,7 @@ export class InventoryItemTableComponent implements OnInit, AfterViewInit {
     private _liveAnnouncer: LiveAnnouncer,
     private dialog: MatDialog
   ) {
-    this.buildTable();
+    // this.buildTable();
   }
 
   ngOnInit() { }
@@ -48,15 +53,19 @@ export class InventoryItemTableComponent implements OnInit, AfterViewInit {
   }
 
  buildTable() {
-    this.entityService.getAll()
-      .pipe(map(items =>
-        items.filter(item => (item.workOrderId == this.passedWorkOrderId))))
-      .subscribe(data => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-    })
-  }
+   this.componentTotal = 0;
+   this.entityService.getAll()
+     .pipe(map(items =>
+       items.filter(item => (item.workOrderId == this.passedWorkOrderId))))
+     .subscribe(data => {
+       data.forEach(a => this.componentTotal += a.totalPrice);
+       console.log("total inv price: " + this.componentTotal);
+       this.totalChangedEvent.emit(this.componentTotal);
+       this.dataSource = new MatTableDataSource(data);
+       this.dataSource.sort = this.sort;
+       this.dataSource.paginator = this.paginator;
+   })
+ }
 
   applyFilter(event: Event) {
     const filterTarget = (event.target as HTMLInputElement).value;

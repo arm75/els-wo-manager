@@ -1,4 +1,4 @@
-import { Input, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -29,11 +29,13 @@ import { SubcontractorItemDeleteComponent } from './dialogs/subcontractor-item-d
 import { ToolEquipmentItemAddComponent } from './dialogs/tool-equipment-item-add/tool-equipment-item-add.component';
 import { ToolEquipmentItemEditComponent } from './dialogs/tool-equipment-item-edit/tool-equipment-item-edit.component';
 import { ToolEquipmentItemDeleteComponent } from './dialogs/tool-equipment-item-delete/tool-equipment-item-delete.component';
-import {AuthGuard} from "../core/security/auth.guard";
-import {AuthenticationService} from "../core/security/authentication.service";
-import {UserService} from "../core/services/user.service";
-import {HTTP_INTERCEPTORS} from "@angular/common/http";
-import {AuthInterceptor} from "../core/security/auth.interceptor";
+
+import { AuthenticationService } from "../core/security/authentication.service";
+import { UserService } from "../core/services/user.service";
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { AuthInterceptor } from "../core/security/auth.interceptor";
+import { WorkOrderEditTabFormComponent } from './components/work-order-edit-tab-form/work-order-edit-tab-form.component';
+import {NgxMaskModule} from "ngx-mask";
 
 // table components array
 const WorkOrderDetailsModuleTableComponents = [
@@ -63,21 +65,25 @@ const WorkOrderDetailsModuleDialogComponents = [
   declarations: [
     WorkOrderDetailsComponent,
     WorkOrderDetailsModuleTableComponents,
-    WorkOrderDetailsModuleDialogComponents
+    WorkOrderDetailsModuleDialogComponents,
+    WorkOrderEditTabFormComponent
   ],
-  imports: [
-    CommonModule,
-    MaterialKitModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule,
-  ],
+    imports: [
+        CommonModule,
+        MaterialKitModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule,
+        NgxMaskModule,
+    ],
   providers:[
     AuthInterceptor,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthenticationService,
     UserService,
-    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } }
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 3000, verticalPosition: 'bottom', horizontalPosition: 'center', panelClass: 'els-custom-snackbar' } }
   ],
 })
 export class WorkOrderDetailsModule { }
+// verticalPosition:  Allowed values are  'top' | 'bottom'
+// horizontalPosition: Allowed values are 'start' | 'center' | 'end' | 'left' | 'right'

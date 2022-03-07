@@ -21,6 +21,21 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Username">Username</th>
       <td mat-cell *matCellDef="let element">{{element.username}}</td>
     </ng-container>
+    <!-- firstName -->
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by First Name">First Name</th>
+      <td mat-cell *matCellDef="let element">{{element.firstName}}</td>
+    </ng-container>
+    <!-- lastName -->
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Last Name">Last Name</th>
+      <td mat-cell *matCellDef="let element">{{element.lastName}}</td>
+    </ng-container>
+    <!-- role -->
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Role">Role</th>
+      <td mat-cell *matCellDef="let element">{{element.role}}</td>
+    </ng-container>
     <!-- actions -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
@@ -34,4 +49,3 @@
   </table>
   <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Pages"></mat-paginator>
 </div>
-

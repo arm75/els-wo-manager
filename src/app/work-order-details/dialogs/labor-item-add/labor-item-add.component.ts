@@ -5,6 +5,8 @@ import { LaborItemService } from "../../../core/services/labor-item.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSelect } from "@angular/material/select";
 import { LaborService } from "../../../core/services/labor.service";
+import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
+import {finalize} from "rxjs/operators";
 
 @Component({
   selector: 'app-labor-item-add',
@@ -16,11 +18,15 @@ export class LaborItemAddComponent implements OnInit {
   formTitle: string = "Add Labor Item";
   woId: null;
   addForm: FormGroup = new FormGroup({});
+  hours = ElsWoManagerConstants.hoursSelectArray;
+  minutes = ElsWoManagerConstants.minutesSelectArray;
 
   @ViewChild('laborSelect')
   laborSelect!: MatSelect;
+
   laborLoaded: any;
   laborSelected!: string;
+  laborSelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<LaborItemAddComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
@@ -46,8 +52,17 @@ export class LaborItemAddComponent implements OnInit {
   }
 
   selectChange() {
-    //console.log(this.selected);
-    // alert("You selected" + this.selected);
+    this.laborService.get(this.laborSelected)
+      .pipe(finalize(() => {
+        this.addForm.controls['notes'].setValue(this.laborSelectedLoaded.description);
+        this.addForm.controls['ratePerHour'].setValue(this.laborSelectedLoaded.ratePerHour);
+      }))
+      .subscribe(
+        data => {
+          this.laborSelectedLoaded = data;
+        }, error => {
+          alert("there was an error");
+        });
   }
 
   loadLaborSelect() {

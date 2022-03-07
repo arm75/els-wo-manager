@@ -1,0 +1,65 @@
+<div class="table-toolbar">
+  <span>
+    <h2>Your Work Orders</h2>
+  </span>
+<!--  <span>-->
+<!--    <mat-form-field class="table-search-box" appearance="outline">-->
+<!--      <input matInput type="text" class="table-filer-box" (keyup)="applyFilter($event)" placeholder="Search">-->
+<!--    </mat-form-field>-->
+<!--  </span>-->
+  <span class="example-fill-remaining-space"></span>
+<!--  <span>-->
+<!--    <button class="mat-flat-button mat-primary work-order-users-table-add-button" (click)="openAddDialog()">Add Work Order Users</button>-->
+<!--  </span>-->
+</div>
+<div class="mat-elevation-z0">
+  <table #entityTable mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z0">
+    <!-- id -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Id">Id</th>
+      <td mat-cell *matCellDef="let element"><a [routerLink]="['/workOrderDetails', element.id]">{{element.id}}</a></td>
+    </ng-container>
+    <!-- quickDescription -->
+    <ng-container matColumnDef="quickDescription">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Quick Description">Quick Description</th>
+      <td mat-cell *matCellDef="let element">{{element.quickDescription}}</td>
+    </ng-container>
+    <!-- customer -->
+    <ng-container matColumnDef="customer">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Customer">Customer</th>
+      <td mat-cell *matCellDef="let element">{{element.customer.entityName}}</td>
+    </ng-container>
+    <!-- location -->
+    <ng-container matColumnDef="location">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Location">Location</th>
+      <td mat-cell *matCellDef="let element">{{element.location.entityName}}</td>
+    </ng-container>
+    <!-- createdDate -->
+    <ng-container matColumnDef="createdDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Created Date">Created Date</th>
+      <td mat-cell *matCellDef="let element">{{element.createdDate|date:'MMM d, y, h:mm a'}}</td>
+    </ng-container>
+    <!-- updatedDate -->
+    <ng-container matColumnDef="updatedDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Updated Date">Updated Date</th>
+      <td mat-cell *matCellDef="let element">{{element.updatedDate|date:'MMM d, y, h:mm a'}}</td>
+    </ng-container>
+    <!-- status -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Status">Status</th>
+      <td mat-cell *matCellDef="let element">{{element.status}}</td>
+    </ng-container>
+    <!-- actions -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button class="work-order-table-edit-button mat-icon-button" [routerLink]="['/workOrderDetails', element.id]"><mat-icon color="primary">edit</mat-icon></button>
+        <button mat-button class="work-order-users-table-delete-button mat-icon-button" (click)="openDeleteDialog(element.id)"><mat-icon color="primary">delete</mat-icon></button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Pages"></mat-paginator>
+</div>
+

@@ -9,6 +9,11 @@
 </div>
 <div class="mat-elevation-z0">
   <table #entityTable mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z0">
+    <!-- createdDate -->
+    <ng-container matColumnDef="createdDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Created Date">Created Date</th>
+      <td mat-cell *matCellDef="let element">{{element.createdDate|date:'MMM d, y, h:mm a'}}</td>
+    </ng-container>
     <!-- entityName -->
     <ng-container matColumnDef="inventory">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Inventory">Inventory</th>
@@ -18,16 +23,6 @@
     <ng-container matColumnDef="notes">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Notes">Notes</th>
       <td mat-cell *matCellDef="let element">{{element.notes}}</td>
-    </ng-container>
-    <!-- createdDate -->
-    <ng-container matColumnDef="createdDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Created Date">Created Date</th>
-      <td mat-cell *matCellDef="let element">{{element.createdDate|date:'MMM d, y, h:mm a'}}</td>
-    </ng-container>
-    <!-- updatedDate -->
-    <ng-container matColumnDef="updatedDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Updated Date">Updated Date</th>
-      <td mat-cell *matCellDef="let element">{{element.updatedDate|date:'MMM d, y, h:mm a'}}</td>
     </ng-container>
     <!-- unitPrice -->
     <ng-container matColumnDef="unitPrice">

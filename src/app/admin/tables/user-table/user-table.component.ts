@@ -17,7 +17,7 @@ import { UserDeleteComponent } from "../../dialogs/user-delete/user-delete.compo
 })
 export class UserTableComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'username', 'actions'];
+  displayedColumns: string[] = ['id', 'username', 'firstName', 'lastName', 'role', 'actions'];
 
   dataSource: any;
 

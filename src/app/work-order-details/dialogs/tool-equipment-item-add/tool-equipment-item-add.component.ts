@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import { MatDialogRef } from "@angular/material/dialog";
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { ToolEquipmentItemService } from "../../../core/services/tool-equipment-item.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import {MatSelect} from "@angular/material/select";
-import {ToolEquipmentService} from "../../../core/services/tool-equipment.service";
+import { MatSelect } from "@angular/material/select";
+import { ToolEquipmentService } from "../../../core/services/tool-equipment.service";
+import {finalize} from "rxjs/operators";
 
 @Component({
   selector: 'app-tool-equipment-item-add',
@@ -14,14 +15,18 @@ import {ToolEquipmentService} from "../../../core/services/tool-equipment.servic
 export class ToolEquipmentItemAddComponent implements OnInit {
 
   formTitle: string = "Add Tool/Equipment Item";
+  woId: null;
   addForm: FormGroup = new FormGroup({});
 
   @ViewChild('toolEquipmentSelect')
   toolEquipmentSelect!: MatSelect;
+
   toolEquipmentLoaded: any;
   toolEquipmentSelected!: string;
+  toolEquipmentSelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<ToolEquipmentItemAddComponent>,
+               @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: ToolEquipmentItemService,
                private toolEquipmentService: ToolEquipmentService,
                private formBuilder: FormBuilder,
@@ -31,8 +36,10 @@ export class ToolEquipmentItemAddComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.woId = this.data.woId;
     this.addForm = this.formBuilder.group({
       'toolEquipmentId': new FormControl(''),
+      'workOrderId': new FormControl(this.woId),
       'notes': new FormControl(''),
       'pricePerDay': new FormControl(''),
       'days': new FormControl(''),
@@ -40,8 +47,17 @@ export class ToolEquipmentItemAddComponent implements OnInit {
   }
 
   selectChange() {
-    //console.log(this.selected);
-    // alert("You selected" + this.selected);
+    this.toolEquipmentService.get(this.toolEquipmentSelected)
+      .pipe(finalize(() => {
+        this.addForm.controls['notes'].setValue(this.toolEquipmentSelectedLoaded.description);
+        this.addForm.controls['pricePerDay'].setValue(this.toolEquipmentSelectedLoaded.pricePerDay);
+      }))
+      .subscribe(
+        data => {
+          this.toolEquipmentSelectedLoaded = data;
+        }, error => {
+          alert("there was an error");
+        });
   }
 
   loadToolEquipmentSelect() {
@@ -67,6 +83,4 @@ export class ToolEquipmentItemAddComponent implements OnInit {
         this.matDialogRef.close();
       });
   }
-
 }
-

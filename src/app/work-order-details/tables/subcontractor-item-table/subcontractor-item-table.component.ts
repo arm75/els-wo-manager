@@ -1,4 +1,4 @@
-import {Component, OnInit, AfterViewInit, ViewChild, Input} from '@angular/core';
+import {Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter} from '@angular/core';
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
@@ -21,7 +21,12 @@ export class SubcontractorItemTableComponent implements OnInit, AfterViewInit {
   @Input()
   passedWorkOrderId: any;
 
-  displayedColumns: string[] = ['subcontractor', 'notes', 'createdDate', 'updatedDate', 'unitPrice', 'qty', 'totalPrice', 'actions'];
+  @Output()
+  totalChangedEvent: EventEmitter<number> = new EventEmitter();
+
+  componentTotal: number = 0;
+
+  displayedColumns: string[] = ['createdDate', 'subcontractor', 'notes', 'unitPrice', 'qty', 'totalPrice', 'actions'];
   dataSource: any;
 
   @ViewChild(MatTable)
@@ -38,7 +43,7 @@ export class SubcontractorItemTableComponent implements OnInit, AfterViewInit {
     private _liveAnnouncer: LiveAnnouncer,
     private dialog: MatDialog
   ) {
-    this.buildTable();
+    //    this.buildTable();
   }
 
   ngOnInit() { }
@@ -48,13 +53,17 @@ export class SubcontractorItemTableComponent implements OnInit, AfterViewInit {
   }
 
  buildTable() {
+   this.componentTotal = 0;
     this.entityService.getAll()
       .pipe(map(items =>
         items.filter(item => (item.workOrderId == this.passedWorkOrderId))))
       .subscribe(data => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+        data.forEach(a => this.componentTotal += a.totalPrice);
+        console.log("total sub price: " + this.componentTotal);
+        this.totalChangedEvent.emit(this.componentTotal);
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
     })
   }
 

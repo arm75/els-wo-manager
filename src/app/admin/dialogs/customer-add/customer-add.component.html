@@ -22,25 +22,25 @@
           <input matInput autocomplete="off" formControlName="emailAddress">
         </mat-form-field>
       </p>
-      <h4 mat-dialog-title>Physical Address</h4>
+      <h4 mat-dialog-title>Address</h4>
       <p>
         <mat-form-field class="example-full-width width-75" appearance="outline">
           <mat-label>Address</mat-label>
-          <input matInput autocomplete="off" formControlName="physAddress">
+          <input matInput autocomplete="off" formControlName="address">
         </mat-form-field>
         <mat-form-field class="example-full-width width-21" appearance="outline">
           <mat-label>Unit</mat-label>
-          <input matInput autocomplete="off" formControlName="physUnit">
+          <input matInput autocomplete="off" formControlName="unit">
         </mat-form-field>
       </p>
       <p>
         <mat-form-field class="example-full-width width-47" appearance="outline">
           <mat-label>City</mat-label>
-          <input matInput autocomplete="off" formControlName="physCity">
+          <input matInput autocomplete="off" formControlName="city">
         </mat-form-field>
         <mat-form-field class="example-full-width width-25" appearance="outline">
           <mat-label>State</mat-label>
-          <mat-select formControlName="physState">
+          <mat-select formControlName="state">
             <mat-option *ngFor="let state of usStates" [value]="state.value">
               {{ state.name }}
             </mat-option>
@@ -48,36 +48,7 @@
         </mat-form-field>
         <mat-form-field class="example-full-width width-20" appearance="outline">
           <mat-label>Zip Code</mat-label>
-          <input matInput #postalCode maxlength="5" autocomplete="off" formControlName="physZipCode">
-        </mat-form-field>
-      </p>
-      <h4 mat-dialog-title>Billing Address</h4>
-      <p>
-        <mat-form-field class="example-full-width width-75" appearance="outline">
-          <mat-label>Address</mat-label>
-          <input matInput autocomplete="off" formControlName="billAddress">
-        </mat-form-field>
-        <mat-form-field class="example-full-width width-21" appearance="outline">
-          <mat-label>Unit</mat-label>
-          <input matInput autocomplete="off" formControlName="billUnit">
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="example-full-width width-47" appearance="outline">
-          <mat-label>City</mat-label>
-          <input matInput autocomplete="off" formControlName="billCity">
-        </mat-form-field>
-        <mat-form-field class="example-full-width width-25" appearance="outline">
-          <mat-label>State</mat-label>
-          <mat-select formControlName="billState">
-            <mat-option *ngFor="let state of usStates" [value]="state.value">
-              {{ state.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="example-full-width width-20" appearance="outline">
-          <mat-label>Zip Code</mat-label>
-          <input matInput #postalCode maxlength="5" autocomplete="off" formControlName="billZipCode">
+          <input matInput #postalCode maxlength="5" autocomplete="off" formControlName="zipCode">
         </mat-form-field>
       </p>
   </mat-dialog-content>

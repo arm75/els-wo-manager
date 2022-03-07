@@ -5,8 +5,8 @@ export interface ToolEquipmentItem {
   id: number;
   workOrderId: number;
   workOrder: WorkOrder;
-  toolsEquipId: number;
-  toolsEquip: ToolEquipment;
+  toolEquipmentId: number;
+  toolEquipment: ToolEquipment;
   entityName: string,
   status: string;
   notes: string;

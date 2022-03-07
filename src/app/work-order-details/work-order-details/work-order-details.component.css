@@ -1,3 +1,7 @@
+.top {
+  width: 100%;
+}
+
 .top-header {
   background-color: #2196f3;
   margin: 0px 0px 0px 0px;
@@ -63,17 +67,67 @@ a:hover {
   color: #ffb84d;
 }
 
+.containing-box {
+  width: 98%;
+  padding: 0px 35px 0px 35px;
+}
+
+.containing-box textarea {
+  height: 200px;
+}
+
+table {
+  width: 100%;
+  margin: 0px 0px 0px 0px;
+}
+
+.table-toolbar {
+  padding: 10px 20px 0px 20px;
+  margin: 0px 0px 0px 0px;
+}
+
+.table-search-box {
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+}
+
+.els-textarea-entry-notes {
+  margin-left: 20px !important;
+  margin-right: 10px !important;
+}
+
+.els-textarea-description {
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+}
+
+button.inventory-item-table-add-button {
+}
+
+button.inventory-item-table-edit-button, button.inventory-item-table-delete-button  {
+  margin: 0px 20px 0px 0px;
+}
+
+.table-toolbar {
+  display: flex;
+}
+
+.example-fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+
 /*th, td {*/
 /*  width: 20%;*/
 /*  text-align: center;*/
 /*  border: 1px solid #ffb84d;*/
 /*}*/
 mat-tab {
-  width: 80%;
+  width: 100%;
 }
 
 table {
-  width: 80%;
+  width: 100%;
   margin: 0px 0px 0px 0px;
 }
 
@@ -148,4 +202,10 @@ table {
   margin: 0px 0px 0px 0px;
   padding: 5px 0px 5px 0px;
   color: #bfbfbf;
+}
+
+h3.master-total-currency {
+  font-weight: 600;
+  font-size: 125%;
+
 }

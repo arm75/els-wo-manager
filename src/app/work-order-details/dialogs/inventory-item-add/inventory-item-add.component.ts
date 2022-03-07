@@ -5,6 +5,7 @@ import { InventoryItemService } from "../../../core/services/inventory-item.serv
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSelect } from "@angular/material/select";
 import { InventoryService } from "../../../core/services/inventory.service";
+import {finalize} from "rxjs/operators";
 
 @Component({
   selector: 'app-inventory-item-add',
@@ -19,8 +20,10 @@ export class InventoryItemAddComponent implements OnInit {
 
   @ViewChild('inventorySelect')
   inventorySelect!: MatSelect;
+
   inventoryLoaded: any;
   inventorySelected!: string;
+  inventorySelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<InventoryItemAddComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
@@ -44,8 +47,17 @@ export class InventoryItemAddComponent implements OnInit {
   }
 
   selectChange() {
-    //console.log(this.selected);
-    // alert("You selected" + this.selected);
+    this.inventoryService.get(this.inventorySelected)
+      .pipe(finalize(() => {
+          this.addForm.controls['notes'].setValue(this.inventorySelectedLoaded.description);
+          this.addForm.controls['unitPrice'].setValue(this.inventorySelectedLoaded.unitPrice);
+      }))
+      .subscribe(
+      data => {
+        this.inventorySelectedLoaded = data;
+      }, error => {
+        alert("there was an error");
+      });
   }
 
   loadInventorySelect() {

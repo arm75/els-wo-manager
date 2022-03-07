@@ -6,15 +6,11 @@ export interface User {
   authorities: string;
   accountNonLocked: boolean;
   active: boolean;
-  userGroupId: number;
   firstName: string;
   lastName: string;
   phoneNumb: string;
   altPhoneNumb: string;
   emailAddress: string;
-  // fontSize: number;
-  // themeColor: string;
-  // darkTheme: boolean;
   createdDate: string;
   updatedDate: string;
 }

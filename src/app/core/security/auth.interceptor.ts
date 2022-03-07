@@ -14,7 +14,6 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authenticationService: AuthenticationService) { }
 
   intercept(httpRequest: HttpRequest<any>, httpHandler: HttpHandler): Observable<HttpEvent<any>> {
-    console.log("interceptor runs");
     // if(httpRequest.url.includes(`${this.authenticationService.baseUrl}/login`)) {
     if(httpRequest.url.includes(`/login`)) {
       // do nothing

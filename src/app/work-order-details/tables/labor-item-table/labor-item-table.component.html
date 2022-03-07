@@ -9,6 +9,16 @@
 </div>
 <div class="mat-elevation-z0">
   <table #entityTable mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z0">
+    <!-- createdDate -->
+    <ng-container matColumnDef="createdDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Created Date">Created Date</th>
+      <td mat-cell *matCellDef="let element">{{element.createdDate|date:'MMM d, y, h:mm a'}}</td>
+    </ng-container>
+    <!-- updatedDate -->
+<!--    <ng-container matColumnDef="updatedDate">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Updated Date">Updated Date</th>-->
+<!--      <td mat-cell *matCellDef="let element">{{element.updatedDate|date:'MMM d, y, h:mm a'}}</td>-->
+<!--    </ng-container>-->
     <!-- labor -->
     <ng-container matColumnDef="labor">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Labor">Labor</th>
@@ -19,35 +29,25 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Notes">Notes</th>
       <td mat-cell *matCellDef="let element">{{element.notes}}</td>
     </ng-container>
-    <!-- createdDate -->
-    <ng-container matColumnDef="createdDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Created Date">Created Date</th>
-      <td mat-cell *matCellDef="let element">{{element.createdDate|date:'MMM d, y, h:mm a'}}</td>
-    </ng-container>
-    <!-- updatedDate -->
-    <ng-container matColumnDef="updatedDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Updated Date">Updated Date</th>
-      <td mat-cell *matCellDef="let element">{{element.updatedDate|date:'MMM d, y, h:mm a'}}</td>
-    </ng-container>
     <!-- ratePerHour -->
     <ng-container matColumnDef="ratePerHour">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Rate per Hour">Rate per Hour</th>
       <td mat-cell *matCellDef="let element">{{element.ratePerHour|currency}}</td>
     </ng-container>
     <!-- hours -->
-    <ng-container matColumnDef="hours">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Hours">Hours</th>
-      <td mat-cell *matCellDef="let element">{{element.hours}}</td>
+    <ng-container matColumnDef="totalTime">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Time">Time</th>
+      <td mat-cell *matCellDef="let element">{{element.totalTime}} hour(s)</td>
     </ng-container>
     <!-- minutes -->
-    <ng-container matColumnDef="minutes">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Quantity">Minutes</th>
-      <td mat-cell *matCellDef="let element">{{element.minutes}}</td>
-    </ng-container>
+<!--    <ng-container matColumnDef="minutes">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Quantity">Minutes</th>-->
+<!--      <td mat-cell *matCellDef="let element">{{element.minutes}}</td>-->
+<!--    </ng-container>-->
     <!-- total -->
-    <ng-container matColumnDef="total">
+    <ng-container matColumnDef="totalPrice">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Total">Total</th>
-      <td mat-cell *matCellDef="let element">{{element.total|currency}}</td>
+      <td mat-cell *matCellDef="let element">{{element.totalPrice|currency}}</td>
     </ng-container>
     <!-- actions -->
     <ng-container matColumnDef="actions">

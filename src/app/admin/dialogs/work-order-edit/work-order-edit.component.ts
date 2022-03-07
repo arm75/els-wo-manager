@@ -24,11 +24,13 @@ export class WorkOrderEditComponent implements OnInit {
 
   @ViewChild('customerSelect')
   customerSelect!: MatSelect;
+
   customerLoaded: any;
   customerSelected!: string;
 
   @ViewChild('locationSelect')
   locationSelect!: MatSelect;
+
   locationLoaded: any;
   locationSelected!: string;
 
@@ -96,7 +98,6 @@ export class WorkOrderEditComponent implements OnInit {
   }
 
   loadLocationSelect(passedCustomerId?: any) {
-    // if(passedCustomerId) {
     this.locationService.getAll()
       .pipe(map(items =>
         items.filter(item => (item.customerId == passedCustomerId))))
@@ -108,16 +109,6 @@ export class WorkOrderEditComponent implements OnInit {
           console.log(error);
         }
       );
-    // } else {
-    //   this.locationService.getAll().subscribe(
-    //     data => {
-    //       console.log(data);
-    //       this.locationLoaded = data;
-    //     }, error => {
-    //       console.log(error);
-    //     }
-    //   );
-    // }
   }
 
   editEntity() {

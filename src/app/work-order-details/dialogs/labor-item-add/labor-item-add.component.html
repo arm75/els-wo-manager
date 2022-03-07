@@ -16,23 +16,31 @@
       <p>
         <mat-form-field class="example-full-width width-99" appearance="outline">
           <mat-label>Notes</mat-label>
-          <textarea matInput class="description-box" value="" formControlName="notes"></textarea>
+          <textarea matInput autocomplete="off" class="description-box" value="" formControlName="notes"></textarea>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field class="example-full-width width-99" appearance="outline">
           <mat-label>Rate per Hour</mat-label>
-          <input matInput formControlName="ratePerHour">
+          <input matInput readonly autocomplete="off" prefix="$" mask="0*.00" formControlName="ratePerHour">
         </mat-form-field>
       </p>
       <p>
         <mat-form-field class="example-full-width width-47" appearance="outline">
           <mat-label>Hours</mat-label>
-          <input matInput formControlName="hours">
+          <mat-select formControlName="hours">
+            <mat-option *ngFor="let hour of hours" [value]="hour.value">
+              {{ hour.name }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field class="example-full-width width-47" appearance="outline">
           <mat-label>Minutes</mat-label>
-          <input matInput formControlName="minutes">
+          <mat-select formControlName="minutes">
+            <mat-option *ngFor="let minute of minutes" [value]="minute.value">
+              {{ minute.name }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </p>
   </mat-dialog-content>

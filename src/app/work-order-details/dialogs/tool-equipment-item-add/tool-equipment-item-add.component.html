@@ -16,17 +16,17 @@
       <p>
         <mat-form-field class="example-full-width width-99" appearance="outline">
           <mat-label>Notes</mat-label>
-          <textarea matInput class="description-box" value="" formControlName="notes"></textarea>
+          <textarea matInput autocomplete="off" class="description-box" value="" formControlName="notes"></textarea>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field class="example-full-width width-47" appearance="outline">
           <mat-label>Price per Day</mat-label>
-          <input matInput formControlName="pricePerDay">
+          <input matInput readonly autocomplete="off" prefix="$" mask="0*.00" formControlName="pricePerDay">
         </mat-form-field>
         <mat-form-field class="example-full-width width-47" appearance="outline">
           <mat-label>Days</mat-label>
-          <input matInput formControlName="days">
+          <input matInput autocomplete="off" formControlName="days">
         </mat-form-field>
       </p>
   </mat-dialog-content>

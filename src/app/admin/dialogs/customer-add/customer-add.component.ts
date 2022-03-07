@@ -26,16 +26,11 @@ export class CustomerAddComponent implements OnInit {
 
     this.addForm = this.formBuilder.group({
       'entityName': new FormControl(''),
-      'physAddress': new FormControl(''),
-      'physUnit': new FormControl(''),
-      'physCity': new FormControl(''),
-      'physState': new FormControl(''),
-      'physZipCode': new FormControl(''),
-      'billAddress': new FormControl(''),
-      'billUnit': new FormControl(''),
-      'billCity': new FormControl(''),
-      'billState': new FormControl(''),
-      'billZipCode': new FormControl(''),
+      'address': new FormControl(''),
+      'unit': new FormControl(''),
+      'city': new FormControl(''),
+      'state': new FormControl(''),
+      'zipCode': new FormControl(''),
       'phoneNumb': new FormControl(''),
       'altPhoneNumb': new FormControl(''),
       'emailAddress': new FormControl('')

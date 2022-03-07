@@ -1,4 +1,4 @@
-import {Component, OnInit, AfterViewInit, ViewChild, Input} from '@angular/core';
+import {Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter} from '@angular/core';
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
@@ -21,7 +21,12 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
   @Input()
   passedWorkOrderId: any;
 
-  displayedColumns: string[] = ['createdDate', 'updatedDate', 'actions'];
+  @Output()
+  totalChangedEvent: EventEmitter<number> = new EventEmitter();
+
+  componentTotal: number = 0;
+
+  displayedColumns: string[] = ['createdDate', 'toolEquipment', 'notes', 'pricePerDay', 'days', 'totalPrice', 'status', 'actions'];
   dataSource: any;
 
   @ViewChild(MatTable)
@@ -38,7 +43,7 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
     private _liveAnnouncer: LiveAnnouncer,
     private dialog: MatDialog
   ) {
-    this.buildTable();
+    //  this.buildTable();
   }
 
   ngOnInit() { }
@@ -48,13 +53,17 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
   }
 
  buildTable() {
+   this.componentTotal = 0;
     this.entityService.getAll()
       .pipe(map(items =>
         items.filter(item => (item.workOrderId == this.passedWorkOrderId))))
       .subscribe(data => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+        data.forEach(a => this.componentTotal += a.totalPrice);
+        console.log("total toolequip price: " + this.componentTotal);
+        this.totalChangedEvent.emit(this.componentTotal);
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
     })
   }
 
@@ -70,6 +79,7 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
     addDialogConfig.autoFocus = true;
     addDialogConfig.width = "40%";
     addDialogConfig.position = { top:  '0' };
+    addDialogConfig.data = { woId: this.passedWorkOrderId };
     const addDialogRef = this.dialog.open(ToolEquipmentItemAddComponent, addDialogConfig);
     addDialogRef.afterClosed().subscribe(addData => {
       this.buildTable();
@@ -83,7 +93,7 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
     editDialogConfig.autoFocus = true;
     editDialogConfig.width = "40%";
     editDialogConfig.position = { top:  '0' };
-    editDialogConfig.data = { entityId: _id };
+    editDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const editDialogRef = this.dialog.open(ToolEquipmentItemEditComponent, editDialogConfig);
     editDialogRef.afterClosed().subscribe(editData => {
       this.buildTable();
@@ -97,7 +107,7 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
     deleteDialogConfig.autoFocus = true;
     deleteDialogConfig.width = "25%";
     deleteDialogConfig.position = { top:  '0' };
-    deleteDialogConfig.data = { entityId: _id };
+    deleteDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const deleteDialogRef = this.dialog.open(ToolEquipmentItemDeleteComponent, deleteDialogConfig);
     deleteDialogRef.afterClosed().subscribe(deleteData => {
       this.buildTable();

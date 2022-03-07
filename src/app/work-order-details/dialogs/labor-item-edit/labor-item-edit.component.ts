@@ -6,6 +6,8 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { LaborItem } from "../../../core/models/labor-item";
 import { MatSelect } from "@angular/material/select";
 import { LaborService } from "../../../core/services/labor.service";
+import {ElsWoManagerConstants} from "../../../core/els-wo-manager-constants";
+import {finalize} from "rxjs/operators";
 
 @Component({
   selector: 'app-labor-item-edit',
@@ -20,11 +22,15 @@ export class LaborItemEditComponent implements OnInit {
   entityId: null;
   entityData!: LaborItem;
   editForm: FormGroup = new FormGroup({});
+  hours = ElsWoManagerConstants.hoursSelectArray;
+  minutes = ElsWoManagerConstants.minutesSelectArray;
 
   @ViewChild('laborSelect')
   laborSelect!: MatSelect;
+
   laborLoaded: any;
   laborSelected!: string;
+  laborSelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<LaborItemEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
@@ -55,7 +61,7 @@ export class LaborItemEditComponent implements OnInit {
             'ratePerHour': new FormControl(this.entityData.ratePerHour),
             'hours': new FormControl(this.entityData.hours),
             'minutes': new FormControl(this.entityData.minutes),
-            'total': new FormControl(this.entityData.total),
+            'totalPrice': new FormControl(this.entityData.totalPrice),
           })
           this.dataLoaded = true;
         })
@@ -66,8 +72,17 @@ export class LaborItemEditComponent implements OnInit {
   }
 
   selectChange() {
-    //console.log(this.selected);
-    // alert("You selected" + this.selected);
+    this.laborService.get(this.laborSelected)
+      .pipe(finalize(() => {
+        this.editForm.controls['notes'].setValue(this.laborSelectedLoaded.description);
+        this.editForm.controls['ratePerHour'].setValue(this.laborSelectedLoaded.ratePerHour);
+      }))
+      .subscribe(
+        data => {
+          this.laborSelectedLoaded = data;
+        }, error => {
+          alert("there was an error");
+        });
   }
 
   loadLaborSelect() {

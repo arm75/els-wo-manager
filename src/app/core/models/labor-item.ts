@@ -11,7 +11,8 @@ export interface LaborItem {
   hours: number;
   minutes: number;
   ratePerHour: number;
-  total: number;
+  totalTime: number;
+  totalPrice: number;
   createdDate: string;
   updatedDate: string;
 }
