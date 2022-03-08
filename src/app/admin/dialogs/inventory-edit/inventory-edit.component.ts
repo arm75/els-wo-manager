@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryService } from "../../../core/services/inventory.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Inventory } from "../../../core/models/inventory";
@@ -55,15 +55,13 @@ export class InventoryEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-            'entityName': new FormControl(this.entityData.entityName),
-            'inventoryGroupId': new FormControl(this.entityData.inventoryGroupId),
-            'inventoryLocationId': new FormControl(this.entityData.inventoryLocationId),
+            'entityName': new FormControl(this.entityData.entityName, [Validators.required]),
+            'inventoryGroupId': new FormControl(this.entityData.inventoryGroupId, [Validators.required]),
+            'inventoryLocationId': new FormControl(this.entityData.inventoryLocationId, [Validators.required]),
             'description': new FormControl(this.entityData.description),
-            'qtyInStock': new FormControl(this.entityData.qtyInStock),
-            'unitCost': new FormControl(this.entityData.unitCost),
-            'unitPrice': new FormControl(this.entityData.unitPrice),
-            // 'taxable': new FormControl(this.entityData.taxable),
-            // 'taxRateId': new FormControl(this.entityData.taxRateId)
+            'qtyInStock': new FormControl(this.entityData.qtyInStock, [Validators.required]),
+            'unitCost': new FormControl(this.entityData.unitCost, [Validators.required]),
+            'unitPrice': new FormControl(this.entityData.unitPrice, [Validators.required])
           })
           this.dataLoaded = true;
         })

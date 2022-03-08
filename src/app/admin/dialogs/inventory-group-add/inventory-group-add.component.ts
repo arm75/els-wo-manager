@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryGroupService } from "../../../core/services/inventory-group.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
@@ -24,8 +24,8 @@ export class InventoryGroupAddComponent implements OnInit {
   ngOnInit() {
 
     this.addForm = this.formBuilder.group({
-      'entityName': new FormControl(''),
-      'physAddress': new FormControl('')
+      'entityName': new FormControl('', [Validators.required]),
+      'description': new FormControl('')
     });
   }
 

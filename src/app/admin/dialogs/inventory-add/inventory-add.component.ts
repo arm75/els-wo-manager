@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryService } from "../../../core/services/inventory.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSelect } from "@angular/material/select";
@@ -40,15 +40,13 @@ export class InventoryAddComponent implements OnInit {
 
   ngOnInit() {
     this.addForm = this.formBuilder.group({
-      'entityName': new FormControl(''),
-      'inventoryGroupId': new FormControl(''),
-      'inventoryLocationId': new FormControl(''),
+      'entityName': new FormControl('', [Validators.required]),
+      'inventoryGroupId': new FormControl('', [Validators.required]),
+      'inventoryLocationId': new FormControl('', [Validators.required]),
       'description': new FormControl(''),
-      'qtyInStock': new FormControl(''),
-      'unitCost': new FormControl(''),
-      'unitPrice': new FormControl(''),
-      // 'taxable': new FormControl(''),
-      // 'taxRateId': new FormControl('')
+      'qtyInStock': new FormControl('', [Validators.required]),
+      'unitCost': new FormControl('', [Validators.required]),
+      'unitPrice': new FormControl('', [Validators.required])
     });
   }
 

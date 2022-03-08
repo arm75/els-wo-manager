@@ -44,13 +44,6 @@
   margin: 0px 10px 0px 10px;
 }
 
-/*h1 {*/
-/*  display: block;*/
-/*}*/
-/*h3 {*/
-/*  display: block;*/
-/*}*/
-
 ul {
   margin-left: 50px;
   padding-left: 0;
@@ -116,12 +109,6 @@ button.inventory-item-table-edit-button, button.inventory-item-table-delete-butt
   flex: 1 1 auto;
 }
 
-
-/*th, td {*/
-/*  width: 20%;*/
-/*  text-align: center;*/
-/*  border: 1px solid #ffb84d;*/
-/*}*/
 mat-tab {
   width: 100%;
 }

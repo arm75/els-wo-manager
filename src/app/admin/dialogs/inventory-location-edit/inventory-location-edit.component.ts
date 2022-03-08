@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryLocationService } from "../../../core/services/inventory-location.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { InventoryLocation } from "../../../core/models/inventory-location";
@@ -39,15 +39,15 @@ export class InventoryLocationEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-	          'entityName': new FormControl(this.entityData.entityName),
-	          'address': new FormControl(this.entityData.address),
+	          'entityName': new FormControl(this.entityData.entityName, [Validators.required]),
+	          'address': new FormControl(this.entityData.address, [Validators.required]),
 	          'unit': new FormControl(this.entityData.unit),
-	          'city': new FormControl(this.entityData.city),
-	          'state': new FormControl(this.entityData.state),
-	          'zipCode': new FormControl(this.entityData.zipCode),
+	          'city': new FormControl(this.entityData.city, [Validators.required]),
+	          'state': new FormControl(this.entityData.state, [Validators.required]),
+	          'zipCode': new FormControl(this.entityData.zipCode, [Validators.required]),
 	          'phoneNumb': new FormControl(this.entityData.phoneNumb),
 	          'altPhoneNumb': new FormControl(this.entityData.altPhoneNumb),
-	          'emailAddress': new FormControl(this.entityData.emailAddress)
+	          'emailAddress': new FormControl(this.entityData.emailAddress, [Validators.email])
           })
           this.dataLoaded = true;
         })

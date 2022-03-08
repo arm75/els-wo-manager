@@ -10,6 +10,7 @@ import { map } from "rxjs/operators";
 import { LocationService } from "../../core/services/location.service";
 import { CustomerService } from "../../core/services/customer.service";
 import { MatSelect } from "@angular/material/select";
+import {GlobalSnackBarService} from "../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-work-order-details',
@@ -57,6 +58,7 @@ export class WorkOrderDetailsComponent implements OnInit {
   constructor(
     // private matDialogRef: MatDialogRef<WorkOrderEditComponent>,
     //@Inject(MAT_DIALOG_DATA) public data: any,
+    private snackBarService: GlobalSnackBarService,
     private entityService: WorkOrderService,
     private customerService: CustomerService,
     private locationService: LocationService,
@@ -64,7 +66,7 @@ export class WorkOrderDetailsComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private matSnackBar2: MatSnackBar
+    private matSnackBar: MatSnackBar
   ) {
 
   }
@@ -74,12 +76,10 @@ export class WorkOrderDetailsComponent implements OnInit {
     this.getIdFromRoute();
     this.loadCustomerSelect();
 
-
     if (this.passedWorkOrderId) {
       console.log("First If=true");
       console.log("entityId: " + this.passedWorkOrderId);
       this.loadWorkOrderIntoView();
-
     }
   }
 
@@ -105,11 +105,15 @@ export class WorkOrderDetailsComponent implements OnInit {
              'locationId': new FormControl(this.entityData.locationId),
              'description': new FormControl(this.entityData.description),
              'entryInstruct': new FormControl(this.entityData.entryInstruct),
-             'notes': new FormControl(this.entityData.notes)
+             'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
+             'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
+             'subcontractorItemsTotal': new FormControl(this.entityData.subcontractorItemsTotal),
+             'toolEquipmentItemsTotal': new FormControl(this.entityData.toolEquipmentItemsTotal),
+             'workOrderTotal': new FormControl(this.entityData.workOrderTotal)
            })
            this.dataLoaded = true;
            this.loadLocationSelect(this.entityData.customerId);
-           this.editForm.controls['customerId'].setValue(0);
+           // this.editForm.controls['customerId'].setValue(0);
            this.editForm.controls['customerId'].setValue(this.entityData.customerId);
            this.editForm.controls['locationId'].setValue(this.entityData.locationId);
       });
@@ -123,6 +127,8 @@ export class WorkOrderDetailsComponent implements OnInit {
     this.woCustomerFieldBox = this.entityData.customer.entityName;
     this.woLocationFieldBox = this.entityData.location.entityName;
     this.woPoFieldBox = this.entityData.customerPo;
+
+
   }
 
   calcMasterTotal() {
@@ -197,17 +203,22 @@ export class WorkOrderDetailsComponent implements OnInit {
 
 
   saveWorkOrder() {
+    this.editForm.controls['inventoryItemsTotal'].setValue(this.masterInventoryTotal);
+    this.editForm.controls['laborItemsTotal'].setValue(this.masterLaborTotal);
+    this.editForm.controls['subcontractorItemsTotal'].setValue(this.masterSubcontractorTotal);
+    this.editForm.controls['toolEquipmentItemsTotal'].setValue(this.masterToolEquipmentTotal);
+    this.editForm.controls['workOrderTotal'].setValue(this.masterTotal);
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
         console.log("Work Order " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar2.open("Work Order " + this.editForm.value.id + " edited successfully.");
-        //this.matDialogRef.close();
+        // this.snackBarService.error("This message is ERROR");
+        // this.snackBarService.warning("This message is WARNING");
+        // this.snackBarService.success("This message is SUCCESS");
+        this.matSnackBar.open("Work Order " + this.editForm.value.id + " saved.");
         this.loadWorkOrderIntoView();
         this.updateFieldBoxes();
       }, error => {
-        // console.log("An error has occurred. Work Order not edited: " + error);
-        this.matSnackBar2.open("An error has occurred. Work Order not edited: " + error);
-        //this.matDialogRef.close();
+        this.matSnackBar.open("An error has occurred. Work Order could not be saved. " + error);
       });
 
   }

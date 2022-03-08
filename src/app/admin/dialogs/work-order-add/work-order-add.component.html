@@ -9,31 +9,6 @@
       </mat-form-field>
       </p>
       <p>
-      <mat-form-field class="example-full-width width-99" appearance="outline">
-          <mat-label>Customer PO</mat-label>
-          <input matInput formControlName="customerPo">
-      </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="example-full-width width-99" appearance="outline">
-          <mat-label>Description</mat-label>
-          <textarea matInput class="description-box" value="" formControlName="description"></textarea>
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="example-full-width width-99" appearance="outline">
-          <mat-label>Entry Instructions</mat-label>
-          <textarea matInput class="description-box" value="" formControlName="entryInstruct"></textarea>
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="example-full-width width-99" appearance="outline">
-          <mat-label>Notes</mat-label>
-          <textarea matInput class="description-box" value="" formControlName="notes"></textarea>
-        </mat-form-field>
-      </p>
-      <h4 mat-dialog-title>Inventory Association</h4>
-      <p>
         <mat-form-field class="example-full-width width-99" appearance="outline">
           <mat-label>Customer</mat-label>
           <mat-select #customerSelect [(value)]="customerSelected" (selectionChange)="customerSelectChange()" formControlName="customerId">
@@ -53,6 +28,24 @@
               {{location.entityName}}
             </mat-option>
           </mat-select>
+        </mat-form-field>
+      </p>
+      <p>
+      <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Customer PO</mat-label>
+          <input matInput formControlName="customerPo">
+      </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput class="description-box" value="" formControlName="description"></textarea>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width width-99" appearance="outline">
+          <mat-label>Entry Instructions</mat-label>
+          <textarea matInput class="description-box" value="" formControlName="entryInstruct"></textarea>
         </mat-form-field>
       </p>
   </mat-dialog-content>

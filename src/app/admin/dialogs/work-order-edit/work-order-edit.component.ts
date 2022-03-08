@@ -65,7 +65,11 @@ export class WorkOrderEditComponent implements OnInit {
             'locationId': new FormControl(this.entityData.locationId),
             'description': new FormControl(this.entityData.description),
             'entryInstruct': new FormControl(this.entityData.entryInstruct),
-            'notes': new FormControl(this.entityData.notes)
+            'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
+            'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
+            'subcontractorItemsTotal': new FormControl(this.entityData.subcontractorItemsTotal),
+            'toolEquipmentItemsTotal': new FormControl(this.entityData.toolEquipmentItemsTotal),
+            'workOrderTotal': new FormControl(this.entityData.workOrderTotal)
           })
           this.dataLoaded = true;
         })

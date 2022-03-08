@@ -43,13 +43,16 @@ export class WorkOrderAddComponent implements OnInit {
 
     this.addForm = this.formBuilder.group({
       'quickDescription': new FormControl(''),
-      //'status': new FormControl(''),
       'customerPo': new FormControl(''),
       'customerId': new FormControl(''),
       'locationId': new FormControl(''),
       'description': new FormControl(''),
       'entryInstruct': new FormControl(''),
-      'notes': new FormControl(''),
+      'inventoryItemsTotal': new FormControl(''),
+      'laborItemsTotal': new FormControl(''),
+      'subcontractorItemsTotal': new FormControl(''),
+      'toolEquipmentItemsTotal': new FormControl(''),
+      'workOrderTotal': new FormControl('')
     });
   }
 

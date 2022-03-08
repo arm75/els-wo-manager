@@ -17,7 +17,7 @@ import { CustomerDeleteComponent } from "../../dialogs/customer-delete/customer-
 })
 export class CustomerTableComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'entityName', 'phoneNumb', 'altPhoneNumb', 'emailAddress', 'actions'];
+  displayedColumns: string[] = ['id', 'entityName', 'phoneNumb', 'emailAddress', 'actions'];
 
   dataSource: any;
 

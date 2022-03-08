@@ -20,8 +20,18 @@
     <button class="mat-flat-button mat-primary work-order-table-add-button" (click)="openAddDialog()">Add Work Order</button>
   </span>
 </div>
-<div class="mat-elevation-z8">
-  <table #entityTable mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
+<div class="mat-elevation-z0">
+  <table #entityTable mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z0">
+    <!-- createdDate -->
+    <ng-container matColumnDef="createdDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Created Date">Created Date</th>
+      <td mat-cell *matCellDef="let element">{{element.createdDate|date:'MMM d, y, h:mm a'}}</td>
+    </ng-container>
+    <!-- updatedDate -->
+    <!--    <ng-container matColumnDef="updatedDate">-->
+    <!--      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Updated Date">Updated Date</th>-->
+    <!--      <td mat-cell *matCellDef="let element">{{element.updatedDate|date:'MMM d, y, h:mm a'}}</td>-->
+    <!--    </ng-container>-->
     <!-- id -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Id">Id</th>
@@ -42,15 +52,10 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Location">Location</th>
       <td mat-cell *matCellDef="let element">{{element.location.entityName}}</td>
     </ng-container>
-    <!-- createdDate -->
-    <ng-container matColumnDef="createdDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Created Date">Created Date</th>
-      <td mat-cell *matCellDef="let element">{{element.createdDate|date:'MMM d, y, h:mm a'}}</td>
-    </ng-container>
-    <!-- updatedDate -->
-    <ng-container matColumnDef="updatedDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Updated Date">Updated Date</th>
-      <td mat-cell *matCellDef="let element">{{element.updatedDate|date:'MMM d, y, h:mm a'}}</td>
+    <!-- workOrderTotal -->
+    <ng-container matColumnDef="workOrderTotal">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Total">Total</th>
+      <td mat-cell *matCellDef="let element">{{element.workOrderTotal|currency}}</td>
     </ng-container>
     <!-- status -->
     <ng-container matColumnDef="status">

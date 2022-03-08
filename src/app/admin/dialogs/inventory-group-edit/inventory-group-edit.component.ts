@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryGroupService } from "../../../core/services/inventory-group.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { InventoryGroup } from "../../../core/models/inventory-group";
@@ -37,8 +37,8 @@ export class InventoryGroupEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-	          'entityName': new FormControl(this.entityData.entityName),
-	          'description': new FormControl(this.entityData.description),
+	          'entityName': new FormControl(this.entityData.entityName, [Validators.required]),
+	          'description': new FormControl(this.entityData.description)
           })
           this.dataLoaded = true;
         })

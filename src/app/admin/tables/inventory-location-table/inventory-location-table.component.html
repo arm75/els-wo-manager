@@ -9,8 +9,8 @@
     <button class="mat-flat-button mat-primary inventory-location-table-add-button" (click)="openAddDialog()">Add Inventory Location</button>
   </span>
 </div>
-<div class="mat-elevation-z8">
-  <table #entityTable mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
+<div class="mat-elevation-z0">
+  <table #entityTable mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z0">
     <!-- id -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Id">Id</th>

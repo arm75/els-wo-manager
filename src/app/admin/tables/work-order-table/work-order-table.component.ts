@@ -20,7 +20,7 @@ import {filter, map} from "rxjs/operators";
 })
 export class WorkOrderTableComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'quickDescription', 'customer', 'location', 'createdDate', 'updatedDate', 'status', 'actions'];
+  displayedColumns: string[] = ['createdDate', 'id', 'quickDescription', 'customer', 'location', 'status', 'workOrderTotal', 'actions'];
 
   dataSource: any;
 

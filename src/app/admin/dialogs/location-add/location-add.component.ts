@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { LocationService } from "../../../core/services/location.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSelect} from "@angular/material/select";
@@ -35,16 +35,8 @@ export class LocationAddComponent implements OnInit {
 
   ngOnInit() {
     this.addForm = this.formBuilder.group({
-      'customerId': new FormControl(''),
-      'entityName': new FormControl(''),
-      'address': new FormControl(''),
-      'unit': new FormControl(''),
-      'city': new FormControl(''),
-      'state': new FormControl(''),
-      'zipCode': new FormControl(''),
-      'phoneNumb': new FormControl(''),
-      'altPhoneNumb': new FormControl(''),
-      'emailAddress': new FormControl('')
+      'customerId': new FormControl('', [Validators.required]),
+      'entityName': new FormControl('', [Validators.required])
     });
   }
 

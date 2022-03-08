@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { LocationService } from "../../../core/services/location.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Location } from "../../../core/models/location";
@@ -48,16 +48,8 @@ export class LocationEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-            'customerId': new FormControl(this.entityData.customer.id),
-            'entityName': new FormControl(this.entityData.entityName),
-            'address': new FormControl(this.entityData.address),
-            'unit': new FormControl(this.entityData.unit),
-            'city': new FormControl(this.entityData.city),
-            'state': new FormControl(this.entityData.state),
-            'zipCode': new FormControl(this.entityData.zipCode),
-            'phoneNumb': new FormControl(this.entityData.phoneNumb),
-            'altPhoneNumb': new FormControl(this.entityData.altPhoneNumb),
-            'emailAddress': new FormControl(this.entityData.emailAddress)
+            'customerId': new FormControl(this.entityData.customer.id, [Validators.required]),
+            'entityName': new FormControl(this.entityData.entityName, [Validators.required])
           })
           this.customerSelected = this.entityData.customer.toString();
           this.dataLoaded = true;

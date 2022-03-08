@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryLocationService } from "../../../core/services/inventory-location.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
@@ -25,15 +25,15 @@ export class InventoryLocationAddComponent implements OnInit {
   ngOnInit() {
 
     this.addForm = this.formBuilder.group({
-      'entityName': new FormControl(''),
-      'address': new FormControl(''),
+      'entityName': new FormControl('', [Validators.required]),
+      'address': new FormControl('', [Validators.required]),
       'unit': new FormControl(''),
-      'city': new FormControl(''),
-      'state': new FormControl(''),
-      'zipCode': new FormControl(''),
+      'city': new FormControl('', [Validators.required]),
+      'state': new FormControl('', [Validators.required]),
+      'zipCode': new FormControl('', [Validators.required]),
       'phoneNumb': new FormControl(''),
       'altPhoneNumb': new FormControl(''),
-      'emailAddress': new FormControl('')
+      'emailAddress': new FormControl('', [Validators.email])
     });
   }
 

@@ -7,14 +7,16 @@ export interface WorkOrder {
   customer: Customer;
   locationId: number;
   location: Location;
-  // userId: number;
-  // assignedTo: number;
   status: string;
   customerPo: string;
   quickDescription: string;
   description: string;
   entryInstruct: string;
-  notes: string;
+  inventoryItemsTotal: number;
+  laborItemsTotal: number;
+  subcontractorItemsTotal: number;
+  toolEquipmentItemsTotal: number;
+  workOrderTotal: number;
   createdDate: string;
   updatedDate: string;
 }
