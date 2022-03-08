@@ -12,6 +12,9 @@ import { WorkOrderDeleteComponent } from "../../dialogs/work-order-delete/work-o
 import {MatSelect} from "@angular/material/select";
 import {CustomerService} from "../../../core/services/customer.service";
 import {filter, map} from "rxjs/operators";
+import {
+  GlobalProgressSpinnerComponent
+} from "../../../shared/progress-spinner/global-progress-spinner/global-progress-spinner.component";
 
 @Component({
   selector: 'app-work-order-table',
@@ -48,8 +51,11 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     private entityService: WorkOrderService,
     private customerService: CustomerService, ///////////////////////////////
     private _liveAnnouncer: LiveAnnouncer,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private spinner: GlobalProgressSpinnerComponent
   ) {
+
+
     this.buildTable();
 
     /////////////////////////////////////////////////////////////////
@@ -66,10 +72,13 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
 
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+
+  }
 
   ngAfterViewInit() {
     this.buildTable();
+    // this.spinner.initiate();  |  does not work yet...
   }
 
  buildTable() {

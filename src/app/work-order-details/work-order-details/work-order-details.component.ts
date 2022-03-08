@@ -10,7 +10,9 @@ import { map } from "rxjs/operators";
 import { LocationService } from "../../core/services/location.service";
 import { CustomerService } from "../../core/services/customer.service";
 import { MatSelect } from "@angular/material/select";
-import {GlobalSnackBarService} from "../../shared/snackbar/global-snack-bar.service";
+import { GlobalSnackBarService} from "../../shared/snackbar/global-snack-bar.service";
+import { MatProgressSpinnerModule, ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { ThemePalette} from "@angular/material/core";
 
 @Component({
   selector: 'app-work-order-details',

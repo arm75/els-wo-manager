@@ -19,21 +19,25 @@ import { AuthGuard } from "./core/security/auth.guard";
 // components
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './shared/page-not-found/page-not-found.component';
+import { GlobalProgressSpinnerComponent } from './shared/progress-spinner/global-progress-spinner/global-progress-spinner.component';
+import {MaterialKitModule} from "./shared/material-kit/material-kit.module";
 
 @NgModule({
   declarations: [
     AppComponent,
     PageNotFoundComponent,
+    GlobalProgressSpinnerComponent,
   ],
-  imports: [
-    CoreModule,
-    AdminModule,
-    WorkOrdersModule,
-    WorkOrderDetailsModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule
-  ],
+    imports: [
+        CoreModule,
+        AdminModule,
+        WorkOrdersModule,
+        WorkOrderDetailsModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MaterialKitModule
+    ],
   providers: [
     AuthInterceptor,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
