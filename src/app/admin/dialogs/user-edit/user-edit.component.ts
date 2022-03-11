@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { UserService } from "../../../core/services/user.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { User } from "../../../core/models/user";
+import {ElsWoManagerConstants} from "../../../core/els-wo-manager-constants";
 
 @Component({
   selector: 'app-user-edit',
@@ -17,6 +18,9 @@ export class UserEditComponent implements OnInit {
   entityId: null;
   entityData!: User;
   editForm: FormGroup = new FormGroup({});
+
+  userRoles = ElsWoManagerConstants.userRolesSelectArray;
+  roleSelected: any;
 
   constructor( private matDialogRef: MatDialogRef<UserEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
@@ -40,8 +44,8 @@ export class UserEditComponent implements OnInit {
 	          'username': new FormControl(this.entityData.username),
             'password': new FormControl(this.entityData.password),
             'retypePassword': new FormControl(this.entityData.password),
-            'roles': new FormControl(this.entityData.roles),
-            'authorities': new FormControl(this.entityData.authorities),
+            'role': new FormControl(this.entityData.role),
+            // 'authorities': new FormControl(this.entityData.authorities),
             'accountNonLocked': new FormControl(this.entityData.accountNonLocked),
             'active': new FormControl(this.entityData.active),
             'firstName': new FormControl(this.entityData.firstName),

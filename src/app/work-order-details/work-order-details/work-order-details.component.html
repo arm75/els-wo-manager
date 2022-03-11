@@ -33,7 +33,7 @@
     <h3>{{woIdFieldBox}}</h3>
   </div>
   <div class="wo-info-field-content col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
-    <h3>{{woStatusFieldBox}}</h3>
+    <h3><span class="work-order-details-status work-order-details-status-{{woStatusFieldBox.toLowerCase()}}">{{woStatusFieldBox}}</span></h3>
   </div>
   <div class="wo-info-field-content col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
     <h3>{{woCreatedDateFieldBox|date:'MMM d, y, h:mm a'}}</h3>

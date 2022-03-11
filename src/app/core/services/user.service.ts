@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
+import {CustomHttpResponse} from "../security/custom-http-response";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,9 @@ export class UserService {
 
   constructor( private http: HttpClient ) { }
 
+  home(): Observable<User | CustomHttpResponse> {
+    return this.http.get<User>(`${this.baseUrl}/home`);
+  }
   getAll(): Observable<User[]> {
     return this.http.get<User[]>(`${this.baseUrl}/all`);
   }

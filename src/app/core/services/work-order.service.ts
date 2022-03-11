@@ -29,13 +29,26 @@ export class WorkOrderService {
     return this.http.put(`${this.baseUrl}/update`, data);
   }
 
+  complete(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/complete`, data);
+  }
+
+  close(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/close`, data);
+  }
+
+  retry(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/retry`, data);
+  }
+
+
   delete(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrl}/delete/${id}`);
   }
-   
+
   // deleteAll(): Observable<any> {
   //   return this.http.delete(this.baseUrl);
   // }
   //
 }
-  
+

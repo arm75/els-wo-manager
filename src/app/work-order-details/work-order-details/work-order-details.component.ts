@@ -133,28 +133,38 @@ export class WorkOrderDetailsComponent implements OnInit {
 
   }
 
+  delayFunction(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
   calcMasterTotal() {
     this.masterTotal = this.masterInventoryTotal + this.masterLaborTotal + this.masterSubcontractorTotal + this.masterToolEquipmentTotal;
+    this.delayFunction(600);
+    this.saveWorkOrder();
   }
 
   getNewInventoryTotal(newTotal: number) {
     this.masterInventoryTotal = newTotal;
     this.calcMasterTotal();
+    // this.saveWorkOrder();
   }
 
   getNewLaborTotal(newTotal: number) {
     this.masterLaborTotal = newTotal;
     this.calcMasterTotal();
+    // this.saveWorkOrder();
   }
 
   getNewSubcontractorTotal(newTotal: number) {
     this.masterSubcontractorTotal = newTotal;
     this.calcMasterTotal();
+    // this.saveWorkOrder();
   }
 
   getNewToolEquipmentTotal(newTotal: number) {
     this.masterToolEquipmentTotal = newTotal;
     this.calcMasterTotal();
+    // this.saveWorkOrder();
   }
 
   customerSelectChange() {

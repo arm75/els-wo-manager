@@ -2,7 +2,7 @@ export interface User {
   id: number;
   username: string;
   password: string;
-  roles: string;
+  role: string;
   authorities: string;
   accountNonLocked: boolean;
   active: boolean;

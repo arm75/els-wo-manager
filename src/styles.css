@@ -90,6 +90,94 @@ body { width: 100%; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif
   background-color: #ff8f00 !important;
 }
 
+/*{ value:WorkOrderStatus.OPEN, name:'OPEN Work Orders' },*/
+/*{ value:WorkOrderStatus.PENDING, name:'PENDING Work Orders' },*/
+/*{ value:WorkOrderStatus.CANCELLED, name:'CANCELLED Work Orders' },*/
+/*{ value:WorkOrderStatus.COMPLETE, name:'COMPLETE Work Orders' },*/
+/*{ value:WorkOrderStatus.CLOSED, name:'CLOSED Work Orders' },*/
+/*{ value:WorkOrderStatus.ERROR, name:'ERROR Work Orders' },*/
+/*{ value:WorkOrderStatus.RETRY, name:'RETRY Work Orders' },*/
+/*{ value:WorkOrderStatus.PROCESSED, name:'PROCESSED Work Orders' }*/
+
+/* WO TABLE STATUS DISPLAY */
+.status-chip {
+  font-size: 90%;
+  color: #ffffff;
+  padding: 3px 6px 3px 6px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.status-chip-open {
+  background-color: #339933;
+}
+.status-chip-pending {
+  background-color: #ff6600;
+}
+.status-chip-cancelled {
+  background-color: #a6a6a6;
+}
+.status-chip-complete {
+  background-color: #0099ff;
+}
+.status-chip-closed {
+  background-color: #3333ff;
+}
+.status-chip-error {
+  background-color: #cc0000;
+}
+.status-chip-retry {
+  background-color: #996633;
+}
+.status-chip-processed {
+  background-color: #000000;
+}
+
+/* WORK ORDER DETAILS STATUS DISPLAY */
+.work-order-details-status {
+  font-weight: 600;
+}
+.work-order-details-status-open {
+  color: #339933;
+}
+.work-order-details-status-pending {
+  color: #ff6600;
+}
+.work-order-details-status-cancelled {
+  color: #a6a6a6;
+}
+.work-order-details-status-complete {
+  color: #0099ff;
+}
+.work-order-details-status-closed {
+  color: #3333ff;
+}
+.work-order-details-status-error {
+  color: #cc0000;
+}
+.work-order-details-status-retry {
+  color: #996633;
+}
+.work-order-details-status-processed {
+  color: #000000;
+}
+
+/* TOOL/EQUIPMENT ITEM STATUS DISPLAY */
+.tool-equipment-status-chip {
+  font-size: 90%;
+  color: #ffffff;
+  padding: 3px 6px 3px 6px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.tool-equipment-status-chip-out {
+  background-color: #339933;
+}
+.tool-equipment-status-chip-returned {
+  background-color: #000000;
+}
+
 /*::ng-deep.mat-tab-label.mat-tab-label-active:not(.mat-tab-disabled),*/
 /*::ng-deep.mat-tab-label.mat-tab-label-active.cdk-keyboard-focused:not(.mat-tab-disabled) {*/
 /*  background-color: #ccf2ff;*/

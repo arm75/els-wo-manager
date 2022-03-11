@@ -1,14 +1,17 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { LiveAnnouncer } from "@angular/cdk/a11y";
-import { MatTable, MatTableDataSource } from "@angular/material/table";
-import { MatSort, Sort } from "@angular/material/sort";
-import { MatPaginator } from "@angular/material/paginator";
-import { WorkOrderService } from "../../../core/services/work-order.service";
-import { WorkOrder } from "../../../core/models/work-order";
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { WorkOrderUsersAddComponent } from "../../dialogs/work-order-users-add/work-order-users-add.component";
-import { WorkOrderUsersEditComponent } from "../../dialogs/work-order-users-edit/work-order-users-edit.component";
-import { WorkOrderUsersDeleteComponent } from "../../dialogs/work-order-users-delete/work-order-users-delete.component";
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {LiveAnnouncer} from "@angular/cdk/a11y";
+import {MatTable, MatTableDataSource} from "@angular/material/table";
+import {MatSort, Sort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
+import {WorkOrderService} from "../../../core/services/work-order.service";
+import {WorkOrder} from "../../../core/models/work-order";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {WorkOrderUsersAddComponent} from "../../dialogs/work-order-users-add/work-order-users-add.component";
+import {WorkOrderUsersEditComponent} from "../../dialogs/work-order-users-edit/work-order-users-edit.component";
+import {WorkOrderUsersDeleteComponent} from "../../dialogs/work-order-users-delete/work-order-users-delete.component";
+import {UserService} from "../../../core/services/user.service";
+import {map} from "rxjs/operators";
+import {WorkOrderStatus} from "../../../core/types/work-order-status";
 
 @Component({
   selector: 'app-work-order-users-table',
@@ -21,6 +24,8 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
 
   dataSource: any;
 
+  dataSource2: any;
+
   @ViewChild(MatTable)
   entityTable!: MatTable<WorkOrder>;
 
@@ -32,6 +37,7 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
 
   constructor(
     private entityService: WorkOrderService,
+    private userService: UserService,
     private _liveAnnouncer: LiveAnnouncer,
     private dialog: MatDialog
   ) {
@@ -44,12 +50,25 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
     this.buildTable();
   }
 
+ home() {
+    this.userService.get(1001340).subscribe((data) => {
+      this.dataSource2 = data;
+      console.log(this.dataSource2.valueOf('username'));
+    }, error => {
+      alert(error.error.message);
+    });
+ }
+
  buildTable() {
-    this.entityService.getAll().subscribe(data => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-    })
+   this.entityService.getAll()
+     .pipe(map(items =>
+       items.filter(item => ((item.status == WorkOrderStatus.OPEN)||(item.status == WorkOrderStatus.PENDING)))))
+     .subscribe(data => {
+       console.log(data);
+       this.dataSource = new MatTableDataSource(data);
+       this.dataSource.sort = this.sort;
+       this.dataSource.paginator = this.paginator;
+     });
   }
 
   applyFilter(event: Event) {

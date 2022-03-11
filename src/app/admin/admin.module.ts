@@ -58,6 +58,9 @@ import {AuthenticationService} from "../core/security/authentication.service";
 import {UserService} from "../core/services/user.service";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {AuthInterceptor} from "../core/security/auth.interceptor";
+import { WorkOrderCompleteComponent } from './dialogs/work-order-complete/work-order-complete.component';
+import { WorkOrderCloseComponent } from './dialogs/work-order-close/work-order-close.component';
+import { ProcessingTableComponent } from './tables/processing-table/processing-table.component';
 // table components array
 const AdminModuleTableComponents = [
   CustomerTableComponent,
@@ -118,7 +121,10 @@ const maskConfig: Partial<IConfig> = {
   declarations: [
     AdminComponent,
     AdminModuleTableComponents,
-    AdminModuleDialogComponents
+    AdminModuleDialogComponents,
+    WorkOrderCompleteComponent,
+    WorkOrderCloseComponent,
+    ProcessingTableComponent
   ],
   // modules that this module needs to use
   imports: [

@@ -3,6 +3,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { UserService } from "../../../core/services/user.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import {ElsWoManagerConstants} from "../../../core/els-wo-manager-constants";
 
 @Component({
   selector: 'app-user-add',
@@ -15,6 +16,10 @@ export class UserAddComponent implements OnInit {
 
   addForm: FormGroup = new FormGroup({});
 
+  userRoles = ElsWoManagerConstants.userRolesSelectArray;
+  roleSelected: any;
+
+
   constructor( private matDialogRef: MatDialogRef<UserAddComponent>,
                private entityService: UserService,
                private formBuilder: FormBuilder,
@@ -26,8 +31,8 @@ export class UserAddComponent implements OnInit {
     this.addForm = this.formBuilder.group({
       'username': new FormControl(''),
       'password': new FormControl(''),
-      'roles': new FormControl(''),
-      'authorities': new FormControl(''),
+      'role': new FormControl(''),
+      //'authorities': new FormControl(''),
       'accountNonLocked': new FormControl(''),
       'active': new FormControl(''),
       'firstName': new FormControl(''),

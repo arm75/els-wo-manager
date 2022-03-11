@@ -1,5 +1,6 @@
 import { Customer } from "./customer";
 import { Location } from "./location";
+import { WorkOrderStatus } from "../types/work-order-status";
 
 export interface WorkOrder {
   id: number;
@@ -7,7 +8,7 @@ export interface WorkOrder {
   customer: Customer;
   locationId: number;
   location: Location;
-  status: string;
+  status: WorkOrderStatus;
   customerPo: string;
   quickDescription: string;
   description: string;

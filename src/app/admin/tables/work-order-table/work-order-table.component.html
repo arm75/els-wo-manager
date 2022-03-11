@@ -1,11 +1,12 @@
 <div class="table-toolbar">
   <span>
     <mat-form-field class="example-full-width width-99 els-custom-customer-select" appearance="outline">
-        <mat-label>Customer</mat-label>
-        <mat-select #customerSelect [(value)]="selected" (selectionChange)="selectChange()">
-          <mat-option *ngFor="let cust of loadedCustomers"
-                      [value]="cust.id">
-            {{cust.entityName}}
+        <mat-label>Filter Work Orders</mat-label>
+        <mat-select #customerSelect [(value)]="workOrderFilterSelected" (selectionChange)="selectChange()">
+          <mat-option value="ALL">ALL Work Orders</mat-option>
+          <mat-option *ngFor="let status of dropdownFilterArray"
+                      [value]="status.value">
+            {{status.name}}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -60,7 +61,7 @@
     <!-- status -->
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Status">Status</th>
-      <td mat-cell *matCellDef="let element">{{element.status}}</td>
+      <td mat-cell *matCellDef="let element"><span class="status-chip status-chip-{{element.status.toLowerCase()}}">{{element.status}}</span></td>
     </ng-container>
     <!-- actions -->
     <ng-container matColumnDef="actions">
@@ -69,7 +70,12 @@
 <!--        <button mat-button class="work-order-table-edit-button mat-icon-button" (click)="openEditDialog(element.id)"><mat-icon color="primary">edit</mat-icon></button>        -->
         <button mat-button class="work-order-table-edit-button mat-icon-button" [routerLink]="['/workOrderDetails', element.id]"><mat-icon color="primary">edit</mat-icon></button>
         <button mat-button class="work-order-table-delete-button mat-icon-button" (click)="openDeleteDialog(element.id)"><mat-icon color="primary">delete</mat-icon></button>
-
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu"><mat-icon  color="primary">more_horiz</mat-icon></button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item *ngIf="(element.status == 'OPEN')||(element.status == 'PENDING')" (click)="completeDialog(element.id)"><span>COMPLETE Work Order</span></button>
+          <button mat-menu-item *ngIf="element.status == 'COMPLETE'"><span>CLOSE Work Order</span></button>
+          <button mat-menu-item *ngIf="element.status == 'CLOSED'"><span>Re-OPEN Work Order</span></button>
+        </mat-menu>
       </td>
 
     </ng-container>

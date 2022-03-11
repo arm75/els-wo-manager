@@ -1,20 +1,20 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { LiveAnnouncer } from "@angular/cdk/a11y";
-import { MatTable, MatTableDataSource } from "@angular/material/table";
-import { MatSort, Sort } from "@angular/material/sort";
-import { MatPaginator } from "@angular/material/paginator";
-import { WorkOrderService } from "../../../core/services/work-order.service";
-import { WorkOrder } from "../../../core/models/work-order";
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { WorkOrderAddComponent } from "../../dialogs/work-order-add/work-order-add.component";
-import { WorkOrderEditComponent } from "../../dialogs/work-order-edit/work-order-edit.component";
-import { WorkOrderDeleteComponent } from "../../dialogs/work-order-delete/work-order-delete.component";
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {LiveAnnouncer} from "@angular/cdk/a11y";
+import {MatTable, MatTableDataSource} from "@angular/material/table";
+import {MatSort, Sort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
+import {WorkOrderService} from "../../../core/services/work-order.service";
+import {WorkOrder} from "../../../core/models/work-order";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {WorkOrderAddComponent} from "../../dialogs/work-order-add/work-order-add.component";
+import {WorkOrderEditComponent} from "../../dialogs/work-order-edit/work-order-edit.component";
+import {WorkOrderDeleteComponent} from "../../dialogs/work-order-delete/work-order-delete.component";
 import {MatSelect} from "@angular/material/select";
 import {CustomerService} from "../../../core/services/customer.service";
-import {filter, map} from "rxjs/operators";
-import {
-  GlobalProgressSpinnerComponent
-} from "../../../shared/progress-spinner/global-progress-spinner/global-progress-spinner.component";
+import {map} from "rxjs/operators";
+import {WorkOrderStatus} from "../../../core/types/work-order-status";
+import {ElsWoManagerConstants} from "../../../core/els-wo-manager-constants";
+import {WorkOrderCompleteComponent} from "../../dialogs/work-order-complete/work-order-complete.component";
 
 @Component({
   selector: 'app-work-order-table',
@@ -38,21 +38,21 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
 
   /////////////////////////////////////////////////////////////////////////////////////
 
-  @ViewChild('customerSelect')
-  customerSelect!: MatSelect;
-
-  selected!: string;
-
+  @ViewChild('workOrderFilterSelect')
+  workOrderFilterSelect!: MatSelect;
+  workOrderFilterSelected: string = 'ALL';
   loadedCustomers: any;
 
   //////////////////////////////////////////////////////////////////////////////////////
+  dropdownFilterSelected: any;
+  dropdownFilterArray = ElsWoManagerConstants.workOrderStatusFilterArray;
 
   constructor(
     private entityService: WorkOrderService,
     private customerService: CustomerService, ///////////////////////////////
     private _liveAnnouncer: LiveAnnouncer,
     private dialog: MatDialog,
-    private spinner: GlobalProgressSpinnerComponent
+    //private spinner: GlobalProgressSpinnerComponent
   ) {
 
 
@@ -81,20 +81,44 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     // this.spinner.initiate();  |  does not work yet...
   }
 
+  menuButtonClick() {
+    alert("Click");
+
+  }
+
+
+
  buildTable() {
-    this.entityService.getAll()
-      .pipe(map(items =>
-        items.filter(item => (item.status == 'OPEN'))))
-      .subscribe(data => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-    });
+   switch(this.workOrderFilterSelected) {
+     case 'ALL': {
+       this.entityService.getAll()
+         .subscribe(data => {
+           console.log(data);
+           this.dataSource = new MatTableDataSource(data);
+           this.dataSource.sort = this.sort;
+           this.dataSource.paginator = this.paginator;
+         });
+       break;
+     }
+     default: {
+       this.entityService.getAll()
+         .pipe(map(items =>
+           items.filter(item => ((item.status == this.workOrderFilterSelected)))))
+         .subscribe(data => {
+           console.log(data);
+           this.dataSource = new MatTableDataSource(data);
+           this.dataSource.sort = this.sort;
+           this.dataSource.paginator = this.paginator;
+         });
+       break;
+     }
+   }
   }
 
   selectChange() {
-    console.log(this.selected)
-    alert("You selected" + this.selected);
+    console.log(this.workOrderFilterSelected)
+    // alert("You selected" + this.workOrderFilterSelected);
+    this.buildTable();
   }
 
   applyFilter(event: Event) {
@@ -125,6 +149,20 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     editDialogConfig.data = { entityId: _id };
     const editDialogRef = this.dialog.open(WorkOrderEditComponent, editDialogConfig);
     editDialogRef.afterClosed().subscribe(editData => {
+      this.buildTable();
+    });
+  }
+
+  // opens Complete Work Order box
+  completeDialog( _id: number) {
+    const completeDialogConfig = new MatDialogConfig();
+    completeDialogConfig.disableClose = true;
+    completeDialogConfig.autoFocus = true;
+    completeDialogConfig.width = "25%";
+    completeDialogConfig.position = { top:  '0' };
+    completeDialogConfig.data = { entityId: _id };
+    const completeDialogRef = this.dialog.open(WorkOrderCompleteComponent, completeDialogConfig);
+    completeDialogRef.afterClosed().subscribe(completeData => {
       this.buildTable();
     });
   }

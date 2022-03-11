@@ -1,9 +1,23 @@
+import {WorkOrderStatus} from "./types/work-order-status";
+
 export class ElsWoManagerConstants {
 
   public static userRolesSelectArray: any = [
+    { value:'ROLE_SUPER_ADMIN', name:'Super Admin' },
     { value:'ROLE_ADMIN', name:'Admin' },
     { value:'ROLE_USER', name:'User' }
   ];
+
+  public static workOrderStatusFilterArray: any = [
+    { value:WorkOrderStatus.OPEN, name:'OPEN Work Orders' },
+    { value:WorkOrderStatus.PENDING, name:'PENDING Work Orders' },
+    { value:WorkOrderStatus.CANCELLED, name:'CANCELLED Work Orders' },
+    { value:WorkOrderStatus.COMPLETE, name:'COMPLETE Work Orders' },
+    { value:WorkOrderStatus.CLOSED, name:'CLOSED Work Orders' },
+    { value:WorkOrderStatus.ERROR, name:'ERROR Work Orders' },
+    { value:WorkOrderStatus.RETRY, name:'RETRY Work Orders' },
+    { value:WorkOrderStatus.PROCESSED, name:'PROCESSED Work Orders' }
+]
 
   public static hoursSelectArray: any = [
     { value:0, name:'0' },

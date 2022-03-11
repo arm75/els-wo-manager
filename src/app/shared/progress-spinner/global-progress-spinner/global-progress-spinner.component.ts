@@ -24,14 +24,14 @@ export class GlobalProgressSpinnerComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public initiate() {
-    const spinnerDialogConfig = new MatDialogConfig();
-    spinnerDialogConfig.disableClose = true;
-    spinnerDialogConfig.autoFocus = true;
-    spinnerDialogConfig.width = "25%";
-    spinnerDialogConfig.position = { bottom:  'dterhytd' };
-    const spinnerDialogRef = this.dialog.open(GlobalProgressSpinnerComponent, spinnerDialogConfig);
-  }
+  // public initiate() {
+  //   const spinnerDialogConfig = new MatDialogConfig();
+  //   spinnerDialogConfig.disableClose = true;
+  //   spinnerDialogConfig.autoFocus = true;
+  //   spinnerDialogConfig.width = "25%";
+  //   spinnerDialogConfig.position = { bottom:  'dterhytd' };
+  //   const spinnerDialogRef = this.dialog.open(GlobalProgressSpinnerComponent, spinnerDialogConfig);
+  // }
 
 
 }

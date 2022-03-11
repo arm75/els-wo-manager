@@ -1,7 +1,8 @@
 export interface CustomHttpResponse {
-  httpStatusCode: number;
-  httpStatus: string;
+  code: number;
+  status: string;
   reason: string;
   message: string;
+  timestamp: string;
 }
 

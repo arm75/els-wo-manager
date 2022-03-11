@@ -19,6 +19,17 @@
         <input matInput formControlName="username">
       </mat-form-field>
     </p>
+    <p>
+      <mat-form-field class="example-full-width width-99" appearance="outline">
+        <mat-label>Role</mat-label>
+        <mat-select #roleSelect [(value)]="roleSelected" formControlName="role">
+          <mat-option *ngFor="let role of userRoles"
+                      [value]="role.value">
+            {{role.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
     <h4 mat-dialog-title>Contact Details</h4>
     <p>
       <mat-form-field class="example-full-width width-31" appearance="outline">
