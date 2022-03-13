@@ -73,19 +73,19 @@ body { width: 100%; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif
 }
 
 .snackbar-container-error {
-  margin-top: 70px !important;
+  margin-bottom: 70px !important;
   color: beige;
   background-color: #c62828 !important;
 }
 
 .snackbar-container-success {
-  margin-top: 70px !important;
+  margin-bottom: 70px !important;
   color: beige;
   background-color: #2e7d32 !important;
 }
 
 .snackbar-container-warning {
-  margin-top: 70px !important;
+  margin-bottom: 70px !important;
   color: beige;
   background-color: #ff8f00 !important;
 }

@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { ToolEquipmentService } from "../../../core/services/tool-equipment.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ToolEquipment } from "../../../core/models/tool-equipment";
@@ -37,9 +37,9 @@ export class ToolEquipmentEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-	          'entityName': new FormControl(this.entityData.entityName),
+	          'entityName': new FormControl(this.entityData.entityName, [Validators.required]),
 	          'description': new FormControl(this.entityData.description),
-	          'pricePerDay': new FormControl(this.entityData.pricePerDay)
+	          'pricePerDay': new FormControl(this.entityData.pricePerDay, [Validators.required])
           })
           this.dataLoaded = true;
         })

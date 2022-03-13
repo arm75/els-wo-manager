@@ -14,7 +14,7 @@ export class GlobalSnackBarService {
   ) {
     this.config = new MatSnackBarConfig();
     this.config.panelClass = ["snackbar-container"];
-    this.config.verticalPosition = "top";
+    this.config.verticalPosition = "bottom";
     this.config.horizontalPosition = "center";
     this.config.duration = 4000;
   }

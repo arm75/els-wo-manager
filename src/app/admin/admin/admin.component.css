@@ -69,3 +69,21 @@ a:hover {
   padding: 5px 0px 5px 0px;
   color: #bfbfbf;
 }
+
+.logged-in-user {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+.logged-in-user p {
+  color: white;
+  font-weight: 500;
+  font-size: 125%;
+  margin: 5px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+
+.els-admin-tabs {
+  padding-bottom: 30px;
+}

@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { UserService } from "../../../core/services/user.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { User } from "../../../core/models/user";
-
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-user-delete',
@@ -20,7 +19,7 @@ export class UserDeleteComponent implements OnInit {
   constructor( private matDialogRef: MatDialogRef<UserDeleteComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: UserService,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
@@ -36,7 +35,8 @@ export class UserDeleteComponent implements OnInit {
           this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
+          this.matDialogRef.close();
+          this.globalSnackBarService.error(error.error.message);
         });
     }
   }
@@ -44,15 +44,11 @@ export class UserDeleteComponent implements OnInit {
   deleteEntity(): void {
     this.entityService.delete(this.entityId)
       .subscribe(data => {
-        console.log("User " + this.entityId  + " deleted successfully.");
-        this.matSnackBar.open("User " + this.entityId  + " deleted successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("User: " + this.entityId  + " has been deleted.");
       }, error => {
-        console.log("An error has occurred. User not deleted: " + error);
-        this.matSnackBar.open("An error has occurred. User not deleted: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
-
 }
-

@@ -36,12 +36,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     if(this.authenticationService.isLoggedIn()) {
-      this.router.navigateByUrl('/workOrders');
+      if((this.authenticationService.getUserFromLocalStorage()?.role == 'ROLE_ADMIN')||(this.authenticationService.getUserFromLocalStorage()?.role == 'ROLE_SUPER_ADMIN')) {
+        this.router.navigateByUrl('/admin');
+      } else {
+        this.router.navigateByUrl('/workOrders');
+      }
     } else {
       this.router.navigateByUrl('/login');
     }
-
-
 
     this.loginFormGroup = this.formBuilder.group({
       'username': new FormControl(''),

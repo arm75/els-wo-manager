@@ -9,12 +9,20 @@ import {AuthenticationService} from "../../core/security/authentication.service"
 })
 export class AdminComponent implements OnInit {
 
+  loggedInUser!: any;
+  nameToDisplay!: any;
+
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService
   ) { }
 
   ngOnInit(): void {
+
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    //console.log(this.loggedInUser);
+    this.nameToDisplay = this.loggedInUser.username;
+
   }
 
   logout() {

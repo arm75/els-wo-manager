@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { UserService } from "../../../core/services/user.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { User } from "../../../core/models/user";
 import {ElsWoManagerConstants} from "../../../core/els-wo-manager-constants";
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-user-edit',
@@ -26,7 +26,7 @@ export class UserEditComponent implements OnInit {
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: UserService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
@@ -41,23 +41,24 @@ export class UserEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-	          'username': new FormControl(this.entityData.username),
-            'password': new FormControl(this.entityData.password),
-            'retypePassword': new FormControl(this.entityData.password),
-            'role': new FormControl(this.entityData.role),
+            'firstName': new FormControl(this.entityData.firstName, [Validators.required]),
+            'lastName': new FormControl(this.entityData.lastName, [Validators.required]),
+            'username': new FormControl(this.entityData.username, [Validators.required]),
+            'password': new FormControl(this.entityData.password, [Validators.required]),
+            'retypePassword': new FormControl(this.entityData.password, [Validators.required]),
+            'role': new FormControl(this.entityData.role, [Validators.required]),
             // 'authorities': new FormControl(this.entityData.authorities),
             'accountNonLocked': new FormControl(this.entityData.accountNonLocked),
             'active': new FormControl(this.entityData.active),
-            'firstName': new FormControl(this.entityData.firstName),
-            'lastName': new FormControl(this.entityData.lastName),
             'phoneNumb': new FormControl(this.entityData.phoneNumb),
             'altPhoneNumb': new FormControl(this.entityData.altPhoneNumb),
-            'emailAddress': new FormControl(this.entityData.emailAddress)
+            'emailAddress': new FormControl(this.entityData.emailAddress, [Validators.email])
           })
           this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
+          this.matDialogRef.close();
+          this.globalSnackBarService.error(error.error.message);
         });
     }
   }
@@ -65,13 +66,11 @@ export class UserEditComponent implements OnInit {
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("User " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar.open("User " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("User " + this.editForm.value.id + " edited successfully.")
       }, error => {
-        console.log("An error has occurred. User not edited: " + error);
-        this.matSnackBar.open("An error has occurred. User not edited: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
 

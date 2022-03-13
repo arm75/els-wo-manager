@@ -196,3 +196,17 @@ h3.master-total-currency {
   font-size: 125%;
 
 }
+
+.logged-in-user {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+.logged-in-user p {
+  color: white;
+  font-weight: 500;
+  font-size: 125%;
+  margin: 5px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}

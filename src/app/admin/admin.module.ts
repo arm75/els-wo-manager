@@ -61,6 +61,8 @@ import {AuthInterceptor} from "../core/security/auth.interceptor";
 import { WorkOrderCompleteComponent } from './dialogs/work-order-complete/work-order-complete.component';
 import { WorkOrderCloseComponent } from './dialogs/work-order-close/work-order-close.component';
 import { ProcessingTableComponent } from './tables/processing-table/processing-table.component';
+import { WorkOrderCancelComponent } from './dialogs/work-order-cancel/work-order-cancel.component';
+import { WorkOrderRetryComponent } from './dialogs/work-order-retry/work-order-retry.component';
 // table components array
 const AdminModuleTableComponents = [
   CustomerTableComponent,
@@ -124,7 +126,9 @@ const maskConfig: Partial<IConfig> = {
     AdminModuleDialogComponents,
     WorkOrderCompleteComponent,
     WorkOrderCloseComponent,
-    ProcessingTableComponent
+    ProcessingTableComponent,
+    WorkOrderCancelComponent,
+    WorkOrderRetryComponent
   ],
   // modules that this module needs to use
   imports: [

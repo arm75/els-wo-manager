@@ -21,6 +21,9 @@ import { ThemePalette} from "@angular/material/core";
 })
 export class WorkOrderDetailsComponent implements OnInit {
 
+  loggedInUser!: any;
+  nameToDisplay!: any;
+
   @Input()
   passedWorkOrderId: any;
 
@@ -74,13 +77,18 @@ export class WorkOrderDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    //console.log(this.loggedInUser);
+    this.nameToDisplay = this.loggedInUser.username;
+
     this.dataLoaded = false;
     this.getIdFromRoute();
     this.loadCustomerSelect();
 
     if (this.passedWorkOrderId) {
-      console.log("First If=true");
-      console.log("entityId: " + this.passedWorkOrderId);
+      //console.log("First If=true");
+      //console.log("entityId: " + this.passedWorkOrderId);
       this.loadWorkOrderIntoView();
     }
   }

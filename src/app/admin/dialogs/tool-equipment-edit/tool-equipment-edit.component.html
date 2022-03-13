@@ -4,27 +4,33 @@
   <mat-dialog-content>
     <h4 mat-dialog-title>Tool/Equipment Details</h4>
     <p>
-      <mat-form-field class="example-full-width width-99" appearance="outline">
+      <mat-form-field class="width-99" appearance="outline">
         <mat-label>ToolEquipment Name</mat-label>
         <input matInput formControlName="entityName">
+        <mat-error *ngIf="editForm.controls['entityName'].hasError('required')">
+          Tool/Equipment Name is required
+        </mat-error>
       </mat-form-field>
     </p>
     <p>
-      <mat-form-field class="example-full-width width-99" appearance="outline">
+      <mat-form-field class="width-99" appearance="outline">
         <mat-label>Description</mat-label>
         <textarea matInput class="description-box" formControlName="description"></textarea>
       </mat-form-field>
     </p>
     <p>
-      <mat-form-field class="example-full-width width-47" appearance="outline">
+      <mat-form-field class="width-47" appearance="outline">
         <mat-label>Price per Day</mat-label>
         <input matInput prefix="$" mask="0*.00" formControlName="pricePerDay">
+        <mat-error *ngIf="editForm.controls['pricePerDay'].hasError('required')">
+          Price per Day is required
+        </mat-error>
       </mat-form-field>
     </p>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>
-    <button class="mat-raised-button mat-primary" type="submit">Save Tool/Equipment</button>
+    <button class="mat-raised-button mat-primary" [disabled]="editForm.invalid" type="submit">Save Tool/Equipment</button>
   </mat-dialog-actions>
 </form>
 </div>

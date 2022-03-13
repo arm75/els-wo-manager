@@ -1,25 +1,34 @@
-<form [formGroup]="addForm" class="example-form" (submit)="addEntity()">
+<form [formGroup]="addForm" class="" (submit)="addEntity()">
     <h2 mat-dialog-title>{{formTitle}}</h2>
     <mat-dialog-content>
     <h4 mat-dialog-title>User Details</h4>
       <p>
-        <mat-form-field class="example-full-width width-47" appearance="outline">
+        <mat-form-field class="width-47" appearance="outline">
           <mat-label>First Name</mat-label>
           <input matInput formControlName="firstName">
+          <mat-error *ngIf="addForm.controls['firstName'].hasError('required')">
+            First Name is required
+          </mat-error>
         </mat-form-field>
-        <mat-form-field class="example-full-width width-47" appearance="outline">
+        <mat-form-field class="width-47" appearance="outline">
           <mat-label>Last Name</mat-label>
           <input matInput formControlName="lastName">
+          <mat-error *ngIf="addForm.controls['lastName'].hasError('required')">
+            Last Name is required
+          </mat-error>
         </mat-form-field>
       </p>
       <p>
-        <mat-form-field class="example-full-width width-99" appearance="outline">
+        <mat-form-field class="width-99" appearance="outline">
           <mat-label>Username</mat-label>
           <input matInput formControlName="username">
+          <mat-error *ngIf="addForm.controls['username'].hasError('required')">
+            Username is required
+          </mat-error>
         </mat-form-field>
       </p>
       <p>
-        <mat-form-field class="example-full-width width-99" appearance="outline">
+        <mat-form-field class="width-99" appearance="outline">
           <mat-label>Role</mat-label>
           <mat-select #roleSelect [(value)]="roleSelected" formControlName="role">
             <mat-option *ngFor="let role of userRoles"
@@ -27,38 +36,50 @@
               {{role.name}}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="addForm.controls['role'].hasError('required')">
+            Role is required
+          </mat-error>
         </mat-form-field>
       </p>
       <h4 mat-dialog-title>Contact Details</h4>
       <p>
-        <mat-form-field class="example-full-width width-31" appearance="outline">
+        <mat-form-field class="width-31" appearance="outline">
           <mat-label>Phone Number</mat-label>
           <input matInput autocomplete="off" mask="(000)000-0000" formControlName="phoneNumb">
         </mat-form-field>
-        <mat-form-field class="example-full-width width-31" appearance="outline">
+        <mat-form-field class="width-31" appearance="outline">
           <mat-label>Alt Phone Number</mat-label>
           <input matInput autocomplete="off" mask="(000)000-0000" formControlName="altPhoneNumb">
         </mat-form-field>
-        <mat-form-field class="example-full-width width-33" appearance="outline">
+        <mat-form-field class="width-33" appearance="outline">
           <mat-label>Email Address</mat-label>
           <input matInput autocomplete="off" formControlName="emailAddress">
+          <mat-error *ngIf="addForm.controls['emailAddress'].hasError('email')">
+            Enter a VALID email address
+          </mat-error>
         </mat-form-field>
       </p>
       <h4 mat-dialog-title>Password</h4>
       <p>
-        <mat-form-field class="example-full-width width-47" appearance="outline">
+        <mat-form-field class="width-47" appearance="outline">
           <mat-label>Password</mat-label>
           <input matInput type="password" formControlName="password">
+          <mat-error *ngIf="addForm.controls['password'].hasError('required')">
+            Password is required
+          </mat-error>
         </mat-form-field>
-        <mat-form-field class="example-full-width width-47" appearance="outline">
+        <mat-form-field class="width-47" appearance="outline">
           <mat-label>Re-Type Password</mat-label>
           <input matInput type="password" formControlName="retypePassword">
+          <mat-error *ngIf="addForm.controls['retypePassword'].hasError('required')">
+            Password is required
+          </mat-error>
         </mat-form-field>
       </p>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>
-    <button class="mat-raised-button mat-primary" type="submit">Save User</button>
+    <button class="mat-raised-button mat-primary" [disabled]="addForm.invalid" type="submit">Save User</button>
   </mat-dialog-actions>
 </form>
 

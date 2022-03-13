@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { UserService } from "../../../core/services/user.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import {ElsWoManagerConstants} from "../../../core/els-wo-manager-constants";
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-user-add',
@@ -23,23 +23,24 @@ export class UserAddComponent implements OnInit {
   constructor( private matDialogRef: MatDialogRef<UserAddComponent>,
                private entityService: UserService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit() {
 
     this.addForm = this.formBuilder.group({
-      'username': new FormControl(''),
-      'password': new FormControl(''),
-      'role': new FormControl(''),
+      'firstName': new FormControl('', [Validators.required]),
+      'lastName': new FormControl('', [Validators.required]),
+      'username': new FormControl('', [Validators.required]),
+      'password': new FormControl('', [Validators.required]),
+      'retypePassword': new FormControl('', [Validators.required]),
+      'role': new FormControl('', [Validators.required]),
       //'authorities': new FormControl(''),
       'accountNonLocked': new FormControl(''),
       'active': new FormControl(''),
-      'firstName': new FormControl(''),
-      'lastName': new FormControl(''),
       'phoneNumb': new FormControl(''),
       'altPhoneNumb': new FormControl(''),
-      'emailAddress': new FormControl('')
+      'emailAddress': new FormControl('', [Validators.email])
     });
 
   }
@@ -47,12 +48,10 @@ export class UserAddComponent implements OnInit {
   addEntity() {
     this.entityService.create(this.addForm.value)
       .subscribe(data => {
-        this.matSnackBar.open("User added successfully.");
-        console.log("User added successfully.");
+        this.globalSnackBarService.success("User added successfully.");
         this.matDialogRef.close();
       }, error => {
-        console.log("An error has occurred. User not added: " + error);
-        this.matSnackBar.open("An error has occurred. User not added: " + error);
+        this.globalSnackBarService.error(error.error.message);
         this.matDialogRef.close();
       });
   }
