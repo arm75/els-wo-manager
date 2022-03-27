@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryLocationService } from "../../../core/services/inventory-location.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { InventoryLocation } from "../../../core/models/inventory-location";
 import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-inventory-location-edit',
@@ -24,14 +24,12 @@ export class InventoryLocationEditComponent implements OnInit {
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: InventoryLocationService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
-
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
-
     if (this.entityId != null) {
       this.entityService.get(this.entityId)
         .toPromise()
@@ -60,13 +58,12 @@ export class InventoryLocationEditComponent implements OnInit {
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Inventory Location " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Inventory Location " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Inventory Location: " + this.editForm.value.id + " has been updated.");
       }, error => {
-        console.log("An error has occurred. Inventory Location not edited: " + error);
-        this.matSnackBar.open("An error has occurred. Inventory Location not edited: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
+
 }

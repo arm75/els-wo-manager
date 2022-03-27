@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryItemService } from "../../../core/services/inventory-item.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { InventoryItem } from "../../../core/models/inventory-item";
 import { MatSelect } from "@angular/material/select";
 import { InventoryService } from "../../../core/services/inventory.service";
 import {finalize} from "rxjs/operators";
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-inventory-item-edit',
@@ -24,9 +24,8 @@ export class InventoryItemEditComponent implements OnInit {
 
   @ViewChild('inventorySelect')
   inventorySelect!: MatSelect;
-
   inventoryLoaded: any;
-  inventorySelected!: string;
+  inventorySelected: any;
   inventorySelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<InventoryItemEditComponent>,
@@ -34,10 +33,8 @@ export class InventoryItemEditComponent implements OnInit {
                private entityService: InventoryItemService,
                private inventoryService: InventoryService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
-  ) {
-    this.loadInventorySelect();
-  }
+               private globalSnackBarService: GlobalSnackBarService
+  ) { }
 
   ngOnInit(): void {
     this.dataLoaded = false;
@@ -50,41 +47,45 @@ export class InventoryItemEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-            'inventoryId': new FormControl(this.entityData.inventoryId),
-            'workOrderId': new FormControl(this.woId),
+            'inventory': new FormControl(this.entityData.inventory, [Validators.required]),
+            'workOrder': new FormControl(this.entityData.workOrder, [Validators.required]),
             'notes': new FormControl(this.entityData.notes),
-            'unitPrice': new FormControl(this.entityData.unitPrice),
-            'qty': new FormControl(this.entityData.qty),
-          })
-          this.dataLoaded = true;
+            'unitPrice': new FormControl(this.entityData.unitPrice, [Validators.required]),
+            'qty': new FormControl(this.entityData.qty, [Validators.required]),
+          });
         })
         .catch(error => {
-          console.log(error);
-        });
+        })
+        .finally(() => {
+          this.dataLoaded = true;
+          this.loadInventorySelect();
+        }
+      );
     }
   }
 
+  compareObjects(o1: any, o2: any): boolean {
+    return o1.entityName === o2.entityName && o1.id === o2.id;
+  }
+
   selectChange() {
-    this.inventoryService.get(this.inventorySelected)
+    this.inventoryService.get(this.inventorySelected.id)
       .pipe(finalize(() => {
         this.editForm.controls['notes'].setValue(this.inventorySelectedLoaded.description);
         this.editForm.controls['unitPrice'].setValue(this.inventorySelectedLoaded.unitPrice);
       }))
-      .subscribe(
-        data => {
+      .subscribe(data => {
           this.inventorySelectedLoaded = data;
-        }, error => {
-          alert("there was an error");
-        });
+      },error => {
+      }
+    );
   }
 
   loadInventorySelect() {
     this.inventoryService.getAll().subscribe(
       data => {
-        console.log(data);
         this.inventoryLoaded = data;
       },error => {
-        console.log(error);
       }
     );
   }
@@ -92,13 +93,13 @@ export class InventoryItemEditComponent implements OnInit {
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Inventory Item " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Inventory Item " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Inventory Item: " + this.editForm.value.id + " has been updated.")
       }, error => {
-        console.log("An error has occurred. Inventory Item not edited: " + error);
-        this.matSnackBar.open("An error has occurred. Inventory Item not edited: " + error);
         this.matDialogRef.close();
-      });
+        this.globalSnackBarService.error(error.error.message);
+      }
+    );
   }
+
 }

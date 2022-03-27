@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryItemService } from "../../../core/services/inventory-item.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSelect } from "@angular/material/select";
 import { InventoryService } from "../../../core/services/inventory.service";
 import {finalize} from "rxjs/operators";
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-inventory-item-add',
@@ -13,16 +13,14 @@ import {finalize} from "rxjs/operators";
   styleUrls: ['./inventory-item-add.component.css']
 })
 export class InventoryItemAddComponent implements OnInit {
-
   formTitle: string = "Add Inventory Item";
   woId: null;
   addForm: FormGroup = new FormGroup({});
 
   @ViewChild('inventorySelect')
   inventorySelect!: MatSelect;
-
   inventoryLoaded: any;
-  inventorySelected!: string;
+  inventorySelected: any;
   inventorySelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<InventoryItemAddComponent>,
@@ -30,43 +28,39 @@ export class InventoryItemAddComponent implements OnInit {
                private entityService: InventoryItemService,
                private inventoryService: InventoryService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
-  ) {
-    this.loadInventorySelect();
-  }
+               private globalSnackBarService: GlobalSnackBarService
+  ) { }
 
   ngOnInit() {
     this.woId = this.data.woId;
     this.addForm = this.formBuilder.group({
-      'inventoryId': new FormControl(''),
-      'workOrderId': new FormControl(this.woId),
+      'inventory': new FormControl('', [Validators.required]),
+      'workOrder': new FormControl({ "id": this.woId}),
       'notes': new FormControl(''),
-      'unitPrice': new FormControl(''),
-      'qty': new FormControl(''),
+      'unitPrice': new FormControl('', [Validators.required]),
+      'qty': new FormControl('', [Validators.required]),
+      'total': new FormControl('')
     });
+    this.loadInventorySelect();
   }
 
   selectChange() {
-    this.inventoryService.get(this.inventorySelected)
+    this.inventoryService.get(this.inventorySelected.id)
       .pipe(finalize(() => {
           this.addForm.controls['notes'].setValue(this.inventorySelectedLoaded.description);
           this.addForm.controls['unitPrice'].setValue(this.inventorySelectedLoaded.unitPrice);
-      }))
-      .subscribe(
-      data => {
+      })).subscribe(data => {
         this.inventorySelectedLoaded = data;
       }, error => {
-        alert("there was an error");
-      });
+      }
+    );
   }
 
   loadInventorySelect() {
     this.inventoryService.getAll().subscribe(
       data => {
-        console.log(data);
         this.inventoryLoaded = data;
       },error => {
-        console.log(error);
       }
     );
   }
@@ -74,13 +68,12 @@ export class InventoryItemAddComponent implements OnInit {
   addEntity() {
     this.entityService.create(this.addForm.value)
       .subscribe(data => {
-        this.matSnackBar.open("Inventory Item added successfully.");
-        console.log("Inventory Item added successfully.");
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Inventory Item added successfully.");
       }, error => {
-        console.log("An error has occurred. Inventory Item not added: " + error);
-        this.matSnackBar.open("An error has occurred. Inventory Item not added: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
+
 }

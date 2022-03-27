@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkOrder } from '../models/work-order';
+import {environment} from "../../../environments/environment";
 
 
 @Injectable({
@@ -9,7 +10,8 @@ import { WorkOrder } from '../models/work-order';
 })
 export class WorkOrderUsersService {
 
-  private baseUrl: string = "http://127.0.0.1:8090/work-order";
+  private baseUrl: string = environment.apiBaseUrl + "/work-order";
+  // private baseUrl: string = "http://127.0.0.1:8090/work-order";
 
   constructor( private http: HttpClient ) { }
 

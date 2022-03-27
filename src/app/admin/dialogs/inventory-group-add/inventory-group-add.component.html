@@ -13,6 +13,14 @@
       </p>
       <p>
         <mat-form-field class="width-99" appearance="outline">
+          <mat-label>Parent Group</mat-label>
+          <mat-select #parentSelect [(value)]="parentSelected" (selectionChange)="selectChange()" formControlName="parent">
+            <mat-option *ngFor="let parent of parentLoaded" [value]="parent">{{parent.entityName}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="width-99" appearance="outline">
           <mat-label>Description</mat-label>
           <textarea matInput class="description-box" value="" formControlName="description"></textarea>
         </mat-form-field>

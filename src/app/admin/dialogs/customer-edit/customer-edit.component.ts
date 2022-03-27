@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { CustomerService } from "../../../core/services/customer.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { Customer } from "../../../core/models/customer";
 import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-customer-edit',
@@ -12,7 +12,6 @@ import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
   styleUrls: ['./customer-edit.component.css']
 })
 export class CustomerEditComponent implements OnInit {
-
   dataLoaded: boolean = false;
   formTitle: string = "Edit Customer";
   entityId: null;
@@ -24,14 +23,12 @@ export class CustomerEditComponent implements OnInit {
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: CustomerService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
-
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
-
     if (this.entityId != null) {
       this.entityService.get(this.entityId)
         .toPromise()
@@ -49,24 +46,25 @@ export class CustomerEditComponent implements OnInit {
             'altPhoneNumb': new FormControl(this.entityData.altPhoneNumb),
             'emailAddress': new FormControl(this.entityData.emailAddress, [Validators.email])
           })
-          this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
-        });
+        })
+        .finally(() => {
+          this.dataLoaded = true;
+        }
+      );
     }
   }
 
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Customer " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Customer " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Customer: " + this.editForm.value.id + " has been updated.");
       }, error => {
-        console.log("An error has occurred. Customer not edited: " + error);
-        this.matSnackBar.open("An error has occurred. Customer not edited: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
+
 }

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { User } from '../models/user';
 import { JwtHelperService } from "@auth0/angular-jwt";
 import {Router} from "@angular/router";
+import {environment} from "../../../environments/environment";
 
 
 @Injectable({
@@ -11,7 +12,8 @@ import {Router} from "@angular/router";
 })
 export class AuthenticationService {
 
-  public baseUrl: string = "http://127.0.0.1:8090/user";
+  private baseUrl: string = environment.apiBaseUrl + "/user";
+  //public baseUrl: string = "http://127.0.0.1:8090/user";
   private token: any;
   private loggedInUsername: any;
   private stringUser!: any;
@@ -60,6 +62,16 @@ export class AuthenticationService {
       return null;
     }
   }
+
+  // public getRoleFromLocalStorage(): User | null {
+  //   if (localStorage.getItem('user') != null) {
+  //     this.stringRole = localStorage.getItem('role');
+  //     // console.log(this.stringUser);
+  //     return JSON.parse(this.stringRole);
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
   public loadToken(): void {
     this.token = localStorage.getItem('token');

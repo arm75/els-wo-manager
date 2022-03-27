@@ -63,6 +63,8 @@ import { WorkOrderCloseComponent } from './dialogs/work-order-close/work-order-c
 import { ProcessingTableComponent } from './tables/processing-table/processing-table.component';
 import { WorkOrderCancelComponent } from './dialogs/work-order-cancel/work-order-cancel.component';
 import { WorkOrderRetryComponent } from './dialogs/work-order-retry/work-order-retry.component';
+import { MatTableTestComponent } from './admin/mat-table-test/mat-table-test.component';
+import { WorkOrderProcessingTableComponent } from './tables/work-order-processing-table/work-order-processing-table.component';
 // table components array
 const AdminModuleTableComponents = [
   CustomerTableComponent,
@@ -128,7 +130,9 @@ const maskConfig: Partial<IConfig> = {
     WorkOrderCloseComponent,
     ProcessingTableComponent,
     WorkOrderCancelComponent,
-    WorkOrderRetryComponent
+    WorkOrderRetryComponent,
+    MatTableTestComponent,
+    WorkOrderProcessingTableComponent
   ],
   // modules that this module needs to use
   imports: [

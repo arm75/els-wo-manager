@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ToolEquipmentService } from "../../../core/services/tool-equipment.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { ToolEquipment } from "../../../core/models/tool-equipment";
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-tool-equipment-edit',
@@ -11,7 +11,6 @@ import { ToolEquipment } from "../../../core/models/tool-equipment";
   styleUrls: ['./tool-equipment-edit.component.css']
 })
 export class ToolEquipmentEditComponent implements OnInit {
-
   dataLoaded: boolean = false;
   formTitle: string = "Edit Tool/Equipment";
   entityId: null;
@@ -22,14 +21,12 @@ export class ToolEquipmentEditComponent implements OnInit {
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: ToolEquipmentService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
-
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
-
     if (this.entityId != null) {
       this.entityService.get(this.entityId)
         .toPromise()
@@ -44,7 +41,8 @@ export class ToolEquipmentEditComponent implements OnInit {
           this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
+          this.matDialogRef.close();
+          this.globalSnackBarService.error(error.error.message);
         });
     }
   }
@@ -52,13 +50,11 @@ export class ToolEquipmentEditComponent implements OnInit {
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Tool/Equipment " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Tool/Equipment " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Tool/Equipment: " + this.editForm.value.id + " has been updated.");
       }, error => {
-        console.log("An error has occurred. Tool/Equipment not edited: " + error);
-        this.matSnackBar.open("An error has occurred. Tool/Equipment not edited: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
 }

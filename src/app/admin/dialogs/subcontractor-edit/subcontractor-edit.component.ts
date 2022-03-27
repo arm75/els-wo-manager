@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { SubcontractorService } from "../../../core/services/subcontractor.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { Subcontractor } from "../../../core/models/subcontractor";
 import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-subcontractor-edit',
@@ -24,14 +24,12 @@ export class SubcontractorEditComponent implements OnInit {
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: SubcontractorService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
-
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
-
     if (this.entityId != null) {
       this.entityService.get(this.entityId)
         .toPromise()
@@ -52,7 +50,8 @@ export class SubcontractorEditComponent implements OnInit {
           this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
+          this.matDialogRef.close();
+          this.globalSnackBarService.error(error.error.message);
         });
     }
   }
@@ -60,13 +59,11 @@ export class SubcontractorEditComponent implements OnInit {
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Subcontractor " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Subcontractor " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Subcontractor: " + this.editForm.value.id + " has been updated.")
       }, error => {
-        console.log("An error has occurred. Subcontractor not edited: " + error);
-        this.matSnackBar.open("An error has occurred. Subcontractor not edited: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
 }

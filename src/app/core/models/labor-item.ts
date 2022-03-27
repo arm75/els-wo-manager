@@ -3,10 +3,8 @@ import { Labor } from "./labor";
 
 export interface LaborItem {
   id: number;
-  workOrderId: number;
-  workOrder: WorkOrder;
-  laborId: number;
   labor: Labor;
+  workOrder: WorkOrder;
   notes: string;
   hours: number;
   minutes: number;

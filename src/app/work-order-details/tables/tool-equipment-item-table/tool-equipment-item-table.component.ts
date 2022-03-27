@@ -56,10 +56,9 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
    this.componentTotal = 0;
     this.entityService.getAll()
       .pipe(map(items =>
-        items.filter(item => (item.workOrderId == this.passedWorkOrderId))))
+        items.filter(item => (item.workOrder.id == this.passedWorkOrderId))))
       .subscribe(data => {
         data.forEach(a => this.componentTotal += a.totalPrice);
-        console.log("total toolequip price: " + this.componentTotal);
         this.totalChangedEvent.emit(this.componentTotal);
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.sort = this.sort;

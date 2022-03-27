@@ -7,4 +7,6 @@ mat-form-field {
   margin-right: 5px;
 }
 
-
+button:disabled {
+  background-color: #afafaf;
+}

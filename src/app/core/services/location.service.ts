@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Location } from '../models/location';
+import {environment} from "../../../environments/environment";
 
 
 @Injectable({
@@ -9,7 +10,8 @@ import { Location } from '../models/location';
 })
 export class LocationService {
 
-  private baseUrl: string = "http://127.0.0.1:8090/location";
+  private baseUrl: string = environment.apiBaseUrl + "/location";
+  // private baseUrl: string = "http://127.0.0.1:8090/location";
 
   constructor( private http: HttpClient ) { }
 
@@ -32,10 +34,10 @@ export class LocationService {
   delete(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrl}/delete/${id}`);
   }
-   
+
   // deleteAll(): Observable<any> {
   //   return this.http.delete(this.baseUrl);
   // }
   //
 }
-  
+

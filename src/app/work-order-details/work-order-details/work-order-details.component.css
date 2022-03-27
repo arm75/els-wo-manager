@@ -66,7 +66,7 @@ a:hover {
 }
 
 .containing-box textarea {
-  height: 200px;
+  height: 100px;
 }
 
 table {
@@ -82,6 +82,16 @@ table {
 .table-search-box {
   padding: 0 0 0 0;
   margin: 0 0 0 0;
+}
+
+.els-form-fields-third-column {
+  margin-left: 20px !important;
+  margin-right: 10px !important;
+}
+
+.els-form-fields-second-column {
+  margin-left: 10px !important;
+  margin-right: 10px !important;
 }
 
 .els-textarea-entry-notes {
@@ -209,4 +219,12 @@ h3.master-total-currency {
   font-size: 125%;
   margin: 5px 0px 0px 0px;
   padding: 0px 0px 0px 0px;
+}
+
+.work-order-details-tab-group {
+  padding-bottom: 120px;
+}
+
+button.add-user-to-workorder {
+  margin-left: 15px;
 }

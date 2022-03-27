@@ -6,12 +6,12 @@
     <p>
       <mat-form-field class="example-full-width width-99" appearance="outline">
         <mat-label>Select Tool/Equipment</mat-label>
-        <mat-select #toolEquipmentSelect [(value)]="toolEquipmentSelected" (selectionChange)="selectChange()" formControlName="toolEquipmentId">
-          <mat-option *ngFor="let toolequip of toolEquipmentLoaded"
-                      [value]="toolequip.id">
-            {{toolequip.entityName}}
-          </mat-option>
+        <mat-select #toolEquipmentSelect [(value)]="toolEquipmentSelected" [compareWith]="compareObjects" (selectionChange)="selectChange()" formControlName="toolEquipment">
+          <mat-option *ngFor="let toolequip of toolEquipmentLoaded" [value]="toolequip">{{toolequip.entityName}}</mat-option>
         </mat-select>
+        <mat-error *ngIf="editForm.controls['toolEquipment'].hasError('required')">
+          Tool/Equipment is required
+        </mat-error>
       </mat-form-field>
     </p>
     <p>
@@ -24,16 +24,22 @@
       <mat-form-field class="example-full-width width-47" appearance="outline">
         <mat-label>Price per Day</mat-label>
         <input matInput readonly autocomplete="off" prefix="$" mask="0*.00" formControlName="pricePerDay">
+        <mat-error *ngIf="editForm.controls['pricePerDay'].hasError('required')">
+          Price per Day is required
+        </mat-error>
       </mat-form-field>
       <mat-form-field class="example-full-width width-47" appearance="outline">
         <mat-label>Days</mat-label>
         <input matInput autocomplete="off" formControlName="days">
+        <mat-error *ngIf="editForm.controls['days'].hasError('required')">
+          Tool/Equipment is required
+        </mat-error>
       </mat-form-field>
     </p>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>
-    <button class="mat-raised-button mat-primary" type="submit">Save Tool/Equipment Item</button>
+    <button class="mat-raised-button mat-primary" [disabled]="editForm.invalid" type="submit">Save Tool/Equipment Item</button>
   </mat-dialog-actions>
 </form>
 </div>

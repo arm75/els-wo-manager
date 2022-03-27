@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { LaborItemService } from "../../../core/services/labor-item.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSelect } from "@angular/material/select";
 import { LaborService } from "../../../core/services/labor.service";
 import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
 import {finalize} from "rxjs/operators";
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-labor-item-add',
@@ -14,7 +14,6 @@ import {finalize} from "rxjs/operators";
   styleUrls: ['./labor-item-add.component.css']
 })
 export class LaborItemAddComponent implements OnInit {
-
   formTitle: string = "Add Labor Item";
   woId: null;
   addForm: FormGroup = new FormGroup({});
@@ -23,9 +22,8 @@ export class LaborItemAddComponent implements OnInit {
 
   @ViewChild('laborSelect')
   laborSelect!: MatSelect;
-
   laborLoaded: any;
-  laborSelected!: string;
+  laborSelected: any;
   laborSelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<LaborItemAddComponent>,
@@ -33,45 +31,41 @@ export class LaborItemAddComponent implements OnInit {
                private entityService: LaborItemService,
                private laborService: LaborService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
-  ) {
-    this.loadLaborSelect();
-  }
+               private globalSnackBarService: GlobalSnackBarService
+  ) { }
 
   ngOnInit() {
     this.woId = this.data.woId;
     this.addForm = this.formBuilder.group({
-      'laborId': new FormControl(''),
-      'workOrderId': new FormControl(this.woId),
+      'labor': new FormControl('', [Validators.required]),
+      'workOrder': new FormControl({ "id": this.woId }),
       'notes': new FormControl(''),
-      'ratePerHour': new FormControl(''),
-      'hours': new FormControl(''),
-      'minutes': new FormControl(''),
-      'total': new FormControl(''),
+      'ratePerHour': new FormControl('', [Validators.required]),
+      'hours': new FormControl('', [Validators.required]),
+      'minutes': new FormControl('', [Validators.required]),
+      'total': new FormControl('')
     });
+    this.loadLaborSelect();
   }
 
   selectChange() {
-    this.laborService.get(this.laborSelected)
+    this.laborService.get(this.laborSelected.id)
       .pipe(finalize(() => {
         this.addForm.controls['notes'].setValue(this.laborSelectedLoaded.description);
         this.addForm.controls['ratePerHour'].setValue(this.laborSelectedLoaded.ratePerHour);
       }))
-      .subscribe(
-        data => {
+      .subscribe(data => {
           this.laborSelectedLoaded = data;
-        }, error => {
-          alert("there was an error");
-        });
+      },error => {
+      }
+    );
   }
 
   loadLaborSelect() {
     this.laborService.getAll().subscribe(
       data => {
-        console.log(data);
         this.laborLoaded = data;
       },error => {
-        console.log(error);
       }
     );
   }
@@ -79,13 +73,13 @@ export class LaborItemAddComponent implements OnInit {
   addEntity() {
     this.entityService.create(this.addForm.value)
       .subscribe(data => {
-        this.matSnackBar.open("Labor Item added successfully.");
-        console.log("Labor Item added successfully.");
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Labor Item added successfully.");
       }, error => {
-        console.log("An error has occurred. Labor Item not added: " + error);
-        this.matSnackBar.open("An error has occurred. Labor Item not added: " + error);
         this.matDialogRef.close();
-      });
+        this.globalSnackBarService.error(error.error.message);
+      }
+    );
   }
+
 }

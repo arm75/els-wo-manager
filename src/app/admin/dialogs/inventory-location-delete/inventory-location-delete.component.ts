@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { InventoryLocationService } from "../../../core/services/inventory-location.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { InventoryLocation } from "../../../core/models/inventory-location";
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 
 @Component({
@@ -20,14 +21,12 @@ export class InventoryLocationDeleteComponent implements OnInit {
   constructor( private matDialogRef: MatDialogRef<InventoryLocationDeleteComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: InventoryLocationService,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
-
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
-
     if (this.entityId != null) {
       this.entityService.get(this.entityId)
         .toPromise()
@@ -44,15 +43,12 @@ export class InventoryLocationDeleteComponent implements OnInit {
   deleteEntity(): void {
     this.entityService.delete(this.entityId)
       .subscribe(data => {
-        console.log("Inventory Location " + this.entityId  + " deleted successfully.");
-        this.matSnackBar.open("Inventory Location " + this.entityId  + " deleted successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Inventory Location: " + this.entityId  + " has been deleted.")
       }, error => {
-        console.log("An error has occurred. Inventory Location not deleted: " + error);
-        this.matSnackBar.open("An error has occurred. Inventory Location not deleted: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
 
 }
-

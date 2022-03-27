@@ -1,17 +1,20 @@
 import { Customer } from "./customer";
 import { Location } from "./location";
+import { User } from "./user";
 import { WorkOrderStatus } from "../types/work-order-status";
 
 export interface WorkOrder {
   id: number;
-  customerId: number;
   customer: Customer;
-  locationId: number;
   location: Location;
+  assignedUsers: User[];
   status: WorkOrderStatus;
   customerPo: string;
   quickDescription: string;
   description: string;
+  contactName: string;
+  contactPhoneNumb: string;
+  contactAltPhoneNumb: string;
   entryInstruct: string;
   inventoryItemsTotal: number;
   laborItemsTotal: number;

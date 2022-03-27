@@ -15,13 +15,10 @@
     <p>
       <mat-form-field class="width-99" appearance="outline">
         <mat-label>Customer</mat-label>
-        <mat-select #customerSelect [(value)]="customerSelected" (selectionChange)="selectChange()" formControlName="customerId">
-          <mat-option *ngFor="let cust of customerLoaded"
-                      [value]="cust.id">
-            {{cust.entityName}}
-          </mat-option>
+        <mat-select #customerSelect [(value)]="customerSelected" [compareWith]="compareObjects" (selectionChange)="selectChange()" formControlName="customer">
+          <mat-option *ngFor="let cust of customerLoaded" [value]="cust">{{cust.entityName}}</mat-option>
         </mat-select>
-        <mat-error *ngIf="editForm.controls['customerId'].hasError('required')">
+        <mat-error *ngIf="editForm.controls['customer'].hasError('required')">
           Customer is required
         </mat-error>
       </mat-form-field>

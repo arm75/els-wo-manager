@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { LaborService } from "../../../core/services/labor.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { Labor } from "../../../core/models/labor";
-
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-labor-delete',
@@ -20,7 +19,7 @@ export class LaborDeleteComponent implements OnInit {
   constructor( private matDialogRef: MatDialogRef<LaborDeleteComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: LaborService,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
@@ -36,7 +35,8 @@ export class LaborDeleteComponent implements OnInit {
           this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
+          this.matDialogRef.close();
+          this.globalSnackBarService.error(error.error.message);
         });
     }
   }
@@ -44,15 +44,11 @@ export class LaborDeleteComponent implements OnInit {
   deleteEntity(): void {
     this.entityService.delete(this.entityId)
       .subscribe(data => {
-        console.log("Labor " + this.entityId  + " deleted successfully.");
-        this.matSnackBar.open("Labor " + this.entityId  + " deleted successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Labor: " + this.entityId  + " has been deleted.")
       }, error => {
-        console.log("An error has occurred. Labor not deleted: " + error);
-        this.matSnackBar.open("An error has occurred. Labor not deleted: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
-
 }
-

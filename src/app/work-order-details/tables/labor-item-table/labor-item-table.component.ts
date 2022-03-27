@@ -42,9 +42,7 @@ export class LaborItemTableComponent implements OnInit, AfterViewInit {
     private entityService: LaborItemService,
     private _liveAnnouncer: LiveAnnouncer,
     private dialog: MatDialog
-  ) {
-    //  this.buildTable();
-  }
+  ) { }
 
   ngOnInit() { }
 
@@ -56,10 +54,9 @@ export class LaborItemTableComponent implements OnInit, AfterViewInit {
     this.componentTotal = 0;
     this.entityService.getAll()
       .pipe(map(items =>
-        items.filter(item => (item.workOrderId == this.passedWorkOrderId))))
+        items.filter(item => (item.workOrder.id == this.passedWorkOrderId))))
       .subscribe(data => {
         data.forEach(a => this.componentTotal += a.totalPrice);
-        console.log("total labor price: " + this.componentTotal);
         this.totalChangedEvent.emit(this.componentTotal);
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.sort = this.sort;

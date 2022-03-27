@@ -21,6 +21,17 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Name">Name</th>
       <td mat-cell *matCellDef="let element">{{element.entityName}}</td>
     </ng-container>
+    <!-- parent -->
+    <ng-container matColumnDef="parent">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Parent">Parent</th>
+      <td mat-cell *matCellDef="let element">
+        <ng-container *ngIf="element.parent; else defaultValue">
+          {{element.parent.entityName}}
+        </ng-container>
+        <ng-template #defaultValue>
+        </ng-template>
+      </td>
+    </ng-container>
     <!-- description -->
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Description">Description</th>

@@ -4,15 +4,13 @@ import { WorkOrderService } from "../../core/services/work-order.service";
 import { WorkOrder } from "../../core/models/work-order";
 import { AuthenticationService } from "../../core/security/authentication.service";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { map } from "rxjs/operators";
 import { LocationService } from "../../core/services/location.service";
 import { CustomerService } from "../../core/services/customer.service";
 import { MatSelect } from "@angular/material/select";
 import { GlobalSnackBarService} from "../../shared/snackbar/global-snack-bar.service";
-import { MatProgressSpinnerModule, ProgressSpinnerMode } from '@angular/material/progress-spinner';
-import { ThemePalette} from "@angular/material/core";
+import {UserService} from "../../core/services/user.service";
+import {User} from "../../core/models/user";
 
 @Component({
   selector: 'app-work-order-details',
@@ -20,30 +18,32 @@ import { ThemePalette} from "@angular/material/core";
   styleUrls: ['./work-order-details.component.css']
 })
 export class WorkOrderDetailsComponent implements OnInit {
-
-  loggedInUser!: any;
-  nameToDisplay!: any;
+  loggedInUser = this.authenticationService.getUserFromLocalStorage();
+  loggedInRole: any;
+  nameToDisplay: any;
+  userData: any;
 
   @Input()
   passedWorkOrderId: any;
 
   dataLoaded: boolean = false;
-  // entity!: WorkOrder;
-  // entityId: null;
   entityData!: WorkOrder;
   editForm: FormGroup = new FormGroup({});
 
   @ViewChild('customerSelect')
   customerSelect!: MatSelect;
-
   customerLoaded: any;
-  customerSelected!: string;
+  customerSelected: any;
 
   @ViewChild('locationSelect')
   locationSelect!: MatSelect;
-
   locationLoaded: any;
-  locationSelected!: string;
+  locationSelected: any;
+
+  @ViewChild('assignedUsersSelect')
+  assignedUsersSelect!: MatSelect;
+  assignedUsersLoaded: any;
+  assignedUsersSelected: any;
 
   masterTotal: number = 0;
 
@@ -61,42 +61,49 @@ export class WorkOrderDetailsComponent implements OnInit {
   woPoFieldBox: any;
 
   constructor(
-    // private matDialogRef: MatDialogRef<WorkOrderEditComponent>,
-    //@Inject(MAT_DIALOG_DATA) public data: any,
     private snackBarService: GlobalSnackBarService,
     private entityService: WorkOrderService,
     private customerService: CustomerService,
     private locationService: LocationService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private matSnackBar: MatSnackBar
-  ) {
-
-  }
+    private globalSnackBarService: GlobalSnackBarService
+  ) { }
 
   ngOnInit(): void {
-
-    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
-    //console.log(this.loggedInUser);
-    this.nameToDisplay = this.loggedInUser.username;
-
     this.dataLoaded = false;
     this.getIdFromRoute();
     this.loadCustomerSelect();
 
     if (this.passedWorkOrderId) {
-      //console.log("First If=true");
-      //console.log("entityId: " + this.passedWorkOrderId);
       this.loadWorkOrderIntoView();
     }
   }
 
+  addUserToWorkOrder() {
+    this.userData.push(this.assignedUsersSelected);
+    this.loadAssignedUsersSelect();
+  }
+
+  removeUserFromWorkOrder(userToRemove: User) {
+    this.userData = this.userData.filter(function( obj: { id: number; } ) {
+      return obj.id !== userToRemove.id;
+    });
+    this.loadAssignedUsersSelect();
+  }
+
+  compareObjects(o1: any, o2: any): boolean {
+    return o1.entityName === o2.entityName && o1.id === o2.id;
+  }
+
+  doSomething($event: number) { }
+
   getIdFromRoute(): void {
     this.route.paramMap.subscribe( params => {
       this.passedWorkOrderId = params.get('passedId');
-      console.log("Got passed Id: " + this.passedWorkOrderId);
     });
   }
 
@@ -105,15 +112,21 @@ export class WorkOrderDetailsComponent implements OnInit {
       .toPromise()
       .then(data => { this.entityData = data; })
       .finally(() => {
+        this.loggedInRole = this.loggedInUser?.role;
+        this.nameToDisplay = this.loggedInUser?.username;
            this.updateFieldBoxes();
            this.editForm = this.formBuilder.group({
              'id': new FormControl(this.entityData.id),
-             'quickDescription': new FormControl(this.entityData.quickDescription),
              'status': new FormControl(this.entityData.status),
              'customerPo': new FormControl(this.entityData.customerPo),
-             'customerId': new FormControl(this.entityData.customerId),
-             'locationId': new FormControl(this.entityData.locationId),
+             'customer': new FormControl(this.entityData.customer),
+             'location': new FormControl(this.entityData.location),
+             'assignedUsers': new FormControl(this.entityData.assignedUsers),
+             'quickDescription': new FormControl(this.entityData.quickDescription),
              'description': new FormControl(this.entityData.description),
+             'contactName': new FormControl(this.entityData.contactName),
+             'contactPhoneNumb': new FormControl(this.entityData.contactPhoneNumb),
+             'contactAltPhoneNumb': new FormControl(this.entityData.contactAltPhoneNumb),
              'entryInstruct': new FormControl(this.entityData.entryInstruct),
              'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
              'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
@@ -122,10 +135,9 @@ export class WorkOrderDetailsComponent implements OnInit {
              'workOrderTotal': new FormControl(this.entityData.workOrderTotal)
            })
            this.dataLoaded = true;
-           this.loadLocationSelect(this.entityData.customerId);
-           // this.editForm.controls['customerId'].setValue(0);
-           this.editForm.controls['customerId'].setValue(this.entityData.customerId);
-           this.editForm.controls['locationId'].setValue(this.entityData.locationId);
+           this.loadLocationSelect(this.entityData.customer.id);
+           this.userData = this.entityData.assignedUsers;
+           this.loadAssignedUsersSelect();
       });
   }
 
@@ -137,62 +149,43 @@ export class WorkOrderDetailsComponent implements OnInit {
     this.woCustomerFieldBox = this.entityData.customer.entityName;
     this.woLocationFieldBox = this.entityData.location.entityName;
     this.woPoFieldBox = this.entityData.customerPo;
-
-
-  }
-
-  delayFunction(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
   calcMasterTotal() {
     this.masterTotal = this.masterInventoryTotal + this.masterLaborTotal + this.masterSubcontractorTotal + this.masterToolEquipmentTotal;
-    this.delayFunction(600);
-    this.saveWorkOrder();
   }
 
   getNewInventoryTotal(newTotal: number) {
     this.masterInventoryTotal = newTotal;
     this.calcMasterTotal();
-    // this.saveWorkOrder();
   }
 
   getNewLaborTotal(newTotal: number) {
     this.masterLaborTotal = newTotal;
     this.calcMasterTotal();
-    // this.saveWorkOrder();
   }
 
   getNewSubcontractorTotal(newTotal: number) {
     this.masterSubcontractorTotal = newTotal;
     this.calcMasterTotal();
-    // this.saveWorkOrder();
   }
 
   getNewToolEquipmentTotal(newTotal: number) {
     this.masterToolEquipmentTotal = newTotal;
     this.calcMasterTotal();
-    // this.saveWorkOrder();
   }
 
-  customerSelectChange() {
-    // alert(this.customerSelected);
-    this.loadLocationSelect(this.customerSelected.valueOf());
-    //console.log(this.selected);
-    // alert("You selected" + this.selected);
-  }
+  customerSelectChange() { this.loadLocationSelect(this.customerSelected.id); }
 
-  locationSelectChange() {
-    //alert(this.locationSelected);
-  }
+  locationSelectChange() { }
+
+  assignedUsersSelectChange() { }
 
   loadCustomerSelect() {
     this.customerService.getAll().subscribe(
       data => {
         this.customerLoaded = data;
-        console.log("Loaded Customer select:" + this.customerLoaded);
       },error => {
-        console.log("Error loading Customer select:" + error);
       }
     );
   }
@@ -201,26 +194,31 @@ export class WorkOrderDetailsComponent implements OnInit {
     if(passedCustomerId) {
       this.locationService.getAll()
         .pipe(map(items =>
-          items.filter(item => (item.customerId == passedCustomerId))))
+          items.filter(item => (item.customer.id == passedCustomerId))))
         .subscribe(data => {
             this.locationLoaded = data;
-            console.log("Loaded Location select:" + this.locationLoaded);
           }, error => {
-            console.log("Error loading Location select:" + error);
           }
         );
     } else {
       this.locationService.getAll()
         .subscribe(data => {
             this.locationLoaded = data;
-            console.log("Loaded Location select:" + this.locationLoaded);
           }, error => {
-            console.log("Error loading Location select:" + error);
           }
         );
     }
   }
 
+  loadAssignedUsersSelect() {
+    this.userService.getAll().subscribe(
+      data => {
+        this.assignedUsersLoaded = data;
+        this.assignedUsersLoaded = this.assignedUsersLoaded.filter((ar: { id: number; }) => !this.userData.find((rm: { id: number; }) => (rm.id === ar.id) ));
+      },error => {
+      }
+    );
+  }
 
   saveWorkOrder() {
     this.editForm.controls['inventoryItemsTotal'].setValue(this.masterInventoryTotal);
@@ -230,17 +228,12 @@ export class WorkOrderDetailsComponent implements OnInit {
     this.editForm.controls['workOrderTotal'].setValue(this.masterTotal);
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Work Order " + this.editForm.value.id + " edited successfully.");
-        // this.snackBarService.error("This message is ERROR");
-        // this.snackBarService.warning("This message is WARNING");
-        // this.snackBarService.success("This message is SUCCESS");
-        this.matSnackBar.open("Work Order " + this.editForm.value.id + " saved.");
+        this.globalSnackBarService.success("Work Order: " + this.editForm.value.id + " has been updated.");
         this.loadWorkOrderIntoView();
         this.updateFieldBoxes();
       }, error => {
-        this.matSnackBar.open("An error has occurred. Work Order could not be saved. " + error);
+        this.globalSnackBarService.error(error.error.message);
       });
-
   }
 
   logout() {

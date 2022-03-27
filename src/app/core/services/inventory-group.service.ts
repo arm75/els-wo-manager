@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { InventoryGroup } from '../models/inventory-group';
-
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class InventoryGroupService {
 
-  private baseUrl: string = "http://127.0.0.1:8090/inventory-group";
+  private baseUrl: string = environment.apiBaseUrl + "/inventory-group";
+  // private baseUrl: string = "http://127.0.0.1:8090/inventory-group";
 
   constructor( private http: HttpClient ) { }
 
@@ -32,10 +33,10 @@ export class InventoryGroupService {
   delete(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrl}/delete/${id}`);
   }
-   
+
   // deleteAll(): Observable<any> {
   //   return this.http.delete(this.baseUrl);
   // }
   //
 }
-  
+

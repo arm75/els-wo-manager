@@ -21,12 +21,14 @@ import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './shared/page-not-found/page-not-found.component';
 import { GlobalProgressSpinnerComponent } from './shared/progress-spinner/global-progress-spinner/global-progress-spinner.component';
 import {MaterialKitModule} from "./shared/material-kit/material-kit.module";
+import { UserProfileComponent } from './shared/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PageNotFoundComponent,
     GlobalProgressSpinnerComponent,
+    UserProfileComponent,
   ],
     imports: [
         CoreModule,

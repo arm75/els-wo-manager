@@ -17,7 +17,7 @@ import { InventoryGroupDeleteComponent } from "../../dialogs/inventory-group-del
 })
 export class InventoryGroupTableComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'entityName', 'description', 'actions'];
+  displayedColumns: string[] = ['id', 'entityName', 'parent', 'description', 'actions'];
 
   dataSource: any;
 

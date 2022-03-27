@@ -8,6 +8,7 @@ import { MatSelect } from "@angular/material/select";
 import { CustomerService } from "../../../core/services/customer.service";
 import { LocationService } from "../../../core/services/location.service";
 import {map} from "rxjs/operators";
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-work-order-edit',
@@ -24,15 +25,13 @@ export class WorkOrderEditComponent implements OnInit {
 
   @ViewChild('customerSelect')
   customerSelect!: MatSelect;
-
   customerLoaded: any;
-  customerSelected!: string;
+  customerSelected: any;
 
   @ViewChild('locationSelect')
   locationSelect!: MatSelect;
-
   locationLoaded: any;
-  locationSelected!: string;
+  locationSelected!: any;
 
   constructor( private matDialogRef: MatDialogRef<WorkOrderEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
@@ -40,17 +39,15 @@ export class WorkOrderEditComponent implements OnInit {
                private customerService: CustomerService,
                private locationService: LocationService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) {
     this.loadCustomerSelect();
     this.loadLocationSelect();
   }
 
   ngOnInit(): void {
-
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
-
     if (this.entityId != null) {
       this.entityService.get(this.entityId)
         .toPromise()
@@ -61,8 +58,9 @@ export class WorkOrderEditComponent implements OnInit {
             'quickDescription': new FormControl(this.entityData.quickDescription),
             'status': new FormControl(this.entityData.status),
             'customerPo': new FormControl(this.entityData.customerPo),
-            'customerId': new FormControl(this.entityData.customerId),
-            'locationId': new FormControl(this.entityData.locationId),
+            'customer': new FormControl(this.entityData.customer),
+            'location': new FormControl(this.entityData.location ),
+            // 'assignedUsers': new FormControl(this.entityData.assignedUsers),
             'description': new FormControl(this.entityData.description),
             'entryInstruct': new FormControl(this.entityData.entryInstruct),
             'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
@@ -74,20 +72,16 @@ export class WorkOrderEditComponent implements OnInit {
           this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
-        });
+        }
+      );
     }
   }
 
   customerSelectChange() {
-    // alert(this.customerSelected);
-    this.loadLocationSelect((this.customerSelected));
-    //console.log(this.selected);
-    // alert("You selected" + this.selected);
+    this.loadLocationSelect(this.customerSelected);
   }
 
   locationSelectChange() {
-    //alert(this.locationSelected);
   }
 
   loadCustomerSelect() {
@@ -96,35 +90,31 @@ export class WorkOrderEditComponent implements OnInit {
         console.log(data);
         this.customerLoaded = data;
       },error => {
-        console.log(error);
       }
     );
   }
 
-  loadLocationSelect(passedCustomerId?: any) {
+  loadLocationSelect(passedCustomer?: any) {
     this.locationService.getAll()
       .pipe(map(items =>
-        items.filter(item => (item.customerId == passedCustomerId))))
+        items.filter(item => (item.customer.id == passedCustomer.id))))
       .subscribe(
         data => {
-          console.log(data);
           this.locationLoaded = data;
-        }, error => {
-          console.log(error);
-        }
-      );
+      }, error => {
+      }
+    );
   }
 
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Work Order " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Work Order " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Work Order " + this.editForm.value.id + " edited successfully.")
       }, error => {
-        console.log("An error has occurred. Work Order not edited: " + error);
-        this.matSnackBar.open("An error has occurred. Work Order not edited: " + error);
         this.matDialogRef.close();
-      });
+        this.globalSnackBarService.error(error.error.message);
+      }
+    );
   }
 }

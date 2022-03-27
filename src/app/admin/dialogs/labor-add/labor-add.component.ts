@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { LaborService } from "../../../core/services/labor.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-labor-add',
@@ -12,17 +12,15 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 export class LaborAddComponent implements OnInit {
 
   formTitle: string = "Add Labor";
-
   addForm: FormGroup = new FormGroup({});
 
   constructor( private matDialogRef: MatDialogRef<LaborAddComponent>,
                private entityService: LaborService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit() {
-
     this.addForm = this.formBuilder.group({
       'entityName': new FormControl('', [Validators.required]),
       'description': new FormControl(''),
@@ -33,13 +31,11 @@ export class LaborAddComponent implements OnInit {
   addEntity() {
     this.entityService.create(this.addForm.value)
       .subscribe(data => {
-        this.matSnackBar.open("Labor added successfully.");
-        console.log("Labor added successfully.");
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Labor added successfully.");
       }, error => {
-        console.log("An error has occurred. Labor not added: " + error);
-        this.matSnackBar.open("An error has occurred. Labor not added: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
 }

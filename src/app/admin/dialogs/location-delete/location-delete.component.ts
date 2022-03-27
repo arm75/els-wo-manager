@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { LocationService } from "../../../core/services/location.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { Location } from "../../../core/models/location";
-
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-location-delete',
@@ -11,7 +10,6 @@ import { Location } from "../../../core/models/location";
   styleUrls: ['./location-delete.component.css']
 })
 export class LocationDeleteComponent implements OnInit {
-
   dataLoaded: boolean = false;
   formTitle: string = "Delete Location";
   entityId: null;
@@ -20,39 +18,36 @@ export class LocationDeleteComponent implements OnInit {
   constructor( private matDialogRef: MatDialogRef<LocationDeleteComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: LocationService,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
-
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
-
     if (this.entityId != null) {
       this.entityService.get(this.entityId)
         .toPromise()
         .then(data => {
           this.entityData = data;
-          this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
-        });
+        })
+        .finally( () => {
+          this.dataLoaded = true;
+        }
+      );
     }
   }
 
   deleteEntity(): void {
     this.entityService.delete(this.entityId)
       .subscribe(data => {
-        console.log("Location " + this.entityId  + " deleted successfully.");
-        this.matSnackBar.open("Location " + this.entityId  + " deleted successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Location " + this.entityId  + " deleted successfully.")
       }, error => {
-        console.log("An error has occurred. Location not deleted: " + error);
-        this.matSnackBar.open("An error has occurred. Location not deleted: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
 
 }
-

@@ -1,37 +1,43 @@
-<form [formGroup]="addForm" class="example-form" (submit)="addEntity()">
+<form [formGroup]="addForm" class="" (submit)="addEntity()">
     <h2 mat-dialog-title>{{formTitle}}</h2>
     <mat-dialog-content>
       <h4 mat-dialog-title>Subcontractor Item Details</h4>
       <p>
-        <mat-form-field class="example-full-width width-99" appearance="outline">
+        <mat-form-field class="width-99" appearance="outline">
           <mat-label>Select Subcontractor</mat-label>
-          <mat-select #subcontractorSelect [(value)]="subcontractorSelected" (selectionChange)="selectChange()" formControlName="subcontractorId">
-            <mat-option *ngFor="let subc of subcontractorLoaded"
-                        [value]="subc.id">
-              {{subc.entityName}}
-            </mat-option>
+          <mat-select #subcontractorSelect [(value)]="subcontractorSelected" (selectionChange)="selectChange()" formControlName="subcontractor">
+            <mat-option *ngFor="let subc of subcontractorLoaded" [value]="subc">{{subc.entityName}}</mat-option>
           </mat-select>
+          <mat-error *ngIf="addForm.controls['subcontractor'].hasError('required')">
+            Subcontractor is required
+          </mat-error>
         </mat-form-field>
       </p>
       <p>
-        <mat-form-field class="example-full-width width-99" appearance="outline">
+        <mat-form-field class="width-99" appearance="outline">
           <mat-label>Notes</mat-label>
-          <textarea matInput class="description-box" formControlName="notes"></textarea>
+          <textarea matInput autocomplete="off" class="description-box" formControlName="notes"></textarea>
         </mat-form-field>
       </p>
       <p>
-        <mat-form-field class="example-full-width width-47" appearance="outline">
+        <mat-form-field class="width-47" appearance="outline">
           <mat-label>Unit Price</mat-label>
-          <input matInput formControlName="unitPrice">
+          <input matInput autocomplete="off" formControlName="unitPrice">
+          <mat-error *ngIf="addForm.controls['unitPrice'].hasError('required')">
+            Unit Price is required
+          </mat-error>
         </mat-form-field>
-        <mat-form-field class="example-full-width width-47" appearance="outline">
+        <mat-form-field class="width-47" appearance="outline">
           <mat-label>Quantity</mat-label>
-          <input matInput formControlName="qty">
+          <input matInput autocomplete="off" formControlName="qty">
+          <mat-error *ngIf="addForm.controls['qty'].hasError('required')">
+            Quantity is required
+          </mat-error>
         </mat-form-field>
       </p>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>
-    <button class="mat-raised-button mat-primary" type="submit">Save Subcontractor Item</button>
+    <button class="mat-raised-button mat-primary" [disabled]="addForm.invalid" type="submit">Save Subcontractor Item</button>
   </mat-dialog-actions>
 </form>

@@ -14,28 +14,11 @@
       <p>
         <mat-form-field class="width-99" appearance="outline">
           <mat-label>Inventory Group</mat-label>
-          <mat-select #inventoryGroupSelect [(value)]="inventoryGroupSelected" (selectionChange)="selectChange()" formControlName="inventoryGroupId">
-            <mat-option *ngFor="let invGroup of inventoryGroupLoaded"
-                        [value]="invGroup.id">
-              {{invGroup.entityName}}
-            </mat-option>
+          <mat-select #inventoryGroupSelect [(value)]="inventoryGroupSelected" (selectionChange)="selectChange()" formControlName="inventoryGroup">
+            <mat-option *ngFor="let invGroup of inventoryGroupLoaded" [value]="invGroup">{{invGroup.entityName}}</mat-option>
           </mat-select>
-          <mat-error *ngIf="addForm.controls['inventoryGroupId'].hasError('required')">
+          <mat-error *ngIf="addForm.controls['inventoryGroup'].hasError('required')">
             Inventory Group is required
-          </mat-error>
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="width-99" appearance="outline">
-          <mat-label>Inventory Location</mat-label>
-          <mat-select #inventoryLocationSelect [(value)]="inventoryLocationSelected" (selectionChange)="selectChange()" formControlName="inventoryLocationId">
-            <mat-option *ngFor="let invLoc of inventoryLocationLoaded"
-                        [value]="invLoc.id">
-              {{invLoc.entityName}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="addForm.controls['inventoryLocationId'].hasError('required')">
-            Inventory Location is required
           </mat-error>
         </mat-form-field>
       </p>
@@ -47,10 +30,10 @@
       </p>
       <p>
         <mat-form-field class="" appearance="outline">
-          <mat-label>Qty in Stock</mat-label>
-          <input matInput autocomplete="off" formControlName="qtyInStock">
-          <mat-error *ngIf="addForm.controls['qtyInStock'].hasError('required')">
-            Qty in Stock is required
+          <mat-label>Total in Stock</mat-label>
+          <input matInput autocomplete="off" formControlName="totalInStock">
+          <mat-error *ngIf="addForm.controls['totalInStock'].hasError('required')">
+            Total in Stock is required
           </mat-error>
         </mat-form-field>
         <mat-form-field class="" appearance="outline">

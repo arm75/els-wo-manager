@@ -1,12 +1,12 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { InventoryService } from "../../../core/services/inventory.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { Inventory } from "../../../core/models/inventory";
-import {MatSelect} from "@angular/material/select";
-import {InventoryGroupService} from "../../../core/services/inventory-group.service";
-import {InventoryLocationService} from "../../../core/services/inventory-location.service";
+import { MatSelect} from "@angular/material/select";
+import { InventoryGroupService } from "../../../core/services/inventory-group.service";
+import { InventoryLocationService } from "../../../core/services/inventory-location.service";
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-inventory-edit',
@@ -24,12 +24,7 @@ export class InventoryEditComponent implements OnInit {
   @ViewChild('inventoryGroupSelect')
   inventoryGroupSelect!: MatSelect;
   inventoryGroupLoaded: any;
-  inventoryGroupSelected!: string;
-
-  @ViewChild('inventoryLocationSelect')
-  inventoryLocationSelect!: MatSelect;
-  inventoryLocationLoaded: any;
-  inventoryLocationSelected!: string;
+  inventoryGroupSelected: any;
 
   constructor( private matDialogRef: MatDialogRef<InventoryEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
@@ -37,17 +32,12 @@ export class InventoryEditComponent implements OnInit {
                private inventoryGroupService: InventoryGroupService,
                private inventoryLocationService: InventoryLocationService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
-  ) {
-    this.loadInventoryGroupSelect();
-    this.loadInventoryLocationSelect();
-  }
+               private globalSnackBarService: GlobalSnackBarService
+  ) { }
 
   ngOnInit(): void {
-
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
-
     if (this.entityId != null) {
       this.entityService.get(this.entityId)
         .toPromise()
@@ -56,19 +46,25 @@ export class InventoryEditComponent implements OnInit {
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
             'entityName': new FormControl(this.entityData.entityName, [Validators.required]),
-            'inventoryGroupId': new FormControl(this.entityData.inventoryGroupId, [Validators.required]),
-            'inventoryLocationId': new FormControl(this.entityData.inventoryLocationId, [Validators.required]),
+            'inventoryGroup': new FormControl(this.entityData.inventoryGroup, [Validators.required]),
             'description': new FormControl(this.entityData.description),
-            'qtyInStock': new FormControl(this.entityData.qtyInStock, [Validators.required]),
+            'totalInStock': new FormControl(this.entityData.totalInStock, [Validators.required]),
             'unitCost': new FormControl(this.entityData.unitCost, [Validators.required]),
             'unitPrice': new FormControl(this.entityData.unitPrice, [Validators.required])
-          })
-          this.dataLoaded = true;
+          });
         })
         .catch(error => {
-          console.log(error);
-        });
+        })
+        .finally(() => {
+          this.dataLoaded = true;
+          this.loadInventoryGroupSelect();
+        }
+      );
     }
+  }
+
+  compareObjects(o1: any, o2: any): boolean {
+    return o1.entityName === o2.entityName && o1.id === o2.id;
   }
 
   selectChange() {
@@ -79,21 +75,8 @@ export class InventoryEditComponent implements OnInit {
   loadInventoryGroupSelect() {
     this.inventoryGroupService.getAll().subscribe(
       data => {
-        console.log(data);
         this.inventoryGroupLoaded = data;
       },error => {
-        console.log(error);
-      }
-    );
-  }
-
-  loadInventoryLocationSelect() {
-    this.inventoryLocationService.getAll().subscribe(
-      data => {
-        console.log(data);
-        this.inventoryLocationLoaded = data;
-      },error => {
-        console.log(error);
       }
     );
   }
@@ -101,13 +84,11 @@ export class InventoryEditComponent implements OnInit {
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Inventory " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Inventory " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Inventory: " + this.editForm.value.id + " has been updated.");
       }, error => {
-        console.log("An error has occurred. Inventory not edited: " + error);
-        this.matSnackBar.open("An error has occurred. Inventory not edited: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
 }

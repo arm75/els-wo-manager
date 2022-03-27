@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Inventory } from '../models/inventory';
+import {environment} from "../../../environments/environment";
 
 
 @Injectable({
@@ -9,7 +10,8 @@ import { Inventory } from '../models/inventory';
 })
 export class InventoryService {
 
-  private baseUrl: string = "http://127.0.0.1:8090/inventory";
+  private baseUrl: string = environment.apiBaseUrl + "/inventory";
+  // private baseUrl: string = "http://127.0.0.1:8090/inventory";
 
   constructor( private http: HttpClient ) { }
 
@@ -32,10 +34,10 @@ export class InventoryService {
   delete(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrl}/delete/${id}`);
   }
-   
+
   // deleteAll(): Observable<any> {
   //   return this.http.delete(this.baseUrl);
   // }
   //
 }
-  
+

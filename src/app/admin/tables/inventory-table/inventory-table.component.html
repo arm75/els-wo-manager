@@ -26,15 +26,10 @@
       <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by Inventory Group">Group</th>
       <td mat-cell *matCellDef="let element">{{element.inventoryGroup.entityName}}</td>
     </ng-container>
-    <!-- inventoryLocation -->
-    <ng-container matColumnDef="inventoryLocation">
-      <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by Inventory Location">Location</th>
-      <td mat-cell *matCellDef="let element">{{element.inventoryLocation.entityName}}</td>
-    </ng-container>
-    <!-- qtyInStock -->
-    <ng-container matColumnDef="qtyInStock">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Qty in Stock">Qty in Stock</th>
-      <td mat-cell *matCellDef="let element">{{element.qtyInStock}}</td>
+    <!-- totalInStock -->
+    <ng-container matColumnDef="totalInStock">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Total in Stock">Total in Stock</th>
+      <td mat-cell *matCellDef="let element">{{element.totalInStock}}</td>
     </ng-container>
     <!-- unitCost -->
     <ng-container matColumnDef="unitCost">

@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { InventoryService } from "../../../core/services/inventory.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { Inventory } from "../../../core/models/inventory";
-
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-inventory-delete',
@@ -20,7 +19,7 @@ export class InventoryDeleteComponent implements OnInit {
   constructor( private matDialogRef: MatDialogRef<InventoryDeleteComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: InventoryService,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
@@ -36,7 +35,8 @@ export class InventoryDeleteComponent implements OnInit {
           this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
+          this.matDialogRef.close();
+          this.globalSnackBarService.error(error.error.message);
         });
     }
   }
@@ -44,15 +44,11 @@ export class InventoryDeleteComponent implements OnInit {
   deleteEntity(): void {
     this.entityService.delete(this.entityId)
       .subscribe(data => {
-        console.log("Inventory " + this.entityId  + " deleted successfully.");
-        this.matSnackBar.open("Inventory " + this.entityId  + " deleted successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Inventory: " + this.entityId  + " has been deleted.")
       }, error => {
-        console.log("An error has occurred. Inventory not deleted: " + error);
-        this.matSnackBar.open("An error has occurred. Inventory not deleted: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
-
 }
-

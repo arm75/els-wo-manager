@@ -2,8 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { LaborService } from "../../../core/services/labor.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { Labor } from "../../../core/models/labor";
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-labor-edit',
@@ -22,7 +22,7 @@ export class LaborEditComponent implements OnInit {
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: LaborService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
@@ -44,7 +44,8 @@ export class LaborEditComponent implements OnInit {
           this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
+          this.matDialogRef.close();
+          this.globalSnackBarService.error(error.error.message);
         });
     }
   }
@@ -52,13 +53,11 @@ export class LaborEditComponent implements OnInit {
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Labor " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Labor " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Labor: " + this.editForm.value.id + " has been updated.")
       }, error => {
-        console.log("An error has occurred. Labor not edited: " + error);
-        this.matSnackBar.open("An error has occurred. Labor not edited: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
 }

@@ -1,39 +1,45 @@
 <div *ngIf="dataLoaded">
-<form [formGroup]="editForm" class="example-form" (submit)="editEntity()">
+<form [formGroup]="editForm" class="" (submit)="editEntity()">
   <h2 mat-dialog-title>{{formTitle}}: {{entityId}}</h2>
   <mat-dialog-content>
     <h4 mat-dialog-title>Inventory Item Details</h4>
     <p>
-      <mat-form-field class="example-full-width width-99" appearance="outline">
+      <mat-form-field class="width-99" appearance="outline">
         <mat-label>Select Inventory</mat-label>
-        <mat-select #inventorySelect [(value)]="inventorySelected" (selectionChange)="selectChange()" formControlName="inventoryId">
-          <mat-option *ngFor="let inv of inventoryLoaded"
-                      [value]="inv.id">
-            {{inv.entityName}}
-          </mat-option>
+        <mat-select #inventorySelect [(value)]="inventorySelected" [compareWith]="compareObjects" (selectionChange)="selectChange()" formControlName="inventory">
+          <mat-option *ngFor="let inv of inventoryLoaded" [value]="inv">{{inv.entityName}}</mat-option>
         </mat-select>
+        <mat-error *ngIf="editForm.controls['inventory'].hasError('required')">
+          Inventory is required
+        </mat-error>
       </mat-form-field>
     </p>
     <p>
-      <mat-form-field class="example-full-width width-99" appearance="outline">
+      <mat-form-field class="width-99" appearance="outline">
         <mat-label>Notes</mat-label>
         <textarea matInput autocomplete="off" class="description-box" value="" formControlName="notes"></textarea>
       </mat-form-field>
     </p>
     <p>
-      <mat-form-field class="example-full-width width-47" appearance="outline">
+      <mat-form-field class="readonly width-47" appearance="outline">
         <mat-label>Unit Price</mat-label>
         <input matInput readonly autocomplete="off" prefix="$" mask="0*.00" formControlName="unitPrice">
+        <mat-error *ngIf="editForm.controls['unitPrice'].hasError('required')">
+          Unit Price is required
+        </mat-error>
       </mat-form-field>
-      <mat-form-field class="example-full-width width-47" appearance="outline">
+      <mat-form-field class="width-47" appearance="outline">
         <mat-label>Quantity</mat-label>
         <input matInput autocomplete="off" formControlName="qty">
+        <mat-error *ngIf="editForm.controls['qty'].hasError('required')">
+          Quantity is required
+        </mat-error>
       </mat-form-field>
     </p>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>
-    <button class="mat-raised-button mat-primary" type="submit">Save Inventory Item</button>
+    <button class="mat-raised-button mat-primary" [disabled]="editForm.invalid" type="submit">Save Inventory Item</button>
   </mat-dialog-actions>
 </form>
 </div>

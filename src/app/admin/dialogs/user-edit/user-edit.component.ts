@@ -67,7 +67,7 @@ export class UserEditComponent implements OnInit {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
         this.matDialogRef.close();
-        this.globalSnackBarService.success("User " + this.editForm.value.id + " edited successfully.")
+        this.globalSnackBarService.success("User: " + this.editForm.value.id + " has been updated.");
       }, error => {
         this.matDialogRef.close();
         this.globalSnackBarService.error(error.error.message);

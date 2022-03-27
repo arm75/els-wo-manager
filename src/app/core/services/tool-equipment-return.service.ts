@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ToolEquipment } from '../models/tool-equipment';
+import {environment} from "../../../environments/environment";
 
 
 @Injectable({
@@ -9,7 +10,8 @@ import { ToolEquipment } from '../models/tool-equipment';
 })
 export class ToolEquipmentReturnService {
 
-  private baseUrl: string = "http://127.0.0.1:8090/tool-equipment";
+  private baseUrl: string = environment.apiBaseUrl + "/tool-equipment";
+  // private baseUrl: string = "http://127.0.0.1:8090/tool-equipment";
 
   constructor( private http: HttpClient ) { }
 

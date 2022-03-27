@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { InventoryGroupService } from "../../../core/services/inventory-group.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { InventoryGroup } from "../../../core/models/inventory-group";
-
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-inventory-group-delete',
@@ -11,7 +10,6 @@ import { InventoryGroup } from "../../../core/models/inventory-group";
   styleUrls: ['./inventory-group-delete.component.css']
 })
 export class InventoryGroupDeleteComponent implements OnInit {
-
   dataLoaded: boolean = false;
   formTitle: string = "Delete Inventory Group";
   entityId: null;
@@ -20,14 +18,12 @@ export class InventoryGroupDeleteComponent implements OnInit {
   constructor( private matDialogRef: MatDialogRef<InventoryGroupDeleteComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: InventoryGroupService,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
-
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
-
     if (this.entityId != null) {
       this.entityService.get(this.entityId)
         .toPromise()
@@ -44,15 +40,12 @@ export class InventoryGroupDeleteComponent implements OnInit {
   deleteEntity(): void {
     this.entityService.delete(this.entityId)
       .subscribe(data => {
-        console.log("Inventory Group " + this.entityId  + " deleted successfully.");
-        this.matSnackBar.open("Inventory Group " + this.entityId  + " deleted successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Inventory Group: " + this.entityId  + " has been deleted.")
       }, error => {
-        console.log("An error has occurred. Inventory Group not deleted: " + error);
-        this.matSnackBar.open("An error has occurred. Inventory Group not deleted: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
 
 }
-

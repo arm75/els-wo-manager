@@ -1,12 +1,12 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { LocationService } from "../../../core/services/location.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { Location } from "../../../core/models/location";
-import {MatSelect} from "@angular/material/select";
-import {CustomerService} from "../../../core/services/customer.service";
-import {ElsWoManagerConstants} from "../../../core/els-wo-manager-constants";
+import { MatSelect } from "@angular/material/select";
+import { CustomerService } from "../../../core/services/customer.service";
+import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-location-edit',
@@ -14,7 +14,6 @@ import {ElsWoManagerConstants} from "../../../core/els-wo-manager-constants";
   styleUrls: ['./location-edit.component.css']
 })
 export class LocationEditComponent implements OnInit {
-
   dataLoaded: boolean = false;
   formTitle: string = "Edit Location";
   entityId: null;
@@ -25,20 +24,17 @@ export class LocationEditComponent implements OnInit {
   @ViewChild('customerSelect')
   customerSelect!: MatSelect;
   customerLoaded: any;
-  customerSelected!: string;
+  customerSelected: any;
 
   constructor( private matDialogRef: MatDialogRef<LocationEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: LocationService,
                private customerService: CustomerService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
-  ) {
-    this.loadCustomerSelect();
-  }
+               private globalSnackBarService: GlobalSnackBarService
+  ) { }
 
   ngOnInit(): void {
-
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
     if (this.entityId != null) {
@@ -48,30 +44,32 @@ export class LocationEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-            'customerId': new FormControl(this.entityData.customer.id, [Validators.required]),
+            'customer': new FormControl(this.entityData.customer, [Validators.required]),
             'entityName': new FormControl(this.entityData.entityName, [Validators.required])
-          })
-          this.customerSelected = this.entityData.customer.toString();
-          this.dataLoaded = true;
+          });
         })
         .catch(error => {
-          console.log(error);
-        });
+        })
+        .finally( () => {
+          this.dataLoaded = true;
+          this.loadCustomerSelect();
+        }
+      );
     }
   }
 
+  compareObjects(o1: any, o2: any): boolean {
+    return o1.entityName === o2.entityName && o1.id === o2.id;
+  }
+
   selectChange() {
-    //console.log(this.selected);
-    // alert("You selected" + this.selected);
   }
 
   loadCustomerSelect() {
     this.customerService.getAll().subscribe(
       data => {
-        console.log(data);
         this.customerLoaded = data;
       },error => {
-        console.log(error);
       }
     );
   }
@@ -79,13 +77,12 @@ export class LocationEditComponent implements OnInit {
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Location " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Location " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Location: " + this.editForm.value.id + " has been updated.")
       }, error => {
-        console.log("An error has occurred. Location not edited: " + error);
-        this.matSnackBar.open("An error has occurred. Location not edited: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
+
 }

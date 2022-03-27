@@ -1,0 +1,27 @@
+mat-drawer-container {
+  display: flex !important;
+  justify-content: stretch !important;
+  /*width: 100% !important;*/
+  height: 860px !important;
+}
+
+mat-drawer-content {
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  justify-content: left !important;
+
+  /*height: 100% !important;*/
+  width: 100% !important;
+}
+
+mat-drawer {
+  padding-left: 20px !important;
+  flex-direction: row !important;
+  /*height: 100% !important;*/
+  width: 20% !important;
+}
+
+.add-group-button {
+  text-align: center;
+  padding: 10px;
+}

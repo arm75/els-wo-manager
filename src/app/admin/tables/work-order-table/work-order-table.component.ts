@@ -61,11 +61,11 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     /////////////////////////////////////////////////////////////////
     this.customerService.getAll().subscribe(
       data => {
-        console.log(data);
+        //console.log(data);
         this.loadedCustomers = data;
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
     /////////////////////////////////////////////////////////////////
@@ -93,7 +93,7 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
      case 'ALL': {
        this.entityService.getAll()
          .subscribe(data => {
-           console.log(data);
+           //console.log(data);
            this.dataSource = new MatTableDataSource(data);
            this.dataSource.sort = this.sort;
            this.dataSource.paginator = this.paginator;
@@ -105,7 +105,7 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
          .pipe(map(items =>
            items.filter(item => ((item.status == this.workOrderFilterSelected)))))
          .subscribe(data => {
-           console.log(data);
+           //console.log(data);
            this.dataSource = new MatTableDataSource(data);
            this.dataSource.sort = this.sort;
            this.dataSource.paginator = this.paginator;
@@ -116,7 +116,7 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
   }
 
   selectChange() {
-    console.log(this.workOrderFilterSelected)
+    //console.log(this.workOrderFilterSelected)
     // alert("You selected" + this.workOrderFilterSelected);
     this.buildTable();
   }

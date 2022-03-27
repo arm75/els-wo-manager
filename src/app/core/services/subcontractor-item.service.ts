@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SubcontractorItem } from '../models/subcontractor-item';
+import {environment} from "../../../environments/environment";
 
 
 @Injectable({
@@ -9,7 +10,8 @@ import { SubcontractorItem } from '../models/subcontractor-item';
 })
 export class SubcontractorItemService {
 
-  private baseUrl: string = "http://127.0.0.1:8090/subcontractor-item";
+  private baseUrl: string = environment.apiBaseUrl + "/subcontractor-item";
+  // private baseUrl: string = "http://127.0.0.1:8090/subcontractor-item";
 
   constructor( private http: HttpClient ) { }
 
@@ -32,10 +34,10 @@ export class SubcontractorItemService {
   delete(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrl}/delete/${id}`);
   }
-   
+
   // deleteAll(): Observable<any> {
   //   return this.http.delete(this.baseUrl);
   // }
   //
 }
-  
+

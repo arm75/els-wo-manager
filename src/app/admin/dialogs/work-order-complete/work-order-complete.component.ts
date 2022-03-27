@@ -43,13 +43,11 @@ export class WorkOrderCompleteComponent implements OnInit {
     private locationService: LocationService,
     private formBuilder: FormBuilder,
     private matSnackBar: MatSnackBar
-  ) {
-  }
+  ) { }
 
   ngOnInit(): void {
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
-
     if (this.entityId != null) {
       this.entityService.get(this.entityId)
         .toPromise()
@@ -60,8 +58,8 @@ export class WorkOrderCompleteComponent implements OnInit {
             'quickDescription': new FormControl(this.entityData.quickDescription),
             //'status': new FormControl(this.entityData.status),
             'customerPo': new FormControl(this.entityData.customerPo),
-            'customerId': new FormControl(this.entityData.customerId),
-            'locationId': new FormControl(this.entityData.locationId),
+            'customer': new FormControl(this.entityData.customer),
+            'location': new FormControl(this.entityData.location),
             'description': new FormControl(this.entityData.description),
             'entryInstruct': new FormControl(this.entityData.entryInstruct),
             'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
@@ -73,7 +71,6 @@ export class WorkOrderCompleteComponent implements OnInit {
           this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
         });
     }
     this.dataLoaded = true;

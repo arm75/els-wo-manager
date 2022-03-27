@@ -1,12 +1,12 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { ToolEquipmentItemService } from "../../../core/services/tool-equipment-item.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { ToolEquipmentItem } from "../../../core/models/tool-equipment-item";
 import {MatSelect} from "@angular/material/select";
 import {ToolEquipmentService} from "../../../core/services/tool-equipment.service";
 import {finalize} from "rxjs/operators";
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-tool-equipment-item-edit',
@@ -14,7 +14,6 @@ import {finalize} from "rxjs/operators";
   styleUrls: ['./tool-equipment-item-edit.component.css']
 })
 export class ToolEquipmentItemEditComponent implements OnInit {
-
   dataLoaded: boolean = false;
   formTitle: string = "Edit Tool/Equipment Item";
   woId: null;
@@ -24,9 +23,8 @@ export class ToolEquipmentItemEditComponent implements OnInit {
 
   @ViewChild('toolEquipmentSelect')
   toolEquipmentSelect!: MatSelect;
-
   toolEquipmentLoaded: any;
-  toolEquipmentSelected!: string;
+  toolEquipmentSelected: any;
   toolEquipmentSelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<ToolEquipmentItemEditComponent>,
@@ -34,10 +32,8 @@ export class ToolEquipmentItemEditComponent implements OnInit {
                private entityService: ToolEquipmentItemService,
                private toolEquipmentService: ToolEquipmentService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
-  ) {
-    this.loadToolEquipmentSelect();
-  }
+               private globalSnackBarService: GlobalSnackBarService
+  ) { }
 
   ngOnInit(): void {
     this.dataLoaded = false;
@@ -50,42 +46,47 @@ export class ToolEquipmentItemEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-            'toolEquipmentId': new FormControl(this.entityData.toolEquipmentId),
-            'workOrderId': new FormControl(this.woId),
+            'toolEquipment': new FormControl(this.entityData.toolEquipmentId, [Validators.required]),
+            'workOrder': new FormControl(this.entityData.workOrder),
 	          'notes': new FormControl(this.entityData.notes),
-            'pricePerDay': new FormControl(this.entityData.pricePerDay),
-            'days': new FormControl(this.entityData.days),
-            'status': new FormControl(this.entityData.status),
-          })
-          this.dataLoaded = true;
+            'pricePerDay': new FormControl(this.entityData.pricePerDay, [Validators.required]),
+            'days': new FormControl(this.entityData.days, [Validators.required]),
+            'status': new FormControl(this.entityData.status, [Validators.required]),
+            'total': new FormControl('')
+          });
         })
         .catch(error => {
-          console.log(error);
-        });
+        })
+        .finally(()=>{
+          this.dataLoaded = true;
+          this.loadToolEquipmentSelect();
+        }
+      );
     }
   }
 
+  compareObjects(o1: any, o2: any): boolean {
+    return o1.entityName === o2.entityName && o1.id === o2.id;
+  }
+
   selectChange() {
-    this.toolEquipmentService.get(this.toolEquipmentSelected)
+    this.toolEquipmentService.get(this.toolEquipmentSelected.id)
       .pipe(finalize(() => {
         this.editForm.controls['notes'].setValue(this.toolEquipmentSelectedLoaded.description);
         this.editForm.controls['pricePerDay'].setValue(this.toolEquipmentSelectedLoaded.pricePerDay);
       }))
-      .subscribe(
-        data => {
-          this.toolEquipmentSelectedLoaded = data;
-        }, error => {
-          alert("there was an error");
-        });
+      .subscribe(data => {
+        this.toolEquipmentSelectedLoaded = data;
+      }, error => {
+      }
+    );
   }
 
   loadToolEquipmentSelect() {
     this.toolEquipmentService.getAll().subscribe(
       data => {
-        console.log(data);
         this.toolEquipmentLoaded = data;
       },error => {
-        console.log(error);
       }
     );
   }
@@ -93,13 +94,13 @@ export class ToolEquipmentItemEditComponent implements OnInit {
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Tool/Equipment Item " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Tool/Equipment Item " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Tool/Equipment Item: " + this.editForm.value.id + " has been updated.")
       }, error => {
-        console.log("An error has occurred. Tool/Equipment Item not edited: " + error);
-        this.matSnackBar.open("An error has occurred. Tool/Equipment Item not edited: " + error);
         this.matDialogRef.close();
-      });
+        this.globalSnackBarService.error(error.error.message);
+      }
+    );
   }
+
 }

@@ -9,7 +9,7 @@
   </div>
   <div class="app-icon-menu-box col-12 col-sm-12 col-md-1 col-lg-1 col-xl-1">
     <a href="/workOrders"><span><mat-icon aria-hidden="false" matTooltip="Home" aria-label="Home">home</mat-icon></span></a>
-    <a href="/admin"><span><mat-icon aria-hidden="false" matTooltip="Admin" aria-label="Admin">settings</mat-icon></span></a>
+    <a *ngIf="(loggedInRole == 'ROLE_ADMIN')||(loggedInRole =='ROLE_SUPER_ADMIN')" href="/admin"><span><mat-icon aria-hidden="false" matTooltip="Admin" aria-label="Admin">settings</mat-icon></span></a>
     <span><mat-icon aria-hidden="false" matTooltip="Logout" aria-label="Logout" (click)="logout()">logout</mat-icon></span>
   </div>
 </div>
@@ -85,29 +85,47 @@
         <p>
           <mat-form-field class="example-full-width width-99" appearance="outline">
             <mat-label>Customer</mat-label>
-            <mat-select #customerSelect [(value)]="customerSelected" (selectionChange)="customerSelectChange()" formControlName="customerId">
-              <mat-option *ngFor="let customer of customerLoaded"
-                          [value]="customer.id">
-                {{customer.entityName}}
-              </mat-option>
+            <mat-select #customerSelect [(value)]="customerSelected" [compareWith]="compareObjects" (selectionChange)="customerSelectChange()" formControlName="customer">
+              <mat-option *ngFor="let customer of customerLoaded" [value]="customer">{{customer.entityName}}</mat-option>
             </mat-select>
           </mat-form-field>
         </p>
         <p>
           <mat-form-field class="example-full-width width-99" appearance="outline">
             <mat-label>Location</mat-label>
-            <mat-select #locationSelect [(value)]="locationSelected" (selectionChange)="locationSelectChange()" formControlName="locationId">
-              <mat-option *ngFor="let location of locationLoaded"
-                          [value]="location.id">
-                {{location.entityName}}
-              </mat-option>
+            <mat-select #locationSelect [(value)]="locationSelected" [compareWith]="compareObjects" (selectionChange)="locationSelectChange()" formControlName="location">
+              <mat-option *ngFor="let location of locationLoaded" [value]="location">{{location.entityName}}</mat-option>
             </mat-select>
           </mat-form-field>
+        </p>
+        <p>
+          <mat-chip-list #chipList aria-label="Assigned Users">
+            <mat-chip *ngFor="let user of userData">{{user.username}}<button matChipRemove (click)="removeUserFromWorkOrder(user)"><mat-icon>cancel</mat-icon></button>
+            </mat-chip>
+          </mat-chip-list>
+        </p>
+        <p>
+          <mat-form-field class="width-70" appearance="outline">
+            <mat-label>Assigned Users</mat-label>
+            <mat-select #assignedUsersSelect [(value)]="assignedUsersSelected" (selectionChange)="assignedUsersSelectChange()" formControlName="assignedUsers">
+              <mat-option *ngFor="let user of assignedUsersLoaded" [value]="user">{{user.username}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <span class="width-20"><button class="mat-flat-button mat-primary add-user-to-workorder" (click)="addUserToWorkOrder()">Add User</button></span>
         </p>
       </div>
       <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
         <p>
-          <mat-form-field class="example-full-width width-99 els-textarea-description" appearance="outline">
+          <mat-form-field class="width-99 els-form-fields-second-column" appearance="outline">
+            <mat-label>Quick Description</mat-label>
+            <input matInput autocomplete="off" formControlName="quickDescription">
+            <mat-error *ngIf="editForm.controls['quickDescription'].hasError('required')">
+              Quick Description is required
+            </mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field class="example-full-width width-99 els-form-fields-second-column" appearance="outline">
             <mat-label>Description</mat-label>
             <textarea matInput autocomplete="off" class="description-box" value="" formControlName="description"></textarea>
           </mat-form-field>
@@ -115,18 +133,34 @@
       </div>
       <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
         <p>
-          <mat-form-field class="example-full-width width-99 els-textarea-entry-notes" appearance="outline">
+          <mat-form-field class="width-99 els-form-fields-third-column" appearance="outline">
+            <mat-label>Contact Name</mat-label>
+            <input matInput autocomplete="off" formControlName="contactName">
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field class="width-45 els-form-fields-third-column" appearance="outline">
+            <mat-label>Contact Phone Number</mat-label>
+            <input matInput autocomplete="off" mask="(000)000-0000" formControlName="contactPhoneNumb">
+          </mat-form-field>
+          <mat-form-field class="width-45 els-form-fields-third-column" appearance="outline">
+            <mat-label>Customer Alt Phone NUmber</mat-label>
+            <input matInput autocomplete="off" mask="(000)000-0000" formControlName="contactAltPhoneNumb">
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field class="example-full-width width-99 els-form-fields-third-column" appearance="outline">
             <mat-label>Entry Instructions</mat-label>
             <textarea matInput autocomplete="off" class="description-box" value="" formControlName="entryInstruct"></textarea>
           </mat-form-field>
         </p>
       </div>
     </div>
-    </div>
     <div class="row">
       <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
         <div><button class="mat-flat-button mat-primary" type="submit">Save Work Order</button></div>
       </div>
+    </div>
     </div>
     </form>
   </mat-tab>
@@ -147,7 +181,7 @@
 <!--    </div>-->
 <!--  </div>-->
 
-  <div class="row els-custom-table-container">
+  <div *ngIf="(loggedInRole == 'ROLE_ADMIN')||(loggedInRole =='ROLE_SUPER_ADMIN')" class="row els-custom-table-container">
     <div class="wo-info-field-title col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
       <h4>Inventory Items Total</h4>
     </div>
@@ -165,7 +199,7 @@
     </div>
   </div>
 
-  <div class="row els-custom-table-container">
+  <div *ngIf="(loggedInRole == 'ROLE_ADMIN')||(loggedInRole =='ROLE_SUPER_ADMIN')" class="row els-custom-table-container">
     <div class="wo-info-field-content col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
       <h3>{{[(masterInventoryTotal|currency)]}}</h3>
     </div>

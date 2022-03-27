@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { ToolEquipmentService } from "../../../core/services/tool-equipment.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { ToolEquipment } from "../../../core/models/tool-equipment";
-
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-tool-equipment-delete',
@@ -20,14 +19,12 @@ export class ToolEquipmentDeleteComponent implements OnInit {
   constructor( private matDialogRef: MatDialogRef<ToolEquipmentDeleteComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: ToolEquipmentService,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
-
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
-
     if (this.entityId != null) {
       this.entityService.get(this.entityId)
         .toPromise()
@@ -36,7 +33,8 @@ export class ToolEquipmentDeleteComponent implements OnInit {
           this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
+          this.matDialogRef.close();
+          this.globalSnackBarService.error(error.error.message);
         });
     }
   }
@@ -44,15 +42,11 @@ export class ToolEquipmentDeleteComponent implements OnInit {
   deleteEntity(): void {
     this.entityService.delete(this.entityId)
       .subscribe(data => {
-        console.log("Tool/Equipment " + this.entityId  + " deleted successfully.");
-        this.matSnackBar.open("Tool/Equipment " + this.entityId  + " deleted successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Tool/Equipment: " + this.entityId  + " has been deleted.");
       }, error => {
-        console.log("An error has occurred. Tool/Equipment not deleted: " + error);
-        this.matSnackBar.open("An error has occurred. Tool/Equipment not deleted: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
-
 }
-

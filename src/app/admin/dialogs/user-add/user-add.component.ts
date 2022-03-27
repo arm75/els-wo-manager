@@ -27,7 +27,6 @@ export class UserAddComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
     this.addForm = this.formBuilder.group({
       'firstName': new FormControl('', [Validators.required]),
       'lastName': new FormControl('', [Validators.required]),
@@ -42,7 +41,6 @@ export class UserAddComponent implements OnInit {
       'altPhoneNumb': new FormControl(''),
       'emailAddress': new FormControl('', [Validators.email])
     });
-
   }
 
   addEntity() {

@@ -3,13 +3,15 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
 import {CustomHttpResponse} from "../security/custom-http-response";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private baseUrl: string = "http://127.0.0.1:8090/user";
+  private baseUrl: string = environment.apiBaseUrl + "/user";
+  // private baseUrl: string = "http://18.217.185.235:8090/user";
   private stringUsers!: any;
 
   constructor( private http: HttpClient ) { }
@@ -23,6 +25,10 @@ export class UserService {
 
   get(id: any): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}/find/${id}`);
+  }
+
+  getByUsername(username: any): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}/findByUsername/${username}`);
   }
 
   create(data: any): Observable<any> {

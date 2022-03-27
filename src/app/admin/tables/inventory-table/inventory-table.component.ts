@@ -17,7 +17,7 @@ import { InventoryDeleteComponent } from "../../dialogs/inventory-delete/invento
 })
 export class InventoryTableComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'entityName', 'inventoryGroup', 'inventoryLocation', 'qtyInStock', 'unitCost', 'unitPrice', 'actions'];
+  displayedColumns: string[] = ['id', 'entityName', 'inventoryGroup', 'totalInStock', 'unitCost', 'unitPrice', 'actions'];
 
   dataSource: any;
 
@@ -46,6 +46,7 @@ export class InventoryTableComponent implements OnInit, AfterViewInit {
 
  buildTable() {
     this.entityService.getAll().subscribe(data => {
+      // console.log(data);
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryLocationService } from "../../../core/services/inventory-location.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-inventory-location-add',
@@ -19,11 +19,10 @@ export class InventoryLocationAddComponent implements OnInit {
   constructor( private matDialogRef: MatDialogRef<InventoryLocationAddComponent>,
                private entityService: InventoryLocationService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit() {
-
     this.addForm = this.formBuilder.group({
       'entityName': new FormControl('', [Validators.required]),
       'address': new FormControl('', [Validators.required]),
@@ -40,13 +39,12 @@ export class InventoryLocationAddComponent implements OnInit {
   addEntity() {
     this.entityService.create(this.addForm.value)
       .subscribe(data => {
-        this.matSnackBar.open("Inventory Location added successfully.");
-        console.log("Inventory Location added successfully.");
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Inventory Location added successfully.");
       }, error => {
-        console.log("An error has occurred. Inventory Location not added: " + error);
-        this.matSnackBar.open("An error has occurred. Inventory Location not added: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
+
 }

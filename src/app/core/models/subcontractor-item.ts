@@ -3,10 +3,8 @@ import {Subcontractor} from "./subcontractor";
 
 export interface SubcontractorItem {
   id: number;
-  workOrderId: number;
-  workOrder: WorkOrder;
-  subcontractorId: number;
   subcontractor: Subcontractor;
+  workOrder: WorkOrder;
   entityName: string,
   notes: string;
   unitPrice: number;

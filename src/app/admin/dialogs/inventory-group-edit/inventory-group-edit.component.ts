@@ -1,9 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryGroupService } from "../../../core/services/inventory-group.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { InventoryGroup } from "../../../core/models/inventory-group";
+import {MatSelect} from "@angular/material/select";
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-inventory-group-edit',
@@ -18,11 +20,16 @@ export class InventoryGroupEditComponent implements OnInit {
   entityData!: InventoryGroup;
   editForm: FormGroup = new FormGroup({});
 
+  @ViewChild('parentSelect')
+  parentSelect!: MatSelect;
+  parentLoaded: any;
+  parentSelected: any;
+
   constructor( private matDialogRef: MatDialogRef<InventoryGroupEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: InventoryGroupService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit(): void {
@@ -35,29 +42,51 @@ export class InventoryGroupEditComponent implements OnInit {
         .toPromise()
         .then(data => {
           this.entityData = data;
+          console.log(data);
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
 	          'entityName': new FormControl(this.entityData.entityName, [Validators.required]),
+            'parent': new FormControl(this.entityData.parent),
 	          'description': new FormControl(this.entityData.description)
           })
-          this.dataLoaded = true;
         })
         .catch(error => {
-          console.log(error);
-        });
+        })
+        .finally(() => {
+        this.dataLoaded = true;
+        this.loadParentSelect();
+        }
+      );
     }
+  }
+
+  compareObjects(o1: any, o2: any): boolean {
+    return o1.entityName === o2.entityName && o1.id === o2.id;
+  }
+
+  selectChange() {
+    //console.log(this.selected);
+    // alert("You selected" + this.selected);
+  }
+
+  loadParentSelect() {
+    this.entityService.getAll().subscribe(
+      data => {
+        //console.log(data);
+        this.parentLoaded = data;
+      },error => {
+      }
+    );
   }
 
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        console.log("Inventory Group " + this.editForm.value.id + " edited successfully.");
-        this.matSnackBar.open("Inventory Group " + this.editForm.value.id + " edited successfully.")
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Inventory Group: " + this.editForm.value.id + " has been updated.")
       }, error => {
-        console.log("An error has occurred. Inventory Group not edited: " + error);
-        this.matSnackBar.open("An error has occurred. Inventory Group not edited: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
 }

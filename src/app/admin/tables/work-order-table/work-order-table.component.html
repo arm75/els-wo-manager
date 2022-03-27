@@ -26,7 +26,7 @@
     <!-- createdDate -->
     <ng-container matColumnDef="createdDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Created Date">Created Date</th>
-      <td mat-cell *matCellDef="let element">{{element.createdDate|date:'MMM d, y, h:mm a'}}</td>
+      <td mat-cell *matCellDef="let element">{{element.createdDate|date:'short'}}</td>
     </ng-container>
     <!-- updatedDate -->
     <!--    <ng-container matColumnDef="updatedDate">-->
@@ -43,6 +43,11 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Quick Description">Quick Description</th>
       <td mat-cell *matCellDef="let element">{{element.quickDescription}}</td>
     </ng-container>
+<!--    &lt;!&ndash; customer &ndash;&gt;-->
+<!--    <ng-container matColumnDef="assignedUser">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Assigned User">Assigned User</th>-->
+<!--      <td mat-cell *matCellDef="let element">{{element.assignedUser.username}}</td>-->
+<!--    </ng-container>-->
     <!-- customer -->
     <ng-container matColumnDef="customer">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Customer">Customer</th>

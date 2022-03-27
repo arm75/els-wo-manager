@@ -16,7 +16,7 @@ export class GlobalSnackBarService {
     this.config.panelClass = ["snackbar-container"];
     this.config.verticalPosition = "bottom";
     this.config.horizontalPosition = "center";
-    this.config.duration = 4000;
+    this.config.duration = 2500;
   }
 
   error(message: string) {
@@ -37,7 +37,7 @@ export class GlobalSnackBarService {
   private show(message: string, config?: MatSnackBarConfig) {
     config = config || this.config;
     this.zone.run(() => {
-      this.snackbar.open(message, "x", config);
+      this.snackbar.open(message, "Close", config);
     });
   }
 

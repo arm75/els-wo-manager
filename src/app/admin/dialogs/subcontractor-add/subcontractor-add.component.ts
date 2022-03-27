@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { SubcontractorService } from "../../../core/services/subcontractor.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-subcontractor-add',
@@ -19,11 +19,10 @@ export class SubcontractorAddComponent implements OnInit {
   constructor( private matDialogRef: MatDialogRef<SubcontractorAddComponent>,
                private entityService: SubcontractorService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) { }
 
   ngOnInit() {
-
     this.addForm = this.formBuilder.group({
       'entityName': new FormControl('', [Validators.required]),
       'address': new FormControl('', [Validators.required]),
@@ -40,13 +39,11 @@ export class SubcontractorAddComponent implements OnInit {
   addEntity() {
     this.entityService.create(this.addForm.value)
       .subscribe(data => {
-        this.matSnackBar.open("Subcontractor added successfully.");
-        console.log("Subcontractor added successfully.");
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Subcontractor added successfully.");
       }, error => {
-        console.log("An error has occurred. Subcontractor not added: " + error);
-        this.matSnackBar.open("An error has occurred. Subcontractor not added: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
 }

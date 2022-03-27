@@ -10,6 +10,7 @@ import { User } from "../../models/user";
 import { Observable, Subscription } from "rxjs";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { HeaderType } from "../header-type";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-login',
@@ -29,6 +30,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     //private matDialogRef: MatDialogRef<LoginComponent>,
     //private entityService: CustomerService,
     private formBuilder: FormBuilder,
+    private userService: UserService
 
     //private matSnackBar: MatSnackBar
   ) { }
@@ -56,16 +58,19 @@ export class LoginComponent implements OnInit, OnDestroy {
     console.log(user);
     this.subscriptions.push(
       this.authenticationService.login(user).subscribe(
-        (response: HttpResponse<User> | HttpErrorResponse) => {
+        (response: HttpResponse<User>) => {
           const token = String(response.headers.get(HeaderType.JWT_TOKEN));
           this.authenticationService.saveTokenToLocalStorage(token);
-          if (!(response instanceof HttpErrorResponse)) {
-            const userToSave: any = response.body;
-            this.authenticationService.saveUserToLocalStorage(userToSave);
-            this.router.navigateByUrl('/workOrders').then();
-            this.showLoading = false;
+          if (response.body?.username != null) {
+            this.userService.getByUsername(response.body?.username).subscribe(
+              data => {
+                this.authenticationService.saveUserToLocalStorage(data);
+              });
           }
-        }, (error: HttpErrorResponse) => {
+          this.router.navigateByUrl('/workOrders').then();
+          this.showLoading = false;
+        }
+        , (error: HttpErrorResponse) => {
           console.log(error);
           this.showLoading = false;
         }

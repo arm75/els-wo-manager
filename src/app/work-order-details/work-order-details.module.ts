@@ -36,6 +36,7 @@ import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AuthInterceptor } from "../core/security/auth.interceptor";
 import { WorkOrderEditTabFormComponent } from './components/work-order-edit-tab-form/work-order-edit-tab-form.component';
 import {NgxMaskModule} from "ngx-mask";
+import { WorkOrderEditTabUsersComponent } from './components/work-order-edit-tab-users/work-order-edit-tab-users.component';
 
 // table components array
 const WorkOrderDetailsModuleTableComponents = [
@@ -66,7 +67,8 @@ const WorkOrderDetailsModuleDialogComponents = [
     WorkOrderDetailsComponent,
     WorkOrderDetailsModuleTableComponents,
     WorkOrderDetailsModuleDialogComponents,
-    WorkOrderEditTabFormComponent
+    WorkOrderEditTabFormComponent,
+    WorkOrderEditTabUsersComponent
   ],
     imports: [
         CommonModule,

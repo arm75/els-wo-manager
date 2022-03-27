@@ -2,11 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { WorkOrderService } from "../../../core/services/work-order.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSelect } from "@angular/material/select";
 import { LocationService } from "../../../core/services/location.service";
 import { CustomerService } from "../../../core/services/customer.service";
 import { map } from "rxjs/operators";
+import { UserService } from "../../../core/services/user.service";
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-work-order-add',
@@ -21,31 +22,36 @@ export class WorkOrderAddComponent implements OnInit {
   @ViewChild('customerSelect')
   customerSelect!: MatSelect;
   customerLoaded: any;
-  customerSelected!: string;
+  customerSelected: any;
 
   @ViewChild('locationSelect')
   locationSelect!: MatSelect;
   locationLoaded: any;
-  locationSelected!: string;
+  locationSelected: any;
+
+  @ViewChild('assignedUserSelect')
+  assignedUserSelect!: MatSelect;
+  assignedUserLoaded: any;
+  assignedUserSelected: any;
 
   constructor( private matDialogRef: MatDialogRef<WorkOrderAddComponent>,
                private entityService: WorkOrderService,
                private customerService: CustomerService,
                private locationService: LocationService,
+               private userService: UserService,
                private formBuilder: FormBuilder,
-               private matSnackBar: MatSnackBar
+               private globalSnackBarService: GlobalSnackBarService
   ) {
-    this.loadCustomerSelect();
-    this.loadLocationSelect();
+
   }
 
   ngOnInit() {
-
     this.addForm = this.formBuilder.group({
       'quickDescription': new FormControl(''),
       'customerPo': new FormControl(''),
-      'customerId': new FormControl(''),
-      'locationId': new FormControl(''),
+      'customer': new FormControl(''),
+      'location': new FormControl(''),
+      // 'assignedUsers': new FormControl(''),
       'description': new FormControl(''),
       'entryInstruct': new FormControl(''),
       'inventoryItemsTotal': new FormControl(''),
@@ -54,65 +60,62 @@ export class WorkOrderAddComponent implements OnInit {
       'toolEquipmentItemsTotal': new FormControl(''),
       'workOrderTotal': new FormControl('')
     });
+    this.loadCustomerSelect();
+    this.loadLocationSelect();
+    //this.loadAssignedUserSelect();
   }
 
   customerSelectChange() {
-    // alert(this.customerSelected);
-    this.loadLocationSelect((this.customerSelected));
-    //console.log(this.selected);
-    // alert("You selected" + this.selected);
+    this.loadLocationSelect(this.customerSelected);
   }
 
   locationSelectChange() {
     //alert(this.locationSelected);
   }
 
+  assignedUserSelectChange() {
+    //alert(this.locationSelected);
+  }
+
   loadCustomerSelect() {
     this.customerService.getAll().subscribe(
       data => {
-        console.log(data);
         this.customerLoaded = data;
       },error => {
-        console.log(error);
       }
     );
   }
 
-  loadLocationSelect(passedCustomerId?: any) {
+  loadLocationSelect(passedCustomer?: any) {
     // if(passedCustomerId) {
       this.locationService.getAll()
         .pipe(map(items =>
-          items.filter(item => (item.customerId == passedCustomerId))))
+          items.filter(item => (item.customer.id == passedCustomer.id))))
         .subscribe(
         data => {
-          console.log(data);
           this.locationLoaded = data;
         }, error => {
-          console.log(error);
         }
       );
-    // } else {
-    //   this.locationService.getAll().subscribe(
-    //     data => {
-    //       console.log(data);
-    //       this.locationLoaded = data;
-    //     }, error => {
-    //       console.log(error);
-    //     }
-    //   );
-    // }
+  }
+
+  loadAssignedUserSelect() {
+    this.userService.getAll().subscribe(
+      data => {
+        this.assignedUserLoaded = data;
+      },error => {
+      }
+    );
   }
 
   addEntity() {
     this.entityService.create(this.addForm.value)
       .subscribe(data => {
-        this.matSnackBar.open("Work Order added successfully.");
-        console.log("Work Order added successfully.");
         this.matDialogRef.close();
+        this.globalSnackBarService.success("Work Order added successfully.");
       }, error => {
-        console.log("An error has occurred. Work Order not added: " + error);
-        this.matSnackBar.open("An error has occurred. Work Order not added: " + error);
         this.matDialogRef.close();
+        this.globalSnackBarService.error(error.error.message);
       });
   }
 }

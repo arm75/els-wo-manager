@@ -29,6 +29,15 @@ body { width: 100%; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif
 .width-47 {
   width: 47%;
 }
+.width-46 {
+  width: 46%;
+}
+.width-45 {
+  width: 45%;
+}
+.width-44 {
+  width: 44%;
+}
 .width-34 {
   width: 34%;
 }
@@ -73,21 +82,31 @@ body { width: 100%; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif
 }
 
 .snackbar-container-error {
-  margin-bottom: 70px !important;
-  color: beige;
+  margin-bottom: 140px !important;
+  color: #fff !important;
+  font-weight: 400 !important;
   background-color: #c62828 !important;
+  z-index: 10000 !important;
 }
 
 .snackbar-container-success {
-  margin-bottom: 70px !important;
-  color: beige;
+  margin-bottom: 140px !important;
+  color: #fff !important;
+  font-weight: 400 !important;
   background-color: #2e7d32 !important;
+  z-index: 1000 !important;
 }
 
 .snackbar-container-warning {
-  margin-bottom: 70px !important;
-  color: beige;
+  margin-bottom: 140px !important;
+  color: #fff !important;
+  font-weight: 400 !important;
   background-color: #ff8f00 !important;
+  z-index: 1000 !important;
+}
+
+.mat-simple-snackbar-action {
+  color: #fff !important;
 }
 
 /*{ value:WorkOrderStatus.OPEN, name:'OPEN Work Orders' },*/
