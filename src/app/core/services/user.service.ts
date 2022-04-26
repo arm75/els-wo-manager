@@ -11,7 +11,6 @@ import { environment } from "../../../environments/environment";
 export class UserService {
 
   private baseUrl: string = environment.apiBaseUrl + "/user";
-  // private baseUrl: string = "http://18.217.185.235:8090/user";
   private stringUsers!: any;
 
   constructor( private http: HttpClient ) { }

@@ -1,75 +1,55 @@
-import { Component, OnInit } from '@angular/core';
-import {MatTreeFlatDataSource, MatTreeFlattener} from "@angular/material/tree";
-import {FlatTreeControl} from "@angular/cdk/tree";
-import {UserGroupService} from "../../../core/services/user-group.service";
-import {UserGroup} from "../../../core/models/user-group";
-import {InventoryGroup} from "../../../core/models/inventory-group";
-import {InventoryGroupService} from "../../../core/services/inventory-group.service";
-
-interface FoodNode {
-  name: string;
-  children?: FoodNode[];
-}
-const TREE_DATA: FoodNode[] = [
-  {
-    name: 'Fruit',
-    children: [ {name: 'Apple'}, {name: 'Banana'}, {name: 'Fruit loops'}, ]
-  },
-  {
-    name: 'Vegetables',
-    children: [ { name: 'Green',
-      children: [ {name: 'Broccoli'}, {name: 'Brussels sprouts'}, ]
-    },
-      {
-        name: 'Orange',
-        children: [ {name: 'Pumpkins'}, {name: 'Carrots'}, ] },
-    ]
-  },
-];
-/** Flat node with expandable and level information */
-interface ExampleFlatNode {
-  expandable: boolean;
-  name: string;
-  level: number;
-}
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import { MatTreeNestedDataSource} from "@angular/material/tree";
+import { NestedTreeControl} from "@angular/cdk/tree";
+import { InventoryGroup } from "../../../core/models/inventory-group";
+import { InventoryGroupService } from "../../../core/services/inventory-group.service";
+import {MatIconRegistry} from "@angular/material/icon";
+import {MatDrawer} from "@angular/material/sidenav";
 
 @Component({
   selector: 'app-inventory-admin',
   templateUrl: './inventory-admin.component.html',
   styleUrls: ['./inventory-admin.component.css']
 })
-export class InventoryAdminComponent implements OnInit {
+export class InventoryAdminComponent implements OnInit, AfterViewInit {
 
-  showFiller = true;
-  drawer!: any;
-  tree_data: any;
 
-  private _transformer = (node: FoodNode, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-    };
+  treeControl = new NestedTreeControl<InventoryGroup>(node => node.children);
+  dataSource = new MatTreeNestedDataSource<InventoryGroup>();
+
+  filterGroupId!: number;
+
+  @ViewChild(MatDrawer)
+  sideDrawer!: MatDrawer;
+
+  constructor(
+    private entityService: InventoryGroupService,
+    private matIconRegistry: MatIconRegistry
+  ) {
+    this.matIconRegistry.addSvgIcon('openedfolder', '/src/assets/icons8-opened-folder.svg');
   }
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
-    node => node.level, node => node.expandable);
-  treeFlattener = new MatTreeFlattener(
-    this._transformer, node => node.level, node => node.expandable, node => node.children);
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-  constructor(private entityService: InventoryGroupService) {
-    //this.dataSource.data = TREE_DATA;
-  }
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   ngOnInit(): void {
-    this.dataSource.data = TREE_DATA;
-    this.entityService.getAll().subscribe(
+    this.entityService.getAllWithChildren()
+      .subscribe(
       data => {
-        this.tree_data = data;
+        this.dataSource.data = data;
       },error => {
       }
     );
+    this.sideDrawer.toggle();
+  }
+
+  ngAfterViewInit() {
+    // console.log("ngAfterViewInit:\n");
+    // console.log(this.dataSource.data);
+  }
+
+  hasChild = (_: number, node: InventoryGroup) => !!node.children && node.children.length > 0;
+
+  setFilterGroupId(groupId: number) {
+    //console.log("setFilterGroupId ran. number is: " + groupId);
+    this.filterGroupId = groupId;
   }
 
 }

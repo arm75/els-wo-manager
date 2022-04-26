@@ -225,6 +225,41 @@ h3.master-total-currency {
   padding-bottom: 120px;
 }
 
-button.add-user-to-workorder {
+button {
   margin-left: 15px;
 }
+
+button:disabled {
+  background-color: #afafaf;
+}
+
+.mat-form-field-disabled {
+  color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.mat-select-disabled {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.edit-button-color {
+  color: white;
+  background-color: green;
+}
+
+app-print-template {
+  display: none;
+}
+
+@media print {
+  app-print-template {
+    display: block;
+  }
+  #els-work-order-details {
+    display: none;
+  }
+}
+
+
+
+
+

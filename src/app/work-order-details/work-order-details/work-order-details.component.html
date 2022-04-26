@@ -1,13 +1,13 @@
-<div *ngIf="dataLoaded" class="els-custom-table-container" xmlns="http://www.w3.org/1999/html">
+<div *ngIf="dataLoaded" id="els-work-order-details" class="els-custom-table-container" xmlns="http://www.w3.org/1999/html">
 <div class="top">
 <div class="row top-header">
   <div class="app-title-box col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
     <h1><a href="/workOrders">ELS Work Order Manager</a> &nbsp;&nbsp; | &nbsp;&nbsp; Work Order Details</h1>
   </div>
-  <div class="logged-in-user app-icon-menu-box col-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
+  <div class="logged-in-user app-icon-menu-box col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
     <p>Hello, {{nameToDisplay}}</p>
   </div>
-  <div class="app-icon-menu-box col-12 col-sm-12 col-md-1 col-lg-1 col-xl-1">
+  <div class="app-icon-menu-box col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
     <a href="/workOrders"><span><mat-icon aria-hidden="false" matTooltip="Home" aria-label="Home">home</mat-icon></span></a>
     <a *ngIf="(loggedInRole == 'ROLE_ADMIN')||(loggedInRole =='ROLE_SUPER_ADMIN')" href="/admin"><span><mat-icon aria-hidden="false" matTooltip="Admin" aria-label="Admin">settings</mat-icon></span></a>
     <span><mat-icon aria-hidden="false" matTooltip="Logout" aria-label="Logout" (click)="logout()">logout</mat-icon></span>
@@ -15,66 +15,45 @@
 </div>
 
 <div class="row els-custom-table-container">
-  <div class="wo-info-field-title col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-    <h4>Work Order ID</h4>
+  <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+    <div class="wo-info-field-title"><h4>Work Order ID</h4></div>
+    <div class="wo-info-field-content"><h3>{{woIdFieldBox}}</h3></div>
   </div>
-  <div class="wo-info-field-title col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-    <h4>Work Order Status</h4>
+  <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+    <div class="wo-info-field-title"><h4>Work Order Status</h4></div>
+    <div class="wo-info-field-content"><h3><span class="work-order-details-status work-order-details-status-{{woStatusFieldBox.toLowerCase()}}">{{woStatusFieldBox}}</span></h3></div>
   </div>
-  <div class="wo-info-field-title col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-    <h4>Created Date/Time</h4>
+  <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+    <div class="wo-info-field-title"><h4>Created Date/Time</h4></div>
+    <div class="wo-info-field-content"><h3>{{woCreatedDateFieldBox|date:'MMM d, y, h:mm a'}}</h3></div>
   </div>
-  <div class="wo-info-field-title col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-    <h4>Updated Date/Time</h4>
-  </div>
-</div>
-
-<div class="row els-custom-table-container">
-  <div class="wo-info-field-content col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-    <h3>{{woIdFieldBox}}</h3>
-  </div>
-  <div class="wo-info-field-content col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-    <h3><span class="work-order-details-status work-order-details-status-{{woStatusFieldBox.toLowerCase()}}">{{woStatusFieldBox}}</span></h3>
-  </div>
-  <div class="wo-info-field-content col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-    <h3>{{woCreatedDateFieldBox|date:'MMM d, y, h:mm a'}}</h3>
-  </div>
-  <div class="wo-info-field-content col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
-    <h3>{{woUpdatedDateFieldBox|date:'MMM d, y, h:mm a'}}</h3>
-  </div>
-</div>
-
-
-<div class="row els-custom-table-container">
-  <div class="wo-info-field-title col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-    <h4>Customer</h4>
-  </div>
-  <div class="wo-info-field-title col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-    <h4>Location</h4>
-  </div>
-  <div class="wo-info-field-title col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-    <h4>Work Order PO</h4>
+  <div class="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+    <div class="wo-info-field-title"><h4>Updated Date/Time</h4></div>
+    <div class="wo-info-field-content"><h3>{{woUpdatedDateFieldBox|date:'MMM d, y, h:mm a'}}</h3></div>
   </div>
 </div>
 
 <div class="row els-custom-table-container">
-  <div class="wo-info-field-content col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-    <h3>{{woCustomerFieldBox}}</h3>
+  <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+    <div class="wo-info-field-title"><h4>Customer</h4></div>
+    <div class="wo-info-field-content"><h3>{{woCustomerFieldBox}}</h3></div>
   </div>
-  <div class="wo-info-field-content col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-    <h3>{{woLocationFieldBox}}</h3>
+  <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+    <div class="wo-info-field-title"><h4>Location</h4></div>
+    <div class="wo-info-field-content"><h3>{{woLocationFieldBox}}</h3></div>
   </div>
-  <div class="wo-info-field-content col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-    <h3>{{woPoFieldBox}}</h3>
+  <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+    <div class="wo-info-field-title"><h4>Work Order PO</h4></div>
+    <div class="wo-info-field-content"><h3>USERS WILL GO HERE</h3></div>
   </div>
 </div>
 
 <div class="row els-custom-table-container">
 <mat-tab-group mat-stretch-tabs class="work-order-details-tab-group">
-  <mat-tab label="Edit Work Order">
+  <mat-tab label="Work Order Details">
     <form [formGroup]="editForm" class="example-form" (submit)="saveWorkOrder()">
     <div class="table-toolbar">
-      <span><h2>Edit Work Order</h2></span>
+      <span><h2>Work Order Details</h2></span>
       <span class="example-fill-remaining-space"></span>
 <!--  <span><button class="mat-flat-button mat-primary inventory-item-table-add-button" (click)="openAddDialog()">Add Inventory Item</button></span>-->
     </div>
@@ -88,6 +67,9 @@
             <mat-select #customerSelect [(value)]="customerSelected" [compareWith]="compareObjects" (selectionChange)="customerSelectChange()" formControlName="customer">
               <mat-option *ngFor="let customer of customerLoaded" [value]="customer">{{customer.entityName}}</mat-option>
             </mat-select>
+            <mat-error *ngIf="editForm.controls['customer'].hasError('required')">
+              Customer is required
+            </mat-error>
           </mat-form-field>
         </p>
         <p>
@@ -96,12 +78,14 @@
             <mat-select #locationSelect [(value)]="locationSelected" [compareWith]="compareObjects" (selectionChange)="locationSelectChange()" formControlName="location">
               <mat-option *ngFor="let location of locationLoaded" [value]="location">{{location.entityName}}</mat-option>
             </mat-select>
+            <mat-error *ngIf="editForm.controls['location'].hasError('required')">
+              Location is required
+            </mat-error>
           </mat-form-field>
         </p>
         <p>
           <mat-chip-list #chipList aria-label="Assigned Users">
-            <mat-chip *ngFor="let user of userData">{{user.username}}<button matChipRemove (click)="removeUserFromWorkOrder(user)"><mat-icon>cancel</mat-icon></button>
-            </mat-chip>
+            <mat-chip *ngFor="let user of userData">{{user.username}}<button matChipRemove *ngIf="editFormEditMode" (click)="removeUserFromWorkOrder(user)"><mat-icon>cancel</mat-icon></button></mat-chip>
           </mat-chip-list>
         </p>
         <p>
@@ -110,8 +94,11 @@
             <mat-select #assignedUsersSelect [(value)]="assignedUsersSelected" (selectionChange)="assignedUsersSelectChange()" formControlName="assignedUsers">
               <mat-option *ngFor="let user of assignedUsersLoaded" [value]="user">{{user.username}}</mat-option>
             </mat-select>
+            <mat-error *ngIf="editForm.controls['assignedUsers'].hasError('required')">
+              Assigned Users is required
+            </mat-error>
           </mat-form-field>
-          <span class="width-20"><button class="mat-flat-button mat-primary add-user-to-workorder" (click)="addUserToWorkOrder()">Add User</button></span>
+          <span class="width-20"><button type="button" class="mat-flat-button mat-primary add-user-to-workorder" [disabled]="!assignedUsersSelected" (click)="addUserToWorkOrder()">Add User</button></span>
         </p>
       </div>
       <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
@@ -136,14 +123,20 @@
           <mat-form-field class="width-99 els-form-fields-third-column" appearance="outline">
             <mat-label>Contact Name</mat-label>
             <input matInput autocomplete="off" formControlName="contactName">
+            <mat-error *ngIf="editForm.controls['contactName'].hasError('required')">
+              Contact Name is required
+            </mat-error>
           </mat-form-field>
         </p>
         <p>
-          <mat-form-field class="width-45 els-form-fields-third-column" appearance="outline">
+          <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
             <mat-label>Contact Phone Number</mat-label>
             <input matInput autocomplete="off" mask="(000)000-0000" formControlName="contactPhoneNumb">
+            <mat-error *ngIf="editForm.controls['contactPhoneNumb'].hasError('required')">
+              Contact Phone Number is required
+            </mat-error>
           </mat-form-field>
-          <mat-form-field class="width-45 els-form-fields-third-column" appearance="outline">
+          <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
             <mat-label>Customer Alt Phone NUmber</mat-label>
             <input matInput autocomplete="off" mask="(000)000-0000" formControlName="contactAltPhoneNumb">
           </mat-form-field>
@@ -152,13 +145,18 @@
           <mat-form-field class="example-full-width width-99 els-form-fields-third-column" appearance="outline">
             <mat-label>Entry Instructions</mat-label>
             <textarea matInput autocomplete="off" class="description-box" value="" formControlName="entryInstruct"></textarea>
+            <mat-error *ngIf="editForm.controls['entryInstruct'].hasError('required')">
+              Entry Instructions is required
+            </mat-error>
           </mat-form-field>
         </p>
       </div>
     </div>
     <div class="row">
       <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-        <div><button class="mat-flat-button mat-primary" type="submit">Save Work Order</button></div>
+        <div><button type="button" class="mat-flat-button mat-primary" (click)="printPage()">Print Work Order</button></div>
+        <div><button *ngIf="!editFormEditMode" class="mat-flat-button mat-primary" (click)="editModeToggle()">Edit Work Order Details</button></div>
+        <div><button *ngIf="editFormEditMode" class="mat-flat-button edit-button-color" type="submit">Save Work Order Details</button></div>
       </div>
     </div>
     </div>
@@ -225,3 +223,5 @@
 
 </div>
 </div>
+<app-print-template [passedWorkOrder]="entityData" ></app-print-template>
+<app-global-progress-spinner *ngIf="spinning"></app-global-progress-spinner>

@@ -15,6 +15,10 @@ import {map} from "rxjs/operators";
 import {WorkOrderStatus} from "../../../core/types/work-order-status";
 import {ElsWoManagerConstants} from "../../../core/els-wo-manager-constants";
 import {WorkOrderCompleteComponent} from "../../dialogs/work-order-complete/work-order-complete.component";
+import {WorkOrderCloseComponent} from "../../dialogs/work-order-close/work-order-close.component";
+import {WorkOrderCancelComponent} from "../../dialogs/work-order-cancel/work-order-cancel.component";
+import {WorkOrderRetryComponent} from "../../dialogs/work-order-retry/work-order-retry.component";
+import {WorkOrderReopenComponent} from "../../dialogs/work-order-reopen/work-order-reopen.component";
 
 @Component({
   selector: 'app-work-order-table',
@@ -45,7 +49,7 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
 
   //////////////////////////////////////////////////////////////////////////////////////
   dropdownFilterSelected: any;
-  dropdownFilterArray = ElsWoManagerConstants.workOrderStatusFilterArray;
+  dropdownFilterArray = ElsWoManagerConstants.inProgressWorkOrderStatusFilterArray;
 
   constructor(
     private entityService: WorkOrderService,
@@ -72,52 +76,47 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
 
   }
 
-  ngOnInit() {
-
+  ngOnInit(): void {
   }
 
   ngAfterViewInit() {
     this.buildTable();
-    // this.spinner.initiate();  |  does not work yet...
   }
 
-  menuButtonClick() {
-    alert("Click");
-
-  }
-
-
-
- buildTable() {
-   switch(this.workOrderFilterSelected) {
-     case 'ALL': {
-       this.entityService.getAll()
-         .subscribe(data => {
-           //console.log(data);
-           this.dataSource = new MatTableDataSource(data);
-           this.dataSource.sort = this.sort;
-           this.dataSource.paginator = this.paginator;
-         });
-       break;
-     }
-     default: {
-       this.entityService.getAll()
-         .pipe(map(items =>
-           items.filter(item => ((item.status == this.workOrderFilterSelected)))))
-         .subscribe(data => {
-           //console.log(data);
-           this.dataSource = new MatTableDataSource(data);
-           this.dataSource.sort = this.sort;
-           this.dataSource.paginator = this.paginator;
-         });
-       break;
-     }
-   }
+  buildTable() {
+    switch(this.workOrderFilterSelected) {
+      case 'ALL': {
+        this.entityService.getAll()
+          .pipe(map(items =>
+            items.filter(item => ( (item.status == WorkOrderStatus.OPEN) || (item.status == WorkOrderStatus.PENDING) ))))
+          .subscribe(data => {
+            //console.log(data);
+            this.dataSource = new MatTableDataSource(data);
+            this.sort.active = 'createdDate';
+            this.sort.direction = 'desc';
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+          });
+        break;
+      }
+      default: {
+        this.entityService.getAll()
+          .pipe(map(items =>
+            items.filter(item => ((item.status == this.workOrderFilterSelected)))))
+          .subscribe(data => {
+            //console.log(data);
+            this.dataSource = new MatTableDataSource(data);
+            this.sort.direction = 'desc';
+            this.sort.active = 'createdDate';
+            this.sort.direction = 'desc';
+            this.dataSource.paginator = this.paginator;
+          });
+        break;
+      }
+    }
   }
 
   selectChange() {
-    //console.log(this.workOrderFilterSelected)
-    // alert("You selected" + this.workOrderFilterSelected);
     this.buildTable();
   }
 
@@ -153,8 +152,7 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // opens Complete Work Order box
-  completeDialog( _id: number) {
+  openCompleteDialog( _id: number) {
     const completeDialogConfig = new MatDialogConfig();
     completeDialogConfig.disableClose = true;
     completeDialogConfig.autoFocus = true;
@@ -163,6 +161,58 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     completeDialogConfig.data = { entityId: _id };
     const completeDialogRef = this.dialog.open(WorkOrderCompleteComponent, completeDialogConfig);
     completeDialogRef.afterClosed().subscribe(completeData => {
+      this.buildTable();
+    });
+  }
+
+  openCloseDialog( _id: number) {
+    const closeDialogConfig = new MatDialogConfig();
+    closeDialogConfig.disableClose = true;
+    closeDialogConfig.autoFocus = true;
+    closeDialogConfig.width = "25%";
+    closeDialogConfig.position = { top:  '0' };
+    closeDialogConfig.data = { entityId: _id };
+    const closeDialogRef = this.dialog.open(WorkOrderCloseComponent, closeDialogConfig);
+    closeDialogRef.afterClosed().subscribe(closeData => {
+      this.buildTable();
+    });
+  }
+
+  openCancelDialog( _id: number) {
+    const cancelDialogConfig = new MatDialogConfig();
+    cancelDialogConfig.disableClose = true;
+    cancelDialogConfig.autoFocus = true;
+    cancelDialogConfig.width = "25%";
+    cancelDialogConfig.position = { top:  '0' };
+    cancelDialogConfig.data = { entityId: _id };
+    const cancelDialogRef = this.dialog.open(WorkOrderCancelComponent, cancelDialogConfig);
+    cancelDialogRef.afterClosed().subscribe(cancelData => {
+      this.buildTable();
+    });
+  }
+
+  openReopenDialog( _id: number) {
+    const reOpenDialogConfig = new MatDialogConfig();
+    reOpenDialogConfig.disableClose = true;
+    reOpenDialogConfig.autoFocus = true;
+    reOpenDialogConfig.width = "25%";
+    reOpenDialogConfig.position = { top:  '0' };
+    reOpenDialogConfig.data = { entityId: _id };
+    const reOpenDialogRef = this.dialog.open(WorkOrderReopenComponent, reOpenDialogConfig);
+    reOpenDialogRef.afterClosed().subscribe(reOpenData => {
+      this.buildTable();
+    });
+  }
+
+  openRetryDialog( _id: number) {
+    const reTryDialogConfig = new MatDialogConfig();
+    reTryDialogConfig.disableClose = true;
+    reTryDialogConfig.autoFocus = true;
+    reTryDialogConfig.width = "25%";
+    reTryDialogConfig.position = { top:  '0' };
+    reTryDialogConfig.data = { entityId: _id };
+    const reTryDialogRef = this.dialog.open(WorkOrderRetryComponent, reTryDialogConfig);
+    reTryDialogRef.afterClosed().subscribe(reTryData => {
       this.buildTable();
     });
   }
@@ -193,5 +243,5 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
-}
 
+}

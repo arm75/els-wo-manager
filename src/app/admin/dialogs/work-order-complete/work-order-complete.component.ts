@@ -57,7 +57,6 @@ export class WorkOrderCompleteComponent implements OnInit {
             'id': new FormControl(this.entityData.id),
             'quickDescription': new FormControl(this.entityData.quickDescription),
             //'status': new FormControl(this.entityData.status),
-            'customerPo': new FormControl(this.entityData.customerPo),
             'customer': new FormControl(this.entityData.customer),
             'location': new FormControl(this.entityData.location),
             'description': new FormControl(this.entityData.description),

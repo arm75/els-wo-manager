@@ -1,4 +1,13 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  AfterViewChecked,
+  OnChanges,
+  DoCheck,
+  AfterContentInit, AfterContentChecked, OnDestroy
+} from '@angular/core';
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
@@ -15,11 +24,14 @@ import { LocationDeleteComponent } from "../../dialogs/location-delete/location-
   templateUrl: './location-table.component.html',
   styleUrls: ['./location-table.component.css']
 })
-export class LocationTableComponent implements OnInit, AfterViewInit {
+export class LocationTableComponent implements OnChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy {
+//export class LocationTableComponent implements OnChanges, OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['id', 'entityName', 'customer', 'actions'];
 
   dataSource: any;
+
+  logNg: boolean = false;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<Location>;
@@ -35,19 +47,49 @@ export class LocationTableComponent implements OnInit, AfterViewInit {
     private _liveAnnouncer: LiveAnnouncer,
     private dialog: MatDialog
   ) {
+    if (this.logNg) { console.log("Constructor ran.\n") }
     this.buildTable();
   }
 
-  ngOnInit() { }
+  ngOnChanges() {
+    if (this.logNg) { console.log("ngOnChanges ran.\n") }
+  }
+
+  ngOnInit() {
+    if (this.logNg) { console.log("ngOnInit ran.\n") }
+  }
+
+  ngDoCheck() {
+    if (this.logNg) { console.log("ngDoCheck ran.\n") }
+  }
+
+  ngAfterContentInit() {
+    if (this.logNg) { console.log("ngAfterContentInit ran.\n") }
+  }
+
+  ngAfterContentChecked() {
+    if (this.logNg) { console.log("ngAfterContentChecked ran.\n") }
+  }
 
   ngAfterViewInit() {
+    if (this.logNg) { console.log("ngAfterViewInit ran.\n") }
     this.buildTable();
   }
 
- buildTable() {
+  ngAfterViewChecked() {
+    if (this.logNg) { console.log("ngAfterViewChecked ran.\n") }
+  }
+
+  ngOnDestroy() {
+    if (this.logNg) { console.log("ngOnDestroy ran.\n") }
+  }
+
+  buildTable() {
     this.entityService.getAll().subscribe(data => {
       //console.log(data);
       this.dataSource = new MatTableDataSource(data);
+      this.sort.active = 'id';
+      this.sort.direction = 'desc';
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     })

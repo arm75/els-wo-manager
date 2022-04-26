@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import {Component, OnInit, AfterViewInit, ViewChild, Input, OnChanges} from '@angular/core';
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
@@ -9,17 +9,21 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { InventoryAddComponent } from "../../dialogs/inventory-add/inventory-add.component";
 import { InventoryEditComponent } from "../../dialogs/inventory-edit/inventory-edit.component";
 import { InventoryDeleteComponent } from "../../dialogs/inventory-delete/inventory-delete.component";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-inventory-table',
   templateUrl: './inventory-table.component.html',
   styleUrls: ['./inventory-table.component.css']
 })
-export class InventoryTableComponent implements OnInit, AfterViewInit {
+export class InventoryTableComponent implements OnInit, OnChanges, AfterViewInit {
 
   displayedColumns: string[] = ['id', 'entityName', 'inventoryGroup', 'totalInStock', 'unitCost', 'unitPrice', 'actions'];
 
   dataSource: any;
+
+  @Input()
+  filterGroupId: number = 0;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<Inventory>;
@@ -44,14 +48,49 @@ export class InventoryTableComponent implements OnInit, AfterViewInit {
     this.buildTable();
   }
 
+  ngOnChanges() {
+    this.filterTable();
+  }
+
  buildTable() {
     this.entityService.getAll().subscribe(data => {
       // console.log(data);
       this.dataSource = new MatTableDataSource(data);
+      this.sort.active = 'id';
+      this.sort.direction = 'desc';
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     })
   }
+
+
+  filterTable() {
+    switch(this.filterGroupId) {
+      case 0: {
+        this.entityService.getAll()
+          .subscribe(data => {
+            //console.log(data);
+            this.dataSource = new MatTableDataSource(data);
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+          });
+        break;
+      }
+      default: {
+        this.entityService.getAll()
+          .pipe(map(items =>
+            items.filter(item => ((item.inventoryGroup.id == this.filterGroupId)))))
+          .subscribe(data => {
+            //console.log(data);
+            this.dataSource = new MatTableDataSource(data);
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+          });
+        break;
+      }
+    }
+  }
+
 
   applyFilter(event: Event) {
     const filterTarget = (event.target as HTMLInputElement).value;

@@ -6,7 +6,6 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {ToolEquipmentItemService} from "../../../core/services/tool-equipment-item.service";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {map} from "rxjs/operators";
 import {
   ToolEquipmentItemAddComponent
 } from "../../../work-order-details/dialogs/tool-equipment-item-add/tool-equipment-item-add.component";
@@ -16,6 +15,9 @@ import {
 import {
   ToolEquipmentItemDeleteComponent
 } from "../../../work-order-details/dialogs/tool-equipment-item-delete/tool-equipment-item-delete.component";
+import {
+  ToolEquipmentItemReturnComponent
+} from "../../../work-order-details/dialogs/tool-equipment-item-return/tool-equipment-item-return.component";
 
 @Component({
   selector: 'app-tool-equipment-return-table',
@@ -32,7 +34,7 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
 
   componentTotal: number = 0;
 
-  displayedColumns: string[] = ['createdDate', 'toolEquipment', 'workOrder', 'notes', 'pricePerDay', 'days', 'totalPrice', 'status', 'actions'];
+  displayedColumns: string[] = ['createdDate', 'entityName', 'workOrder', 'notes', 'pricePerDay', 'days', 'totalPrice', 'status', 'actions'];
   dataSource: any;
 
   @ViewChild(MatTable)
@@ -65,7 +67,6 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
       //   items.filter(item => (item.workOrderId == this.passedWorkOrderId))))
       .subscribe(data => {
         data.forEach(a => this.componentTotal += a.totalPrice);
-        console.log("total toolequip price: " + this.componentTotal);
         this.totalChangedEvent.emit(this.componentTotal);
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.sort = this.sort;
@@ -120,18 +121,31 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     });
   }
 
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
+  openReturnItemDialog(_id: number) {
+    const returnDialogConfig = new MatDialogConfig();
+    returnDialogConfig.disableClose = true;
+    returnDialogConfig.autoFocus = true;
+    returnDialogConfig.width = "25%";
+    returnDialogConfig.position = { top:  '0' };
+    returnDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
+    const returnDialogRef = this.dialog.open(ToolEquipmentItemReturnComponent, returnDialogConfig);
+    returnDialogRef.afterClosed().subscribe(returnData => {
+      this.buildTable();
+    });
   }
+
+  /** Announce the change in sort state for assistive technology. */
+  // announceSortChange(sortState: Sort) {
+  //   // This example uses English messages. If your application supports
+  //   // multiple language, you would internationalize these strings.
+  //   // Furthermore, you can customize the message to add additional
+  //   // details about the values being sorted.
+  //   if (sortState.direction) {
+  //     this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+  //   } else {
+  //     this._liveAnnouncer.announce('Sorting cleared');
+  //   }
+  //  }
 
   alert(returnedToolEquipment: string) {
     alert(returnedToolEquipment);

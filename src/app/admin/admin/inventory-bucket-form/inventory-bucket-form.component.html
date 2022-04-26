@@ -1,0 +1,9 @@
+<h4>Bucket Form</h4>
+<form [formGroup]="bucketForm">
+  <div formArrayName="buckets" *ngFor="let bucket of buckets.controls; index as i">
+    <div formGroupName="{{i}}">
+      {{bucket.value.location.entityName}}: <input [value]="bucket.value.qtyInStock" formControlName="qtyInStock">
+    </div>
+  </div>
+  <button (click)="submitForm()" type="submit">Submit(Log)</button>
+</form>

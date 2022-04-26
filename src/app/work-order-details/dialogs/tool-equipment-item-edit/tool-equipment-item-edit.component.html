@@ -6,10 +6,10 @@
     <p>
       <mat-form-field class="example-full-width width-99" appearance="outline">
         <mat-label>Select Tool/Equipment</mat-label>
-        <mat-select #toolEquipmentSelect [(value)]="toolEquipmentSelected" [compareWith]="compareObjects" (selectionChange)="selectChange()" formControlName="toolEquipment">
-          <mat-option *ngFor="let toolequip of toolEquipmentLoaded" [value]="toolequip">{{toolequip.entityName}}</mat-option>
+        <mat-select #toolEquipmentSelect [(value)]="toolEquipmentIdSelected" (selectionChange)="selectChange()" formControlName="toolEquipmentId">
+          <mat-option *ngFor="let toolequip of toolEquipmentLoaded" [value]="toolequip.id">{{toolequip.entityName}}</mat-option>
         </mat-select>
-        <mat-error *ngIf="editForm.controls['toolEquipment'].hasError('required')">
+        <mat-error *ngIf="editForm.controls['toolEquipmentId'].hasError('required')">
           Tool/Equipment is required
         </mat-error>
       </mat-form-field>

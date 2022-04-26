@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {ThemePalette} from "@angular/material/core";
 import {ProgressSpinnerMode} from "@angular/material/progress-spinner";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {WorkOrderDeleteComponent} from "../../../admin/dialogs/work-order-delete/work-order-delete.component";
 
 @Component({
   selector: 'app-global-progress-spinner',
@@ -13,7 +12,7 @@ export class GlobalProgressSpinnerComponent implements OnInit {
 
   color: ThemePalette = 'primary';
   mode: ProgressSpinnerMode = 'indeterminate';
-  value = 50;
+  value = 500;
 
   constructor(
     private dialog: MatDialog

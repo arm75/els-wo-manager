@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { WorkOrderService } from "../../../core/services/work-order.service";
 import { MatSelect } from "@angular/material/select";
 import { LocationService } from "../../../core/services/location.service";
@@ -8,6 +8,7 @@ import { CustomerService } from "../../../core/services/customer.service";
 import { map } from "rxjs/operators";
 import { UserService } from "../../../core/services/user.service";
 import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
+import {User} from "../../../core/models/user";
 
 @Component({
   selector: 'app-work-order-add',
@@ -19,6 +20,8 @@ export class WorkOrderAddComponent implements OnInit {
   formTitle: string = "Add Work Order";
   addForm: FormGroup = new FormGroup({});
 
+  userData: User[] = [];
+
   @ViewChild('customerSelect')
   customerSelect!: MatSelect;
   customerLoaded: any;
@@ -29,10 +32,10 @@ export class WorkOrderAddComponent implements OnInit {
   locationLoaded: any;
   locationSelected: any;
 
-  @ViewChild('assignedUserSelect')
-  assignedUserSelect!: MatSelect;
-  assignedUserLoaded: any;
-  assignedUserSelected: any;
+  @ViewChild('assignedUsersSelect')
+  assignedUsersSelect!: MatSelect;
+  assignedUsersLoaded: any;
+  assignedUsersSelected: any;
 
   constructor( private matDialogRef: MatDialogRef<WorkOrderAddComponent>,
                private entityService: WorkOrderService,
@@ -41,41 +44,53 @@ export class WorkOrderAddComponent implements OnInit {
                private userService: UserService,
                private formBuilder: FormBuilder,
                private globalSnackBarService: GlobalSnackBarService
-  ) {
-
-  }
+  ) { }
 
   ngOnInit() {
     this.addForm = this.formBuilder.group({
-      'quickDescription': new FormControl(''),
-      'customerPo': new FormControl(''),
-      'customer': new FormControl(''),
-      'location': new FormControl(''),
-      // 'assignedUsers': new FormControl(''),
+      'customer': new FormControl('', [Validators.required]),
+      'location': new FormControl('', [Validators.required]),
+      'assignedUsers': new FormControl('', [Validators.required]),
+      'quickDescription': new FormControl('', [Validators.required]),
       'description': new FormControl(''),
-      'entryInstruct': new FormControl(''),
-      'inventoryItemsTotal': new FormControl(''),
-      'laborItemsTotal': new FormControl(''),
-      'subcontractorItemsTotal': new FormControl(''),
-      'toolEquipmentItemsTotal': new FormControl(''),
-      'workOrderTotal': new FormControl('')
+      'contactName': new FormControl('', [Validators.required]),
+      'contactPhoneNumb': new FormControl('', [Validators.required]),
+      'contactAltPhoneNumb': new FormControl(''),
+      'entryInstruct': new FormControl('', [Validators.required]),
+      // 'inventoryItemsTotal': new FormControl(''),
+      // 'laborItemsTotal': new FormControl(''),
+      // 'subcontractorItemsTotal': new FormControl(''),
+      // 'toolEquipmentItemsTotal': new FormControl(''),
+      // 'workOrderTotal': new FormControl('')
     });
     this.loadCustomerSelect();
     this.loadLocationSelect();
-    //this.loadAssignedUserSelect();
+    //this.userData = this.entityData.assignedUsers;
+    this.loadAssignedUsersSelect();
+  }
+
+  addUserToWorkOrder() {
+    this.userData.push(this.assignedUsersSelected);
+    this.loadAssignedUsersSelect();
+    this.assignedUsersSelected = "";
+  }
+
+  removeUserFromWorkOrder(userToRemove: User) {
+    if (this.userData.length > 1) {
+      this.userData = this.userData.filter(function (obj: { id: number; }) {
+        return obj.id !== userToRemove.id;
+      });
+    }
+    this.loadAssignedUsersSelect();
   }
 
   customerSelectChange() {
     this.loadLocationSelect(this.customerSelected);
   }
 
-  locationSelectChange() {
-    //alert(this.locationSelected);
-  }
+  locationSelectChange() { }
 
-  assignedUserSelectChange() {
-    //alert(this.locationSelected);
-  }
+  assignedUsersSelectChange() { }
 
   loadCustomerSelect() {
     this.customerService.getAll().subscribe(
@@ -99,20 +114,22 @@ export class WorkOrderAddComponent implements OnInit {
       );
   }
 
-  loadAssignedUserSelect() {
+  loadAssignedUsersSelect() {
     this.userService.getAll().subscribe(
       data => {
-        this.assignedUserLoaded = data;
+        this.assignedUsersLoaded = data;
+        this.assignedUsersLoaded = this.assignedUsersLoaded.filter((ar: { id: number; }) => !this.userData.find((rm: { id: number; }) => (rm.id === ar.id) ));
       },error => {
       }
     );
   }
 
   addEntity() {
+    this.addForm.controls['assignedUsers'].setValue(this.userData);
     this.entityService.create(this.addForm.value)
       .subscribe(data => {
         this.matDialogRef.close();
-        this.globalSnackBarService.success("Work Order added successfully.");
+        this.globalSnackBarService.success("Work Order: " + data.id + " been created.");
       }, error => {
         this.matDialogRef.close();
         this.globalSnackBarService.error(error.error.message);

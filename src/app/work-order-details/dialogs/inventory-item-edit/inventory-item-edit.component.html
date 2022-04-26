@@ -6,11 +6,22 @@
     <p>
       <mat-form-field class="width-99" appearance="outline">
         <mat-label>Select Inventory</mat-label>
-        <mat-select #inventorySelect [(value)]="inventorySelected" [compareWith]="compareObjects" (selectionChange)="selectChange()" formControlName="inventory">
-          <mat-option *ngFor="let inv of inventoryLoaded" [value]="inv">{{inv.entityName}}</mat-option>
+        <mat-select #inventorySelect [(value)]="inventoryIdSelected" (selectionChange)="selectChange()" formControlName="inventoryId">
+          <mat-option *ngFor="let inv of inventoryLoaded" [value]="inv.id">{{inv.entityName}}</mat-option>
         </mat-select>
-        <mat-error *ngIf="editForm.controls['inventory'].hasError('required')">
+        <mat-error *ngIf="editForm.controls['inventoryId'].hasError('required')">
           Inventory is required
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="width-99" appearance="outline">
+        <mat-label>Inventory Location (taken from)</mat-label>
+        <mat-select #inventoryBucketSelect [(value)]="inventoryBucketIdSelected" formControlName="bucketId">
+          <mat-option *ngFor="let bucket of inventoryBucketLoaded" [value]="bucket.id">{{bucket.location.entityName}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="editForm.controls['bucketId'].hasError('required')">
+          Inventory Location is required
         </mat-error>
       </mat-form-field>
     </p>

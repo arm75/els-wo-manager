@@ -20,7 +20,7 @@ export class ToolEquipmentItemAddComponent implements OnInit {
   @ViewChild('toolEquipmentSelect')
   toolEquipmentSelect!: MatSelect;
   toolEquipmentLoaded: any;
-  toolEquipmentSelected: any;
+  toolEquipmentIdSelected: any;
   toolEquipmentSelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<ToolEquipmentItemAddComponent>,
@@ -34,8 +34,9 @@ export class ToolEquipmentItemAddComponent implements OnInit {
   ngOnInit() {
     this.woId = this.data.woId;
     this.addForm = this.formBuilder.group({
-      'toolEquipment': new FormControl('', [Validators.required]),
       'workOrder': new FormControl({ "id": this.woId }),
+      'toolEquipmentId': new FormControl('', [Validators.required]),
+      'entityName': new FormControl(''),
       'notes': new FormControl(''),
       'pricePerDay': new FormControl('', [Validators.required]),
       'days': new FormControl('', [Validators.required]),
@@ -45,8 +46,10 @@ export class ToolEquipmentItemAddComponent implements OnInit {
   }
 
   selectChange() {
-    this.toolEquipmentService.get(this.toolEquipmentSelected.id)
+    this.toolEquipmentService.get(this.toolEquipmentIdSelected)
       .pipe(finalize(() => {
+        this.addForm.controls['toolEquipmentId'].setValue(this.toolEquipmentSelectedLoaded.id);
+        this.addForm.controls['entityName'].setValue(this.toolEquipmentSelectedLoaded.entityName);
         this.addForm.controls['notes'].setValue(this.toolEquipmentSelectedLoaded.description);
         this.addForm.controls['pricePerDay'].setValue(this.toolEquipmentSelectedLoaded.pricePerDay);
       }))

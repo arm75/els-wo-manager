@@ -181,7 +181,7 @@ body { width: 100%; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif
   color: #000000;
 }
 
-/* TOOL/EQUIPMENT ITEM STATUS DISPLAY */
+/* TOOL/EQUIPMENT ITEM RETURN STATUS DISPLAY */
 .tool-equipment-status-chip {
   font-size: 90%;
   color: #ffffff;
@@ -197,10 +197,46 @@ body { width: 100%; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif
   background-color: #000000;
 }
 
+/* SUBCONTRACTOR ITEM COMPLETION STATUS DISPLAY */
+.subcontractor-status-chip {
+  font-size: 90%;
+  color: #ffffff;
+  padding: 3px 6px 3px 6px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.subcontractor-status-chip-active {
+  background-color: #339933;
+}
+.subcontractor-status-chip-complete {
+  background-color: #000000;
+}
+
 /*::ng-deep.mat-tab-label.mat-tab-label-active:not(.mat-tab-disabled),*/
 /*::ng-deep.mat-tab-label.mat-tab-label-active.cdk-keyboard-focused:not(.mat-tab-disabled) {*/
 /*  background-color: #ccf2ff;*/
 /*  !*font-weight: 700;*!*/
 /*  !*color: black;*!*/
 /*  opacity: 1;*/
-/*}*/
+
+.mat-tab-label {
+  height: 40px !important;
+  padding: 0 12px !important;
+  min-width: 150px;
+}
+
+body {
+  font-size: 80% !important;
+}
+
+h6.hint-text-box {
+  padding: 10px 30px 10px 30px;
+  background-color: lightgoldenrodyellow;
+  font-size: 2rem;
+  color: #996633;
+  border: 1px solid #996633;
+  text-align: center;
+  margin: 0 0 0 0;
+  width: 400px;
+}

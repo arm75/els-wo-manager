@@ -23,7 +23,7 @@ export class LaborItemAddComponent implements OnInit {
   @ViewChild('laborSelect')
   laborSelect!: MatSelect;
   laborLoaded: any;
-  laborSelected: any;
+  laborIdSelected: any;
   laborSelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<LaborItemAddComponent>,
@@ -37,8 +37,9 @@ export class LaborItemAddComponent implements OnInit {
   ngOnInit() {
     this.woId = this.data.woId;
     this.addForm = this.formBuilder.group({
-      'labor': new FormControl('', [Validators.required]),
       'workOrder': new FormControl({ "id": this.woId }),
+      'laborId': new FormControl('', [Validators.required]),
+      'entityName': new FormControl(''),
       'notes': new FormControl(''),
       'ratePerHour': new FormControl('', [Validators.required]),
       'hours': new FormControl('', [Validators.required]),
@@ -49,8 +50,10 @@ export class LaborItemAddComponent implements OnInit {
   }
 
   selectChange() {
-    this.laborService.get(this.laborSelected.id)
+    this.laborService.get(this.laborIdSelected)
       .pipe(finalize(() => {
+        this.addForm.controls['laborId'].setValue(this.laborSelectedLoaded.id);
+        this.addForm.controls['entityName'].setValue(this.laborSelectedLoaded.entityName);
         this.addForm.controls['notes'].setValue(this.laborSelectedLoaded.description);
         this.addForm.controls['ratePerHour'].setValue(this.laborSelectedLoaded.ratePerHour);
       }))

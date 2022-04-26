@@ -5,10 +5,10 @@
       <p>
         <mat-form-field class="width-99" appearance="outline">
           <mat-label>Select Labor Type</mat-label>
-          <mat-select #inventorySelect [(value)]="laborSelected" (selectionChange)="selectChange()" formControlName="labor">
-            <mat-option *ngFor="let labor of laborLoaded" [value]="labor">{{labor.entityName}}</mat-option>
+          <mat-select #laborSelect [(value)]="laborIdSelected" (selectionChange)="selectChange()" formControlName="laborId">
+            <mat-option *ngFor="let labor of laborLoaded" [value]="labor.id">{{labor.entityName}}</mat-option>
           </mat-select>
-          <mat-error *ngIf="addForm.controls['labor'].hasError('required')">
+          <mat-error *ngIf="addForm.controls['laborId'].hasError('required')">
             Labor is required
           </mat-error>
         </mat-form-field>

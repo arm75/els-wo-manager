@@ -1,23 +1,25 @@
-import {Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
-import {ActivatedRoute, Router } from "@angular/router";
+import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, DoCheck, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from "@angular/router";
 import { WorkOrderService } from "../../core/services/work-order.service";
 import { WorkOrder } from "../../core/models/work-order";
 import { AuthenticationService } from "../../core/security/authentication.service";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { map } from "rxjs/operators";
 import { LocationService } from "../../core/services/location.service";
 import { CustomerService } from "../../core/services/customer.service";
 import { MatSelect } from "@angular/material/select";
-import { GlobalSnackBarService} from "../../shared/snackbar/global-snack-bar.service";
-import {UserService} from "../../core/services/user.service";
-import {User} from "../../core/models/user";
+import { GlobalSnackBarService } from "../../shared/snackbar/global-snack-bar.service";
+import { UserService } from "../../core/services/user.service";
+import { User } from "../../core/models/user";
+import { MatInput } from "@angular/material/input";
 
 @Component({
   selector: 'app-work-order-details',
   templateUrl: './work-order-details.component.html',
   styleUrls: ['./work-order-details.component.css']
 })
-export class WorkOrderDetailsComponent implements OnInit {
+export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy {
+// export class WorkOrderDetailsComponent implements OnInit {
   loggedInUser = this.authenticationService.getUserFromLocalStorage();
   loggedInRole: any;
   nameToDisplay: any;
@@ -29,6 +31,7 @@ export class WorkOrderDetailsComponent implements OnInit {
   dataLoaded: boolean = false;
   entityData!: WorkOrder;
   editForm: FormGroup = new FormGroup({});
+  editFormEditMode: boolean = false;
 
   @ViewChild('customerSelect')
   customerSelect!: MatSelect;
@@ -45,6 +48,9 @@ export class WorkOrderDetailsComponent implements OnInit {
   assignedUsersLoaded: any;
   assignedUsersSelected: any;
 
+  @ViewChild('quickDescriptionInput')
+  quickDescriptionInput!: MatInput;
+
   masterTotal: number = 0;
 
   masterInventoryTotal: number = 0;
@@ -60,6 +66,10 @@ export class WorkOrderDetailsComponent implements OnInit {
   woLocationFieldBox: any;
   woPoFieldBox: any;
 
+  spinning: boolean = false;
+
+  logNg: boolean = false;
+
   constructor(
     private snackBarService: GlobalSnackBarService,
     private entityService: WorkOrderService,
@@ -73,25 +83,57 @@ export class WorkOrderDetailsComponent implements OnInit {
     private globalSnackBarService: GlobalSnackBarService
   ) { }
 
+  ngOnChanges() {
+    if (this.logNg) { console.log("OnChanges ran.\n") }
+  }
+
   ngOnInit(): void {
+    if (this.logNg) { console.log("ngOnInit ran.\n") }
     this.dataLoaded = false;
     this.getIdFromRoute();
+    this.editFormEditMode = false;
     this.loadCustomerSelect();
-
     if (this.passedWorkOrderId) {
       this.loadWorkOrderIntoView();
     }
   }
 
+  ngDoCheck() {
+    if (this.logNg) { console.log("ngDoCheck ran.\n") }
+  }
+
+  ngAfterContentInit() {
+    if (this.logNg) { console.log("ngAfterContentInit ran.\n") }
+  }
+
+  ngAfterContentChecked() {
+    if (this.logNg) { console.log("ngAfterContentChecked ran.\n") }
+  }
+
+  ngAfterViewInit() {
+    if (this.logNg) { console.log("ngAfterViewInit ran.\n") }
+  }
+
+  ngAfterViewChecked() {
+    if (this.logNg) { console.log("ngAfterViewChecked ran.\n") }
+  }
+
+  ngOnDestroy() {
+    if (this.logNg) { console.log("ngOnDestroy ran.\n") }
+  }
+
   addUserToWorkOrder() {
     this.userData.push(this.assignedUsersSelected);
     this.loadAssignedUsersSelect();
+    this.assignedUsersSelected = "";
   }
 
   removeUserFromWorkOrder(userToRemove: User) {
-    this.userData = this.userData.filter(function( obj: { id: number; } ) {
-      return obj.id !== userToRemove.id;
-    });
+    if (this.userData.length > 1) {
+      this.userData = this.userData.filter(function (obj: { id: number; }) {
+        return obj.id !== userToRemove.id;
+      });
+    }
     this.loadAssignedUsersSelect();
   }
 
@@ -118,16 +160,15 @@ export class WorkOrderDetailsComponent implements OnInit {
            this.editForm = this.formBuilder.group({
              'id': new FormControl(this.entityData.id),
              'status': new FormControl(this.entityData.status),
-             'customerPo': new FormControl(this.entityData.customerPo),
-             'customer': new FormControl(this.entityData.customer),
-             'location': new FormControl(this.entityData.location),
-             'assignedUsers': new FormControl(this.entityData.assignedUsers),
-             'quickDescription': new FormControl(this.entityData.quickDescription),
-             'description': new FormControl(this.entityData.description),
-             'contactName': new FormControl(this.entityData.contactName),
-             'contactPhoneNumb': new FormControl(this.entityData.contactPhoneNumb),
-             'contactAltPhoneNumb': new FormControl(this.entityData.contactAltPhoneNumb),
-             'entryInstruct': new FormControl(this.entityData.entryInstruct),
+             'customer': new FormControl({ value: this.entityData.customer, disabled: true}, [Validators.required]),
+             'location': new FormControl({ value: this.entityData.location, disabled: true}, [Validators.required]),
+             'assignedUsers': new FormControl({ value: this.entityData.assignedUsers, disabled: true}, [Validators.required]),
+             'quickDescription': new FormControl({ value: this.entityData.quickDescription, disabled: true}, [Validators.required]),
+             'description': new FormControl({ value: this.entityData.description, disabled: true}),
+             'contactName': new FormControl({ value: this.entityData.contactName, disabled: true}, [Validators.required]),
+             'contactPhoneNumb': new FormControl({ value: this.entityData.contactPhoneNumb, disabled: true}, [Validators.required]),
+             'contactAltPhoneNumb': new FormControl({ value: this.entityData.contactAltPhoneNumb, disabled: true}),
+             'entryInstruct': new FormControl({ value: this.entityData.entryInstruct, disabled: true}, [Validators.required]),
              'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
              'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
              'subcontractorItemsTotal': new FormControl(this.entityData.subcontractorItemsTotal),
@@ -138,6 +179,7 @@ export class WorkOrderDetailsComponent implements OnInit {
            this.loadLocationSelect(this.entityData.customer.id);
            this.userData = this.entityData.assignedUsers;
            this.loadAssignedUsersSelect();
+           //this.editForm.
       });
   }
 
@@ -148,7 +190,6 @@ export class WorkOrderDetailsComponent implements OnInit {
     this.woUpdatedDateFieldBox = this.entityData.updatedDate;
     this.woCustomerFieldBox = this.entityData.customer.entityName;
     this.woLocationFieldBox = this.entityData.location.entityName;
-    this.woPoFieldBox = this.entityData.customerPo;
   }
 
   calcMasterTotal() {
@@ -220,7 +261,14 @@ export class WorkOrderDetailsComponent implements OnInit {
     );
   }
 
+  editModeToggle() {
+    this.editFormEditMode = true;
+    this.editForm.enable();
+  }
+
   saveWorkOrder() {
+    this.startSpinner();
+    this.editForm.controls['assignedUsers'].setValue(this.userData);
     this.editForm.controls['inventoryItemsTotal'].setValue(this.masterInventoryTotal);
     this.editForm.controls['laborItemsTotal'].setValue(this.masterLaborTotal);
     this.editForm.controls['subcontractorItemsTotal'].setValue(this.masterSubcontractorTotal);
@@ -228,12 +276,29 @@ export class WorkOrderDetailsComponent implements OnInit {
     this.editForm.controls['workOrderTotal'].setValue(this.masterTotal);
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        this.globalSnackBarService.success("Work Order: " + this.editForm.value.id + " has been updated.");
+        //this.globalSnackBarService.success("Work Order: " + this.editForm.value.id + " has been updated.");
         this.loadWorkOrderIntoView();
         this.updateFieldBoxes();
+        this.editForm.disable();
+        this.editFormEditMode = false;
       }, error => {
         this.globalSnackBarService.error(error.error.message);
+      }, () => {
+        this.stopSpinner();
+        this.globalSnackBarService.success("Work Order: " + this.editForm.value.id + " has been updated.");
       });
+  }
+
+  printPage() {
+    window.print();
+  }
+
+  startSpinner() {
+    this.spinning = true;
+  }
+
+  stopSpinner() {
+    this.spinning = false;
   }
 
   logout() {

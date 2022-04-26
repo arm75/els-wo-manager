@@ -17,7 +17,7 @@ import { SubcontractorDeleteComponent } from "../../dialogs/subcontractor-delete
 })
 export class SubcontractorTableComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'entityName', 'phoneNumb', 'altPhoneNumb', 'emailAddress', 'actions'];
+  displayedColumns: string[] = ['id', 'entityName', 'phoneNumb', 'altPhoneNumb', 'emailAddress', 'status', 'actions'];
 
   dataSource: any;
 
@@ -47,6 +47,8 @@ export class SubcontractorTableComponent implements OnInit, AfterViewInit {
  buildTable() {
     this.entityService.getAll().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
+      this.sort.active = 'id';
+      this.sort.direction = 'desc';
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     })

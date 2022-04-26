@@ -26,7 +26,7 @@ export class SubcontractorItemTableComponent implements OnInit, AfterViewInit {
 
   componentTotal: number = 0;
 
-  displayedColumns: string[] = ['createdDate', 'subcontractor', 'notes', 'unitPrice', 'qty', 'totalPrice', 'actions'];
+  displayedColumns: string[] = ['createdDate', 'entityName', 'notes', 'unitPrice', 'qty', 'totalPrice', 'status', 'actions'];
   dataSource: any;
 
   @ViewChild(MatTable)

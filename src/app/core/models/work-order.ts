@@ -9,7 +9,6 @@ export interface WorkOrder {
   location: Location;
   assignedUsers: User[];
   status: WorkOrderStatus;
-  customerPo: string;
   quickDescription: string;
   description: string;
   contactName: string;

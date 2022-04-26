@@ -5,6 +5,7 @@ import { SubcontractorItemService } from "../../../core/services/subcontractor-i
 import { MatSelect } from "@angular/material/select";
 import { SubcontractorService } from "../../../core/services/subcontractor.service";
 import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
+import {finalize} from "rxjs/operators";
 
 @Component({
   selector: 'app-subcontractor-item-add',
@@ -19,7 +20,8 @@ export class SubcontractorItemAddComponent implements OnInit {
   @ViewChild('subcontractorSelect')
   subcontractorSelect!: MatSelect;
   subcontractorLoaded: any;
-  subcontractorSelected: any;
+  subcontractorIdSelected: any;
+  subcontractorSelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<SubcontractorItemAddComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
@@ -32,8 +34,9 @@ export class SubcontractorItemAddComponent implements OnInit {
   ngOnInit() {
     this.woId = this.data.woId;
     this.addForm = this.formBuilder.group({
-      'subcontractor': new FormControl('', [Validators.required]),
       'workOrder': new FormControl({ "id": this.woId }),
+      'subcontractorId': new FormControl('', [Validators.required]),
+      'entityName': new FormControl(''),
       'notes': new FormControl(''),
       'unitPrice': new FormControl('', [Validators.required]),
       'qty': new FormControl('', [Validators.required]),
@@ -43,6 +46,18 @@ export class SubcontractorItemAddComponent implements OnInit {
   }
 
   selectChange() {
+    this.subcontractorService.get(this.subcontractorIdSelected)
+      .pipe(finalize(() => {
+        this.addForm.controls['subcontractorId'].setValue(this.subcontractorSelectedLoaded.id);
+        this.addForm.controls['entityName'].setValue(this.subcontractorSelectedLoaded.entityName);
+        // this.addForm.controls['notes'].setValue(this.laborSelectedLoaded.description);
+        // this.addForm.controls['ratePerHour'].setValue(this.laborSelectedLoaded.ratePerHour);
+      }))
+      .subscribe(data => {
+          this.subcontractorSelectedLoaded = data;
+        },error => {
+        }
+      );
   }
 
   loadSubcontractorSelect() {

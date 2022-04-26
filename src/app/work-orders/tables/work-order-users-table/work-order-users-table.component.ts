@@ -53,9 +53,7 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
  home() {
     this.userService.get(1001340).subscribe((data) => {
       this.dataSource2 = data;
-      console.log(this.dataSource2.valueOf('username'));
     }, error => {
-      alert(error.error.message);
     });
  }
 
@@ -64,7 +62,6 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
      .pipe(map(items =>
        items.filter(item => ((item.status == WorkOrderStatus.OPEN)||(item.status == WorkOrderStatus.PENDING)))))
      .subscribe(data => {
-       console.log(data);
        this.dataSource = new MatTableDataSource(data);
        this.dataSource.sort = this.sort;
        this.dataSource.paginator = this.paginator;

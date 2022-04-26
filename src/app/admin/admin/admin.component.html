@@ -3,10 +3,10 @@
     <div class="app-title-box col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
       <h1><a href="/workOrders">ELS Work Order Manager</a> &nbsp;&nbsp; | &nbsp;&nbsp; Administration</h1>
     </div>
-    <div class="logged-in-user app-icon-menu-box col-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
+    <div class="logged-in-user app-icon-menu-box col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
       <p>Hello, {{nameToDisplay}}</p>
     </div>
-    <div class="app-icon-menu-box col-12 col-sm-12 col-md-1 col-lg-1 col-xl-1">
+    <div class="app-icon-menu-box col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
       <a href="/workOrders"><span><mat-icon aria-hidden="false" matTooltip="Home" aria-label="Home">home</mat-icon></span></a>
       <a href="/admin"><span><mat-icon aria-hidden="false" matTooltip="Admin" aria-label="Admin">settings</mat-icon></span></a>
       <span><mat-icon aria-hidden="false" matTooltip="Logout" aria-label="Logout" (click)="logout()">logout</mat-icon></span>
@@ -15,7 +15,13 @@
 
   <div class="row els-admin-tabs">
     <mat-tab-group mat-stretch-tabs class="admin-tab-group">
-      <mat-tab label="Work Orders"><app-work-order-table></app-work-order-table></mat-tab>
+      <mat-tab label="Work Orders">
+        <mat-tab-group mat-stretch-tabs class="admin-wo-tab-group">
+          <mat-tab label="In-Progess"><app-work-order-table></app-work-order-table></mat-tab>
+          <mat-tab label="Processing"><app-work-order-processing-table></app-work-order-processing-table></mat-tab>
+          <mat-tab label="History"><app-work-order-history-table></app-work-order-history-table></mat-tab>
+        </mat-tab-group>
+      </mat-tab>
       <mat-tab label="Customers"><app-customer-table></app-customer-table></mat-tab>
       <mat-tab label="Locations"><app-location-table></app-location-table></mat-tab>
       <mat-tab label="Inventory"><app-inventory-admin></app-inventory-admin></mat-tab>
@@ -25,7 +31,7 @@
       <mat-tab label="Tools/Equipment"><app-tool-equipment-table></app-tool-equipment-table></mat-tab>
       <mat-tab label="Labor"><app-labor-table></app-labor-table></mat-tab>
       <mat-tab label="Users"><app-user-table></app-user-table></mat-tab>
-      <mat-tab label="Processing"><app-work-order-processing-table></app-work-order-processing-table></mat-tab>
+<!--      <mat-tab label="Processing"><app-work-order-processing-table></app-work-order-processing-table></mat-tab>-->
     </mat-tab-group>
   </div>
 </div>

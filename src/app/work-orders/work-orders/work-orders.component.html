@@ -4,10 +4,10 @@
     <div class="app-title-box col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
       <h1><a href="/workOrders">ELS Work Order Manager</a>&nbsp;&nbsp;|&nbsp;&nbsp;Work Orders</h1>
     </div>
-    <div class="logged-in-user app-icon-menu-box col-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">
+    <div class="logged-in-user app-icon-menu-box col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
       <p>Hello, {{nameToDisplay}}</p>
     </div>
-    <div class="app-icon-menu-box col-12 col-sm-12 col-md-1 col-lg-1 col-xl-1">
+    <div class="app-icon-menu-box col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
       <a href="/workOrders"><span><mat-icon aria-hidden="false" matTooltip="Home" aria-label="Home">home</mat-icon></span></a>
       <a *ngIf="(loggedInRole == 'ROLE_ADMIN')||(loggedInRole == 'ROLE_SUPER_ADMIN')" href="/admin"><span><mat-icon aria-hidden="false" matTooltip="Admin" aria-label="Admin">settings</mat-icon></span></a>
       <span><mat-icon aria-hidden="false" matTooltip="Logout" aria-label="Logout" (click)="logout()">logout</mat-icon></span>
@@ -17,6 +17,7 @@
   <div class="row els-work-orders-tabs">
     <mat-tab-group mat-stretch-tabs class="work-orders-tab-group">
       <mat-tab label="Work Orders"><app-work-order-users-table></app-work-order-users-table></mat-tab>
+      <mat-tab label="Subcontractor Completion"><app-subcontractor-completion-table></app-subcontractor-completion-table></mat-tab>
       <mat-tab label="Tool/Equipment Return"><app-tool-equipment-return-table></app-tool-equipment-return-table></mat-tab>
     </mat-tab-group>
   </div>

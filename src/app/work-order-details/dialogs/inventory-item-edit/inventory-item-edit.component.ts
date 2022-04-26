@@ -7,6 +7,7 @@ import { MatSelect } from "@angular/material/select";
 import { InventoryService } from "../../../core/services/inventory.service";
 import {finalize} from "rxjs/operators";
 import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
+import {InventoryBucketService} from "../../../core/services/inventory-bucket.service";
 
 @Component({
   selector: 'app-inventory-item-edit',
@@ -25,13 +26,20 @@ export class InventoryItemEditComponent implements OnInit {
   @ViewChild('inventorySelect')
   inventorySelect!: MatSelect;
   inventoryLoaded: any;
-  inventorySelected: any;
+  inventoryIdSelected: any;
   inventorySelectedLoaded: any;
+
+  @ViewChild('inventoryBucketSelect')
+  inventoryBucketSelect!: MatSelect;
+  inventoryBucketLoaded: any;
+  inventoryBucketIdSelected: any;
+  inventoryBucketSelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<InventoryItemEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: InventoryItemService,
                private inventoryService: InventoryService,
+               private inventoryBucketService: InventoryBucketService,
                private formBuilder: FormBuilder,
                private globalSnackBarService: GlobalSnackBarService
   ) { }
@@ -47,11 +55,15 @@ export class InventoryItemEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-            'inventory': new FormControl(this.entityData.inventory, [Validators.required]),
-            'workOrder': new FormControl(this.entityData.workOrder, [Validators.required]),
+            'workOrder': new FormControl(this.entityData.workOrder),
+            'inventoryId': new FormControl(this.entityData.inventoryId, [Validators.required]), // only kept for error validation
+            'bucketId': new FormControl(this.entityData.bucketId, [Validators.required]),
+            'entityName': new FormControl(this.entityData.entityName),
             'notes': new FormControl(this.entityData.notes),
+            'unitCost': new FormControl(this.entityData.unitCost),
             'unitPrice': new FormControl(this.entityData.unitPrice, [Validators.required]),
             'qty': new FormControl(this.entityData.qty, [Validators.required]),
+            'totalPrice': new FormControl(this.entityData.totalPrice)
           });
         })
         .catch(error => {
@@ -59,6 +71,7 @@ export class InventoryItemEditComponent implements OnInit {
         .finally(() => {
           this.dataLoaded = true;
           this.loadInventorySelect();
+          this.loadInventoryBucketSelect();
         }
       );
     }
@@ -69,10 +82,14 @@ export class InventoryItemEditComponent implements OnInit {
   }
 
   selectChange() {
-    this.inventoryService.get(this.inventorySelected.id)
+    this.inventoryService.get(this.inventoryIdSelected)
       .pipe(finalize(() => {
+        this.editForm.controls['inventoryId'].setValue(this.inventorySelectedLoaded.id);
+        this.editForm.controls['entityName'].setValue(this.inventorySelectedLoaded.entityName);
         this.editForm.controls['notes'].setValue(this.inventorySelectedLoaded.description);
+        this.editForm.controls['unitCost'].setValue(this.inventorySelectedLoaded.unitCost);
         this.editForm.controls['unitPrice'].setValue(this.inventorySelectedLoaded.unitPrice);
+        this.loadInventoryBucketSelect();
       }))
       .subscribe(data => {
           this.inventorySelectedLoaded = data;
@@ -85,6 +102,15 @@ export class InventoryItemEditComponent implements OnInit {
     this.inventoryService.getAll().subscribe(
       data => {
         this.inventoryLoaded = data;
+      },error => {
+      }
+    );
+  }
+
+  loadInventoryBucketSelect() {
+    this.inventoryBucketService.getAllNonEmptyByInventoryId(this.entityData.inventoryId).subscribe(
+      data => {
+        this.inventoryBucketLoaded = data;
       },error => {
       }
     );

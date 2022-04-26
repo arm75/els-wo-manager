@@ -19,6 +19,10 @@ export class InventoryLocationService {
     return this.http.get<InventoryLocation[]>(`${this.baseUrl}/all`);
   }
 
+  getUnusedByInvId(id: any): Observable<InventoryLocation> {
+    return this.http.get<InventoryLocation>(`${this.baseUrl}/allUnusedByInventoryId/${id}`);
+  }
+
   get(id: any): Observable<InventoryLocation> {
     return this.http.get<InventoryLocation>(`${this.baseUrl}/find/${id}`);
   }

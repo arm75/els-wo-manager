@@ -23,7 +23,7 @@ export class SubcontractorItemEditComponent implements OnInit {
   @ViewChild('subcontractorSelect')
   subcontractorSelect!: MatSelect;
   subcontractorLoaded: any;
-  subcontractorSelected: any;
+  subcontractorIdSelected: any;
 
   constructor( private matDialogRef: MatDialogRef<SubcontractorItemEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
@@ -44,8 +44,9 @@ export class SubcontractorItemEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-            'subcontractor': new FormControl(this.entityData.subcontractor, [Validators.required]),
             'workOrder': new FormControl(this.entityData.workOrder),
+            'subcontractorId': new FormControl(this.entityData.subcontractorId, [Validators.required]),
+            'entityName': new FormControl(this.entityData.entityName),
             'notes': new FormControl(this.entityData.notes),
             'unitPrice': new FormControl(this.entityData.unitPrice, [Validators.required]),
             'qty': new FormControl(this.entityData.qty, [Validators.required]),

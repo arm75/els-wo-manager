@@ -1,4 +1,14 @@
-import { Component, OnInit, AfterViewInit, ViewChild, Input, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  Input,
+  EventEmitter,
+  Output,
+  OnChanges,
+  DoCheck, AfterContentInit, AfterContentChecked, AfterViewChecked, OnDestroy
+} from '@angular/core';
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
@@ -10,13 +20,17 @@ import { InventoryItemAddComponent } from "../../dialogs/inventory-item-add/inve
 import { InventoryItemEditComponent } from "../../dialogs/inventory-item-edit/inventory-item-edit.component";
 import { InventoryItemDeleteComponent } from "../../dialogs/inventory-item-delete/inventory-item-delete.component";
 import { map } from "rxjs/operators";
+import {
+  GlobalProgressSpinnerComponent
+} from "../../../shared/progress-spinner/global-progress-spinner/global-progress-spinner.component";
 
 @Component({
   selector: 'app-inventory-item-table',
   templateUrl: './inventory-item-table.component.html',
   styleUrls: ['./inventory-item-table.component.css']
 })
-export class InventoryItemTableComponent implements OnInit, AfterViewInit {
+export class InventoryItemTableComponent implements OnChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy {
+//export class InventoryItemTableComponent implements OnInit, AfterViewInit {
 
   @Input()
   passedWorkOrderId: any;
@@ -26,7 +40,7 @@ export class InventoryItemTableComponent implements OnInit, AfterViewInit {
 
   componentTotal: number = 0;
 
-  displayedColumns: string[] = ['createdDate', 'inventory', 'notes', 'unitPrice', 'qty', 'totalPrice', 'actions'];
+  displayedColumns: string[] = ['createdDate', 'entityName', 'notes', 'unitPrice', 'qty', 'totalPrice', 'actions'];
   dataSource: any;
 
   @ViewChild(MatTable)
@@ -38,6 +52,8 @@ export class InventoryItemTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort)
   sort: MatSort = new MatSort;
 
+  logNg: boolean = false;
+
   constructor(
     private entityService: InventoryItemService,
     private _liveAnnouncer: LiveAnnouncer,
@@ -46,12 +62,39 @@ export class InventoryItemTableComponent implements OnInit, AfterViewInit {
     // this.buildTable();
   }
 
+  ngOnChanges() {
+    if (this.logNg) { console.log("---------------------------ngOnChanges ran.\n") }
+  }
+
   ngOnInit() {
+    if (this.logNg) { console.log("ngOnInit ran.\n") }
+  }
+
+  ngDoCheck() {
+    if (this.logNg) { console.log("ngDoCheck ran.\n") }
+  }
+
+  ngAfterContentInit() {
+    if (this.logNg) { console.log("ngAfterContentInit ran.\n") }
+  }
+
+  ngAfterContentChecked() {
+    if (this.logNg) { console.log("ngAfterContentChecked ran.\n") }
   }
 
   ngAfterViewInit() {
+    if (this.logNg) { console.log("ngAfterViewInit ran.\n") }
     this.buildTable();
   }
+
+  ngAfterViewChecked() {
+    if (this.logNg) { console.log("ngAfterViewChecked ran.\n") }
+  }
+
+  ngOnDestroy() {
+    if (this.logNg) { console.log("ngOnDestroy ran.\n") }
+  }
+
 
  buildTable() {
    this.componentTotal = 0;
@@ -64,7 +107,7 @@ export class InventoryItemTableComponent implements OnInit, AfterViewInit {
        this.dataSource = new MatTableDataSource(data);
        this.dataSource.sort = this.sort;
        this.dataSource.paginator = this.paginator;
-   })
+   });
  }
 
   applyFilter(event: Event) {
@@ -111,6 +154,20 @@ export class InventoryItemTableComponent implements OnInit, AfterViewInit {
     const deleteDialogRef = this.dialog.open(InventoryItemDeleteComponent, deleteDialogConfig);
     deleteDialogRef.afterClosed().subscribe(deleteData => {
       this.buildTable();
+    });
+  }
+
+  openSpinner() {
+    const spinnerDialogConfig = new MatDialogConfig();
+    spinnerDialogConfig.disableClose = true;
+    spinnerDialogConfig.autoFocus = true;
+    //spinnerDialogConfig.width = "25%";
+    spinnerDialogConfig.position = { top:  '0' };
+    //spinnerDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
+    const spinnerDialogRef = this.dialog.open(GlobalProgressSpinnerComponent, spinnerDialogConfig);
+    spinnerDialogRef.afterClosed().subscribe(spinnerData => {
+      //this.buildTable();
+      console.log("spinner called\n");
     });
   }
 

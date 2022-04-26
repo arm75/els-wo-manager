@@ -39,10 +39,17 @@ export class WorkOrderService {
     return this.http.put(`${this.baseUrl}/close`, data);
   }
 
+  cancel(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/cancel`, data);
+  }
+
   retry(data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/retry`, data);
   }
 
+  reopen(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/reopen`, data);
+  }
 
   delete(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrl}/delete/${id}`);

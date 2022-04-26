@@ -24,7 +24,7 @@ export class ToolEquipmentItemEditComponent implements OnInit {
   @ViewChild('toolEquipmentSelect')
   toolEquipmentSelect!: MatSelect;
   toolEquipmentLoaded: any;
-  toolEquipmentSelected: any;
+  toolEquipmentIdSelected: any;
   toolEquipmentSelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<ToolEquipmentItemEditComponent>,
@@ -46,8 +46,9 @@ export class ToolEquipmentItemEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-            'toolEquipment': new FormControl(this.entityData.toolEquipmentId, [Validators.required]),
             'workOrder': new FormControl(this.entityData.workOrder),
+            'toolEquipmentId': new FormControl(this.entityData.toolEquipmentId, [Validators.required]),
+            'entityName': new FormControl(this.entityData.entityName),
 	          'notes': new FormControl(this.entityData.notes),
             'pricePerDay': new FormControl(this.entityData.pricePerDay, [Validators.required]),
             'days': new FormControl(this.entityData.days, [Validators.required]),
@@ -70,8 +71,10 @@ export class ToolEquipmentItemEditComponent implements OnInit {
   }
 
   selectChange() {
-    this.toolEquipmentService.get(this.toolEquipmentSelected.id)
+    this.toolEquipmentService.get(this.toolEquipmentIdSelected)
       .pipe(finalize(() => {
+        this.editForm.controls['toolEquipmentId'].setValue(this.toolEquipmentSelectedLoaded.id);
+        this.editForm.controls['entityName'].setValue(this.toolEquipmentSelectedLoaded.entityName);
         this.editForm.controls['notes'].setValue(this.toolEquipmentSelectedLoaded.description);
         this.editForm.controls['pricePerDay'].setValue(this.toolEquipmentSelectedLoaded.pricePerDay);
       }))

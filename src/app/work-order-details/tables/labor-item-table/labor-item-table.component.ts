@@ -26,7 +26,7 @@ export class LaborItemTableComponent implements OnInit, AfterViewInit {
 
   componentTotal: number = 0;
 
-  displayedColumns: string[] = ['createdDate', 'labor', 'notes', 'ratePerHour', 'totalTime', 'totalPrice', 'actions'];
+  displayedColumns: string[] = ['createdDate', 'entityName', 'notes', 'ratePerHour', 'totalTime', 'totalPrice', 'actions'];
   dataSource: any;
 
   @ViewChild(MatTable)

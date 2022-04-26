@@ -8,16 +8,25 @@ export class ElsWoManagerConstants {
     { value:'ROLE_USER', name:'User' }
   ];
 
-  public static workOrderStatusFilterArray: any = [
+  public static inProgressWorkOrderStatusFilterArray: any = [
     { value:WorkOrderStatus.OPEN, name:'OPEN Work Orders' },
     { value:WorkOrderStatus.PENDING, name:'PENDING Work Orders' },
-    { value:WorkOrderStatus.CANCELLED, name:'CANCELLED Work Orders' },
+  ]
+
+  public static processingWorkOrderStatusFilterArray: any = [
     { value:WorkOrderStatus.COMPLETE, name:'COMPLETE Work Orders' },
     { value:WorkOrderStatus.CLOSED, name:'CLOSED Work Orders' },
     { value:WorkOrderStatus.ERROR, name:'ERROR Work Orders' },
     { value:WorkOrderStatus.RETRY, name:'RETRY Work Orders' },
+  ]
+
+  public static historyWorkOrderStatusFilterArray: any = [
+    { value:WorkOrderStatus.CANCELLED, name:'CANCELLED Work Orders' },
     { value:WorkOrderStatus.PROCESSED, name:'PROCESSED Work Orders' }
-]
+  ]
+
+
+
 
   public static hoursSelectArray: any = [
     { value:0, name:'0' },

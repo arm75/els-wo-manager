@@ -35,8 +35,11 @@ import { UserService } from "../core/services/user.service";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AuthInterceptor } from "../core/security/auth.interceptor";
 import { WorkOrderEditTabFormComponent } from './components/work-order-edit-tab-form/work-order-edit-tab-form.component';
-import {NgxMaskModule} from "ngx-mask";
+import { NgxMaskModule } from "ngx-mask";
 import { WorkOrderEditTabUsersComponent } from './components/work-order-edit-tab-users/work-order-edit-tab-users.component';
+import { PrintTemplateComponent } from './work-order-details/print/print-template/print-template.component';
+import { GlobalProgressSpinnerComponent } from "../shared/progress-spinner/global-progress-spinner/global-progress-spinner.component";
+import { ToolEquipmentItemReturnComponent } from './dialogs/tool-equipment-item-return/tool-equipment-item-return.component';
 
 // table components array
 const WorkOrderDetailsModuleTableComponents = [
@@ -68,22 +71,25 @@ const WorkOrderDetailsModuleDialogComponents = [
     WorkOrderDetailsModuleTableComponents,
     WorkOrderDetailsModuleDialogComponents,
     WorkOrderEditTabFormComponent,
-    WorkOrderEditTabUsersComponent
+    WorkOrderEditTabUsersComponent,
+    PrintTemplateComponent,
+    GlobalProgressSpinnerComponent,
+    ToolEquipmentItemReturnComponent,
   ],
-    imports: [
-        CommonModule,
-        MaterialKitModule,
-        FormsModule,
-        ReactiveFormsModule,
-        RouterModule,
-        NgxMaskModule,
-    ],
+  imports: [
+    CommonModule,
+    MaterialKitModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
+    NgxMaskModule,
+  ],
   providers:[
     AuthInterceptor,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthenticationService,
     UserService,
-    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 3000, verticalPosition: 'bottom', horizontalPosition: 'center', panelClass: 'els-custom-snackbar' } }
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500, verticalPosition: 'bottom', horizontalPosition: 'center', panelClass: 'els-custom-snackbar' } }
   ],
 })
 export class WorkOrderDetailsModule { }

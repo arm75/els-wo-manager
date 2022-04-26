@@ -1,12 +1,14 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryService } from "../../../core/services/inventory.service";
 import { Inventory } from "../../../core/models/inventory";
 import { MatSelect} from "@angular/material/select";
 import { InventoryGroupService } from "../../../core/services/inventory-group.service";
 import { InventoryLocationService } from "../../../core/services/inventory-location.service";
 import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
+import {InventoryBucket} from "../../../core/models/inventory-bucket";
+import {InventoryLocation} from "../../../core/models/inventory-location";
 
 @Component({
   selector: 'app-inventory-edit',
@@ -20,11 +22,19 @@ export class InventoryEditComponent implements OnInit {
   entityId: null;
   entityData!: Inventory;
   editForm: FormGroup = new FormGroup({});
+  //bucketForm: FormGroup = new FormGroup({});
+  bucketData: any;
+
 
   @ViewChild('inventoryGroupSelect')
   inventoryGroupSelect!: MatSelect;
   inventoryGroupLoaded: any;
   inventoryGroupSelected: any;
+
+  @ViewChild('inventoryLocationSelect')
+  inventoryLocationSelect!: MatSelect;
+  inventoryLocationsLoaded: any;
+  inventoryLocationSelected: any;
 
   constructor( private matDialogRef: MatDialogRef<InventoryEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
@@ -47,20 +57,55 @@ export class InventoryEditComponent implements OnInit {
             'id': new FormControl(this.entityData.id),
             'entityName': new FormControl(this.entityData.entityName, [Validators.required]),
             'inventoryGroup': new FormControl(this.entityData.inventoryGroup, [Validators.required]),
+            'buckets': new FormArray([]),
             'description': new FormControl(this.entityData.description),
-            'totalInStock': new FormControl(this.entityData.totalInStock, [Validators.required]),
             'unitCost': new FormControl(this.entityData.unitCost, [Validators.required]),
-            'unitPrice': new FormControl(this.entityData.unitPrice, [Validators.required])
+            'unitPrice': new FormControl(this.entityData.unitPrice, [Validators.required]),
+            'totalInStock': new FormControl(this.entityData.totalInStock, [Validators.required]),
           });
+
         })
         .catch(error => {
         })
         .finally(() => {
           this.dataLoaded = true;
           this.loadInventoryGroupSelect();
+          this.loadInventoryLocationSelect();
+          this.bucketData = this.entityData.buckets;
+          console.log("Bucket Data:\n");
+          console.table(this.bucketData);
+          this.bucketData.forEach( (bucket: InventoryBucket, index: number) => {
+            this.addBucketControl(bucket, index);
+          });
+
+          //console.log(this.editForm);
         }
       );
     }
+  }
+
+  createBucketFormGroup( bucket: InventoryBucket, index?: number) {
+    return this.formBuilder.group({
+      'id': new FormControl(bucket.id),
+      'inventory': new FormGroup({
+        'id': new FormControl(this.entityData.id),
+        'entityName': new FormControl(this.entityData.entityName)
+      }),
+      'location': new FormGroup( {
+        'id': new FormControl(bucket.location?.id),
+        'entityName': new FormControl(bucket.location?.entityName)
+      }),
+      'qtyInStock': new FormControl(bucket.qtyInStock),
+    });
+  }
+
+  addBucketControl(bucket: InventoryBucket, index?: number) {
+    if (index) { this.buckets.push(this.createBucketFormGroup(bucket, index)); }
+    else { this.buckets.push(this.createBucketFormGroup(bucket)); }
+  }
+
+  get buckets() {
+    return this.editForm?.get('buckets') as FormArray;
   }
 
   compareObjects(o1: any, o2: any): boolean {
@@ -81,6 +126,46 @@ export class InventoryEditComponent implements OnInit {
     );
   }
 
+  loadInventoryLocationSelect() {
+    this.inventoryLocationService.getUnusedByInvId(this.entityId).subscribe(
+      data => {
+        this.inventoryLocationsLoaded = data;
+        //this.inventoryLocationLoaded = this.inventoryLocationLoaded.filter((ar: { id: number; }) => !this.data.find((rm: { id: number; }) => (rm.id === ar.id) ));
+      },error => {
+      }
+    );
+  }
+
+  createNewInventoryBucket(location: InventoryLocation) {
+    console.log("location passed:\n");
+    console.table(location);
+    this.inventoryLocationsLoaded = this.inventoryLocationsLoaded.filter(function (obj: InventoryLocation) { return obj.id !== location.id; });
+    console.log("inventoryLocationsLoaded: \n");
+    console.table(this.inventoryLocationsLoaded);
+    let inventoryBucket: InventoryBucket;
+    inventoryBucket = {
+      'inventory': this.entityData,
+      'location': location,
+      'qtyInStock': 0
+    };
+    this.addBucketControl(inventoryBucket);
+    this.inventoryLocationSelected = "";
+    //this.loadInventoryLocationSelect();
+  }
+
+  removeInventoryBucket(bucketsIndexToRemove: number, bucketToRemove: InventoryBucket) {
+    console.log("Bucket to Remove:\n");
+    console.log(bucketsIndexToRemove);
+    // this.images.removeAt(this.images.value.findIndex(image => image.id === 502))
+    this.buckets.removeAt(bucketsIndexToRemove);
+    this.inventoryLocationsLoaded.push(bucketToRemove.location);
+    console.table(this.buckets.value);
+  }
+
+  addLocation() {
+    console.log("Location added;");
+  }
+
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
@@ -91,4 +176,5 @@ export class InventoryEditComponent implements OnInit {
         this.globalSnackBarService.error(error.error.message);
       });
   }
+
 }

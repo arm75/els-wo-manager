@@ -26,3 +26,14 @@ button.customer-table-edit-button, button.customer-table-delete-button  {
 .example-fill-remaining-space {
   flex: 1 1 auto;
 }
+
+.sticky-column-header {
+  position: sticky;
+}
+
+mat-header-row{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+}

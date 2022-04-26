@@ -47,6 +47,8 @@ export class UserTableComponent implements OnInit, AfterViewInit {
  buildTable() {
     this.entityService.getAll().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
+      this.sort.active = 'id';
+      this.sort.direction = 'desc';
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     })

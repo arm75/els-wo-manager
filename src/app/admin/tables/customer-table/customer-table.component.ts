@@ -38,18 +38,22 @@ export class CustomerTableComponent implements OnInit, AfterViewInit {
     this.buildTable();
   }
 
-  ngOnInit() { }
+  async ngOnInit() {
+    await this.buildTable();
 
-  ngAfterViewInit() {
-    this.buildTable();
   }
 
- buildTable() {
-    this.entityService.getAll().subscribe(data => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-    })
+  async ngAfterViewInit() {
+  }
+
+   buildTable() {
+     this.entityService.getAll().subscribe(data => {
+       this.dataSource = new MatTableDataSource(data);
+       this.sort.active = 'id';
+       this.sort.direction = 'desc';
+       this.dataSource.sort = this.sort;
+       this.dataSource.paginator = this.paginator;
+     })
   }
 
   applyFilter(event: Event) {
@@ -98,17 +102,4 @@ export class CustomerTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
 }
-

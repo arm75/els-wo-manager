@@ -24,6 +24,7 @@ import {
   ToolEquipmentReturnDeleteComponent
 } from "./dialogs/tool-equipment-return-delete/tool-equipment-return-delete.component";
 import {ReactiveFormsModule} from "@angular/forms";
+import { SubcontractorCompletionTableComponent } from './tables/subcontractor-completion-table/subcontractor-completion-table.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import {ReactiveFormsModule} from "@angular/forms";
     ToolEquipmentReturnTableComponent,
     ToolEquipmentReturnAddComponent,
     ToolEquipmentReturnEditComponent,
-    ToolEquipmentReturnDeleteComponent
+    ToolEquipmentReturnDeleteComponent,
+    SubcontractorCompletionTableComponent
   ],
   imports: [
     CommonModule,

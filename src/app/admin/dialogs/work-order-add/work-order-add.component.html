@@ -24,19 +24,19 @@
           </mat-select>
         </mat-form-field>
       </p>
-<!--      <p>-->
-<!--        <mat-form-field class="width-99" appearance="outline">-->
-<!--          <mat-label>Assigned Users</mat-label>-->
-<!--          <mat-select #assignedUsersSelect [(value)]="assignedUsersSelected" (selectionChange)="assignedUserSelectChange()" formControlName="assignedUsers">-->
-<!--            <mat-option *ngFor="let user of assignedUsersLoaded" [value]="user">{{user.username}}</mat-option>-->
-<!--          </mat-select>-->
-<!--        </mat-form-field>-->
-<!--      </p>-->
       <p>
-      <mat-form-field class="width-99" appearance="outline">
-          <mat-label>Customer PO</mat-label>
-          <input matInput formControlName="customerPo">
-      </mat-form-field>
+        <mat-chip-list #chipList aria-label="Assigned Users">
+          <mat-chip *ngFor="let user of userData">{{user.username}}<button matChipRemove (click)="removeUserFromWorkOrder(user)"><mat-icon>cancel</mat-icon></button></mat-chip>
+        </mat-chip-list>
+      </p>
+      <p>
+        <mat-form-field class="width-70" appearance="outline">
+          <mat-label>Assigned Users</mat-label>
+          <mat-select #assignedUsersSelect [(value)]="assignedUsersSelected" (selectionChange)="assignedUsersSelectChange()" formControlName="assignedUsers">
+            <mat-option *ngFor="let user of assignedUsersLoaded" [value]="user">{{user.username}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <span class="width-20"><button type="button" class="mat-flat-button mat-primary add-user-to-workorder" [disabled]="!assignedUsersSelected" (click)="addUserToWorkOrder()">Add User</button></span>
       </p>
       <p>
         <mat-form-field class="width-99" appearance="outline">

@@ -15,3 +15,34 @@ p {
 button:disabled {
   background-color: #afafaf;
 }
+
+.mat-form-field-infix * {
+  padding: 7px 0 7px 0 !important;
+}
+
+.mat-form-field-wrapper * {
+  padding-bottom: 7px !important;
+}
+
+.inv-loc-name {
+  font-weight: 300;
+  font-size: 1.2rem;
+}
+
+.inv-loc-table {
+  width: 700px;
+}
+
+.inv-loc-table td {
+  width: 250px;
+  text-align: left;
+}
+
+.mat-icon-button {
+  background-color: transparent !important;
+}
+
+button.x-button {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}

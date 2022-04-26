@@ -27,7 +27,7 @@ export class LaborItemEditComponent implements OnInit {
   @ViewChild('laborSelect')
   laborSelect!: MatSelect;
   laborLoaded: any;
-  laborSelected: any;
+  laborIdSelected: any;
   laborSelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<LaborItemEditComponent>,
@@ -49,8 +49,9 @@ export class LaborItemEditComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-            'labor': new FormControl(this.entityData.labor, [Validators.required]),
             'workOrder': new FormControl(this.entityData.workOrder),
+            'laborId': new FormControl(this.entityData.laborId, [Validators.required]),
+            'entityName': new FormControl(this.entityData.entityName),
             'notes': new FormControl(this.entityData.notes),
             'ratePerHour': new FormControl(this.entityData.ratePerHour, [Validators.required]),
             'hours': new FormControl(this.entityData.hours, [Validators.required]),
@@ -73,8 +74,10 @@ export class LaborItemEditComponent implements OnInit {
   }
 
   selectChange() {
-    this.laborService.get(this.laborSelected.id)
+    this.laborService.get(this.laborIdSelected)
       .pipe(finalize(() => {
+        this.editForm.controls['laborId'].setValue(this.laborSelectedLoaded.id);
+        this.editForm.controls['entityName'].setValue(this.laborSelectedLoaded.entityName);
         this.editForm.controls['notes'].setValue(this.laborSelectedLoaded.description);
         this.editForm.controls['ratePerHour'].setValue(this.laborSelectedLoaded.ratePerHour);
       }))

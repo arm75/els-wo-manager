@@ -1,1 +1,17 @@
-<p>work-order-close works!</p>
+<div *ngIf="dataLoaded">
+  <h2 mat-dialog-title>{{formTitle}}: {{entityId}}</h2>
+  <mat-dialog-content>
+    <h4 mat-dialog-title>Are you sure you want to close Work Order: {{entityId}}?</h4>
+  </mat-dialog-content>
+<!--  <mat-list>-->
+<!--    <mat-list-item>Inventory Total: {{entityData.inventoryItemsTotal|currency}}</mat-list-item>-->
+<!--    <mat-list-item>Labor Total: {{entityData.laborItemsTotal|currency}}</mat-list-item>-->
+<!--    <mat-list-item>Subcontractor Total: {{entityData.subcontractorItemsTotal|currency}}</mat-list-item>-->
+<!--    <mat-list-item>Tool/Equipment Total: {{entityData.toolEquipmentItemsTotal|currency}}</mat-list-item>-->
+<!--    <mat-list-item><b>Inventory Total: {{entityData.workOrderTotal|currency}}</b></mat-list-item>-->
+<!--  </mat-list>-->
+  <mat-dialog-actions>
+    <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>
+    <button class="mat-raised-button mat-primary" (click)="closeEntity()">Close Work Order</button>
+  </mat-dialog-actions>
+</div>

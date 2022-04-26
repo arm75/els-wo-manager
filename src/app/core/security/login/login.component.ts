@@ -11,6 +11,7 @@ import { Observable, Subscription } from "rxjs";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { HeaderType } from "../header-type";
 import {UserService} from "../../services/user.service";
+import {waitForAsync} from "@angular/core/testing";
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   loginFormGroup: FormGroup = new FormGroup({});
   public showLoading: boolean = false;
   private subscriptions: Subscription[] = [];
+  loginErrorMessage!: string;
 
   constructor(
     private router: Router,
@@ -72,6 +74,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
         , (error: HttpErrorResponse) => {
           console.log(error);
+          this.loginErrorMessage = error.error.message;
           this.showLoading = false;
         }
       )

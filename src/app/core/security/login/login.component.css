@@ -33,6 +33,8 @@ mat-form-field {
 }
 
 .els-login-text {
+}
 
-
+.login-error-message {
+  color: red;
 }

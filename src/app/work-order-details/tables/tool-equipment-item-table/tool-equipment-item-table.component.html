@@ -25,9 +25,9 @@
 <!--      <td mat-cell *matCellDef="let element">{{element.updatedDate|date:'MMM d, y, h:mm a'}}</td>-->
 <!--    </ng-container>-->
     <!-- entityName -->
-    <ng-container matColumnDef="toolEquipment">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Tool/Equipment">Tool/Equipment</th>
-      <td mat-cell *matCellDef="let element">{{element.toolEquipment.entityName}}</td>
+    <ng-container matColumnDef="entityName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Tool/Equipment Item Name">Tool/Equipment Item Name</th>
+      <td mat-cell *matCellDef="let element">{{element.entityName}}</td>
     </ng-container>
     <!-- notes -->
     <ng-container matColumnDef="notes">

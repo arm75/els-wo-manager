@@ -22,12 +22,32 @@
           </mat-error>
         </mat-form-field>
       </p>
+
+      <h4>Inventory Locations</h4>
+      <span formArrayName="buckets" *ngFor="let bucket of this.buckets.controls; index as i">
+        <span formGroupName="{{i}}">
+          <mat-form-field class="width-47" appearance="outline">
+            <mat-label>{{bucket.value.location.entityName}} | Qty in Stock</mat-label>
+            <input matInput autocomplete="off" [value]="bucket.value.qtyInStock" formControlName="qtyInStock">
+            <button class="x-button" type="button" [disabled]="bucket.value.qtyInStock > 0" matSuffix mat-icon-button aria-label="Remove Location" (click)="removeInventoryBucket(i, bucket.value)"><mat-icon>close</mat-icon></button>
+          </mat-form-field>
+        </span>
+      </span>
+      <mat-form-field class="width-75" appearance="outline">
+        <mat-label>Inventory Location</mat-label>
+        <mat-select #inventoryLocationSelect [(value)]="inventoryLocationSelected">
+          <mat-option *ngFor="let invLoc of inventoryLocationsLoaded" [value]="invLoc">{{invLoc.entityName}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span class="width-20"><button type="button" class="mat-flat-button mat-primary add-user-to-workorder" [disabled]="!inventoryLocationSelected" (click)="createNewInventoryBucket(inventoryLocationSelected)">Add Location</button></span>
+
       <p>
         <mat-form-field class="width-99" appearance="outline">
           <mat-label>Description</mat-label>
           <textarea matInput autocomplete="off" class="description-box" formControlName="description"></textarea>
         </mat-form-field>
       </p>
+
       <p>
         <mat-form-field class="" appearance="outline">
           <mat-label>Total in Stock</mat-label>

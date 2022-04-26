@@ -1,0 +1,33 @@
+
+<header>
+  <div class="row print-template-row">
+    <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 print-template-element print-template-header-left">
+      <h1>ELS Property Management</h1>
+    </div>
+    <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 print-template-element print-template-header-right">
+      <h1>Work Order: {{passedWorkOrder.id}}</h1>
+    </div>
+  </div>
+</header>
+
+<header>
+  <div class="row print-template-row">
+    <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 print-template-element print-template-header-left">
+      Work Order Status: {{passedWorkOrder.status}}<br>
+      Created Date: {{passedWorkOrder.createdDate}}<br>
+      Updated Date: {{passedWorkOrder.updatedDate}}<br>
+      Customer: {{passedWorkOrder.customer.entityName}}<br>
+      Location: {{passedWorkOrder.location.entityName}}<br>
+    </div>
+    <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 print-template-element print-template-header-right">
+      Quick Description: {{passedWorkOrder.quickDescription}}<br>
+      Description: {{passedWorkOrder.description}}<br>
+      Contact Name: {{passedWorkOrder.contactName}}<br>
+      Contact Phone Number: {{passedWorkOrder.contactAltPhoneNumb}}<br>
+      Contact Alt Phone Number: {{passedWorkOrder.contactAltPhoneNumb}}<br>
+      Entry Instructions: {{passedWorkOrder.entryInstruct}}<br>
+    </div>
+  </div>
+
+</header>
+

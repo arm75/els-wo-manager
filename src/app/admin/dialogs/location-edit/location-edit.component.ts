@@ -75,6 +75,7 @@ export class LocationEditComponent implements OnInit {
   }
 
   editEntity() {
+    console.log(JSON.stringify(this.editForm.value));
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
         this.matDialogRef.close();

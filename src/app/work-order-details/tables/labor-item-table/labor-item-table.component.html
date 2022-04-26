@@ -19,10 +19,10 @@
 <!--      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Updated Date">Updated Date</th>-->
 <!--      <td mat-cell *matCellDef="let element">{{element.updatedDate|date:'MMM d, y, h:mm a'}}</td>-->
 <!--    </ng-container>-->
-    <!-- labor -->
-    <ng-container matColumnDef="labor">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Labor">Labor</th>
-      <td mat-cell *matCellDef="let element">{{element.labor.entityName}}</td>
+    <!-- entityName -->
+    <ng-container matColumnDef="entityName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Labor Item Name">Labor Item Name</th>
+      <td mat-cell *matCellDef="let element">{{element.entityName}}</td>
     </ng-container>
     <!-- notes -->
     <ng-container matColumnDef="notes">

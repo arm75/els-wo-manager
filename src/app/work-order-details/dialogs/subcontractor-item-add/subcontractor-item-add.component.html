@@ -5,10 +5,10 @@
       <p>
         <mat-form-field class="width-99" appearance="outline">
           <mat-label>Select Subcontractor</mat-label>
-          <mat-select #subcontractorSelect [(value)]="subcontractorSelected" (selectionChange)="selectChange()" formControlName="subcontractor">
-            <mat-option *ngFor="let subc of subcontractorLoaded" [value]="subc">{{subc.entityName}}</mat-option>
+          <mat-select #subcontractorSelect [(value)]="subcontractorIdSelected" (selectionChange)="selectChange()" formControlName="subcontractorId">
+            <mat-option *ngFor="let subc of subcontractorLoaded" [value]="subc.id">{{subc.entityName}}</mat-option>
           </mat-select>
-          <mat-error *ngIf="addForm.controls['subcontractor'].hasError('required')">
+          <mat-error *ngIf="addForm.controls['subcontractorId'].hasError('required')">
             Subcontractor is required
           </mat-error>
         </mat-form-field>

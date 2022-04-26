@@ -17,7 +17,7 @@ import { ToolEquipmentDeleteComponent } from "../../dialogs/tool-equipment-delet
 })
 export class ToolEquipmentTableComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'entityName', 'description', 'pricePerDay', 'actions'];
+  displayedColumns: string[] = ['id', 'entityName', 'description', 'pricePerDay', 'status', 'actions'];
 
   dataSource: any;
 
@@ -47,6 +47,8 @@ export class ToolEquipmentTableComponent implements OnInit, AfterViewInit {
  buildTable() {
     this.entityService.getAll().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
+      this.sort.active = 'id';
+      this.sort.direction = 'desc';
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     })

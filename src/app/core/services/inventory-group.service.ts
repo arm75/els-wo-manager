@@ -18,6 +18,10 @@ export class InventoryGroupService {
     return this.http.get<InventoryGroup[]>(`${this.baseUrl}/all`);
   }
 
+  getAllWithChildren(): Observable<InventoryGroup[]> {
+    return this.http.get<InventoryGroup[]>(`${this.baseUrl}/allWithChildren`);
+  }
+
   get(id: any): Observable<InventoryGroup> {
     return this.http.get<InventoryGroup>(`${this.baseUrl}/find/${id}`);
   }

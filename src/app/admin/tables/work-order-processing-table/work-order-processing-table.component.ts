@@ -14,6 +14,7 @@ import {WorkOrderAddComponent} from "../../dialogs/work-order-add/work-order-add
 import {WorkOrderEditComponent} from "../../dialogs/work-order-edit/work-order-edit.component";
 import {WorkOrderCompleteComponent} from "../../dialogs/work-order-complete/work-order-complete.component";
 import {WorkOrderDeleteComponent} from "../../dialogs/work-order-delete/work-order-delete.component";
+import {WorkOrderStatus} from "../../../core/types/work-order-status";
 
 @Component({
   selector: 'app-work-order-processing-table',
@@ -44,7 +45,7 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
 
   //////////////////////////////////////////////////////////////////////////////////////
   dropdownFilterSelected: any;
-  dropdownFilterArray = ElsWoManagerConstants.workOrderStatusFilterArray;
+  dropdownFilterArray = ElsWoManagerConstants.processingWorkOrderStatusFilterArray;
 
   constructor(
     private entityService: WorkOrderService,
@@ -92,9 +93,13 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
     switch(this.workOrderFilterSelected) {
       case 'ALL': {
         this.entityService.getAll()
+          .pipe(map(items =>
+            items.filter(item => ( (item.status == WorkOrderStatus.COMPLETE) || (item.status == WorkOrderStatus.CLOSED) || (item.status == WorkOrderStatus.ERROR) || (item.status == WorkOrderStatus.RETRY) ))))
           .subscribe(data => {
             //console.log(data);
             this.dataSource = new MatTableDataSource(data);
+            this.sort.active = 'createdDate';
+            this.sort.direction = 'desc';
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
           });
@@ -107,6 +112,8 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
           .subscribe(data => {
             //console.log(data);
             this.dataSource = new MatTableDataSource(data);
+            this.sort.active = 'createdDate';
+            this.sort.direction = 'desc';
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
           });

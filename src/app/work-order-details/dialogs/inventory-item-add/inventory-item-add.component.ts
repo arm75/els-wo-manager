@@ -6,6 +6,7 @@ import { MatSelect } from "@angular/material/select";
 import { InventoryService } from "../../../core/services/inventory.service";
 import {finalize} from "rxjs/operators";
 import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
+import {InventoryBucketService} from "../../../core/services/inventory-bucket.service";
 
 @Component({
   selector: 'app-inventory-item-add',
@@ -20,13 +21,20 @@ export class InventoryItemAddComponent implements OnInit {
   @ViewChild('inventorySelect')
   inventorySelect!: MatSelect;
   inventoryLoaded: any;
-  inventorySelected: any;
+  inventoryIdSelected: any;
   inventorySelectedLoaded: any;
+
+  @ViewChild('inventoryBucketSelect')
+  inventoryBucketSelect!: MatSelect;
+  inventoryBucketLoaded: any;
+  inventoryBucketIdSelected: any;
+  inventoryBucketSelectedLoaded: any;
 
   constructor( private matDialogRef: MatDialogRef<InventoryItemAddComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: InventoryItemService,
                private inventoryService: InventoryService,
+               private inventoryBucketService: InventoryBucketService,
                private formBuilder: FormBuilder,
                private globalSnackBarService: GlobalSnackBarService
   ) { }
@@ -34,21 +42,29 @@ export class InventoryItemAddComponent implements OnInit {
   ngOnInit() {
     this.woId = this.data.woId;
     this.addForm = this.formBuilder.group({
-      'inventory': new FormControl('', [Validators.required]),
       'workOrder': new FormControl({ "id": this.woId}),
+      'inventoryId': new FormControl('', [Validators.required]), // only kept for error validation
+      'bucketId': new FormControl('', [Validators.required]),
+      'entityName': new FormControl(''),
       'notes': new FormControl(''),
+      'unitCost': new FormControl(''),
       'unitPrice': new FormControl('', [Validators.required]),
       'qty': new FormControl('', [Validators.required]),
-      'total': new FormControl('')
+      'totalPrice': new FormControl('')
     });
     this.loadInventorySelect();
+
   }
 
   selectChange() {
-    this.inventoryService.get(this.inventorySelected.id)
+    this.inventoryService.get(this.inventoryIdSelected)
       .pipe(finalize(() => {
-          this.addForm.controls['notes'].setValue(this.inventorySelectedLoaded.description);
-          this.addForm.controls['unitPrice'].setValue(this.inventorySelectedLoaded.unitPrice);
+        this.addForm.controls['inventoryId'].setValue(this.inventorySelectedLoaded.id);
+        this.addForm.controls['entityName'].setValue(this.inventorySelectedLoaded.entityName);
+        this.addForm.controls['notes'].setValue(this.inventorySelectedLoaded.description);
+        this.addForm.controls['unitCost'].setValue(this.inventorySelectedLoaded.unitCost);
+        this.addForm.controls['unitPrice'].setValue(this.inventorySelectedLoaded.unitPrice);
+        this.loadInventoryBucketSelect();
       })).subscribe(data => {
         this.inventorySelectedLoaded = data;
       }, error => {
@@ -60,6 +76,15 @@ export class InventoryItemAddComponent implements OnInit {
     this.inventoryService.getAll().subscribe(
       data => {
         this.inventoryLoaded = data;
+      },error => {
+      }
+    );
+  }
+
+  loadInventoryBucketSelect() {
+    this.inventoryBucketService.getAllNonEmptyByInventoryId(this.inventoryIdSelected).subscribe(
+      data => {
+        this.inventoryBucketLoaded = data;
       },error => {
       }
     );

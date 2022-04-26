@@ -2,9 +2,10 @@ import {Inventory} from "./inventory";
 import {InventoryLocation} from "./inventory-location";
 
 export interface InventoryBucket {
-  inventory: Inventory;
-  location: InventoryLocation;
+  id?: number;
+  inventory?: Inventory;
+  location?: InventoryLocation;
   qtyInStock: number;
-  createdDate: string;
-  updatedDate: string;
+  createdDate?: string;
+  updatedDate?: string;
 }

@@ -9,6 +9,7 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { LaborAddComponent } from "../../dialogs/labor-add/labor-add.component";
 import { LaborEditComponent } from "../../dialogs/labor-edit/labor-edit.component";
 import { LaborDeleteComponent } from "../../dialogs/labor-delete/labor-delete.component";
+import {AsyncAction} from "rxjs/internal/scheduler/AsyncAction";
 
 @Component({
   selector: 'app-labor-table',
@@ -38,6 +39,7 @@ export class LaborTableComponent implements OnInit, AfterViewInit {
     this.buildTable();
   }
 
+
   ngOnInit() { }
 
   ngAfterViewInit() {
@@ -47,6 +49,8 @@ export class LaborTableComponent implements OnInit, AfterViewInit {
  buildTable() {
     this.entityService.getAll().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
+      this.sort.active = 'id';
+      this.sort.direction = 'desc';
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     })

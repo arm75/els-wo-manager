@@ -21,7 +21,65 @@ mat-drawer {
   width: 20% !important;
 }
 
+
 .add-group-button {
   text-align: center;
   padding: 10px;
+}
+
+.example-tree-invisible {
+  display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+/*
+ * This padding sets alignment of the nested nodes.
+ */
+.example-tree .mat-nested-tree-node div[role=group] {
+  padding-left: 20px;
+}
+
+/*
+ * Padding for leaf nodes.
+ * Leaf nodes need to have padding so as to align with other non-leaf nodes
+ * under the same parent.
+ */
+.example-tree div[role=group] > .mat-tree-node {
+  padding-left: 20px;
+}
+
+a.group-tree, a.group-tree:visited {
+  font-size: 1rem;
+  color: #555;
+  padding: 3px 7px 3px 7px;
+  background-color: #ccc;
+  text-decoration: none;
+  border-radius: 6px 6px 6px 6px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  -moz-border-radius: 6px 6px 6px 6px;
+}
+
+a.group-tree:hover, a.group-tree:link {
+  font-size: 1rem;
+  color: #ffffff;
+  padding: 3px 7px 3px 7px;
+  background-color: steelblue;
+  text-decoration: none;
+  border-radius: 6px 6px 6px 6px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  -moz-border-radius: 6px 6px 6px 6px;
+}
+
+
+
+
+
+.group-tree-leaf-node {
+  margin-left: 8px;
 }

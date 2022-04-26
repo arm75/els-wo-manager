@@ -26,7 +26,7 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
 
   componentTotal: number = 0;
 
-  displayedColumns: string[] = ['createdDate', 'toolEquipment', 'notes', 'pricePerDay', 'days', 'totalPrice', 'status', 'actions'];
+  displayedColumns: string[] = ['createdDate', 'entityName', 'notes', 'pricePerDay', 'days', 'totalPrice', 'status', 'actions'];
   dataSource: any;
 
   @ViewChild(MatTable)
