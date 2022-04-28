@@ -24,7 +24,7 @@ export class InventoryEditComponent implements OnInit {
   editForm: FormGroup = new FormGroup({});
   //bucketForm: FormGroup = new FormGroup({});
   bucketData: any;
-
+  bucketSum: number = 0;
 
   @ViewChild('inventoryGroupSelect')
   inventoryGroupSelect!: MatSelect;
@@ -72,8 +72,10 @@ export class InventoryEditComponent implements OnInit {
           this.loadInventoryGroupSelect();
           this.loadInventoryLocationSelect();
           this.bucketData = this.entityData.buckets;
-          console.log("Bucket Data:\n");
-          console.table(this.bucketData);
+          this.bucketSum = this.bucketData.reduce((accumulator: number, data: any) => { return accumulator + data.qtyInStock; }, 0);
+          //console.log("Bucket Sum:\n");
+          //console.table(this.bucketSum);
+          //this.editForm.controls['totalInStock'].setValue(this.bucketSum);
           this.bucketData.forEach( (bucket: InventoryBucket, index: number) => {
             this.addBucketControl(bucket, index);
           });
@@ -160,10 +162,6 @@ export class InventoryEditComponent implements OnInit {
     this.buckets.removeAt(bucketsIndexToRemove);
     this.inventoryLocationsLoaded.push(bucketToRemove.location);
     console.table(this.buckets.value);
-  }
-
-  addLocation() {
-    console.log("Location added;");
   }
 
   editEntity() {

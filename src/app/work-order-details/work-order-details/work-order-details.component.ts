@@ -68,7 +68,7 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
 
   spinning: boolean = false;
 
-  logNg: boolean = false;
+  logNg: boolean = true;
 
   constructor(
     private snackBarService: GlobalSnackBarService,

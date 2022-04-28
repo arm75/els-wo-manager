@@ -43,7 +43,7 @@
       <span class="width-20"><button type="button" class="mat-flat-button mat-primary add-user-to-workorder" [disabled]="!inventoryLocationSelected" (click)="createNewInventoryBucket(inventoryLocationSelected)">Add Location</button></span>
       <mat-form-field class="" appearance="outline">
         <mat-label>Total in Stock</mat-label>
-        <input matInput autocomplete="off" formControlName="totalInStock">
+        <input matInput readonly autocomplete="off" formControlName="totalInStock">
         <mat-error *ngIf="editForm.controls['totalInStock'].hasError('required')">
           Total in Stock is required
         </mat-error>

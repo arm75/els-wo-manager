@@ -51,7 +51,7 @@
       <p>
         <mat-form-field class="" appearance="outline">
           <mat-label>Total in Stock</mat-label>
-          <input matInput autocomplete="off" formControlName="totalInStock">
+          <input matInput readonly autocomplete="off" formControlName="totalInStock">
           <mat-error *ngIf="addForm.controls['totalInStock'].hasError('required')">
             Total in Stock is required
           </mat-error>

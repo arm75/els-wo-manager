@@ -44,7 +44,7 @@
   </div>
   <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
     <div class="wo-info-field-title"><h4>Work Order PO</h4></div>
-    <div class="wo-info-field-content"><h3>USERS WILL GO HERE</h3></div>
+    <div class="wo-info-field-content"><h3><span *ngFor="let user of entityData.assignedUsers">{{user.username}}, </span></h3></div>
   </div>
 </div>
 
@@ -173,45 +173,26 @@
 
 <div class="bottom fixed-bottom els-custom-table-container">
 
-<!--  <div class="row">-->
-<!--    <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">-->
-<!--      <div><button class="mat-flat-button mat-primary" type="submit">Save Work Order</button></div>-->
-<!--    </div>-->
-<!--  </div>-->
-
   <div *ngIf="(loggedInRole == 'ROLE_ADMIN')||(loggedInRole =='ROLE_SUPER_ADMIN')" class="row els-custom-table-container">
-    <div class="wo-info-field-title col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-      <h4>Inventory Items Total</h4>
+    <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+      <div class="wo-info-field-title"><h4>Inventory Items Total</h4></div>
+      <div class="wo-info-field-content"><h3>{{[(masterInventoryTotal|currency)]}}</h3></div>
     </div>
-    <div class="wo-info-field-title col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-      <h4>Labor Items Total</h4>
+    <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+      <div class="wo-info-field-title"><h4>Labor Items Total</h4></div>
+      <div class="wo-info-field-content"><h3>{{[(masterLaborTotal|currency)]}}</h3></div>
     </div>
-    <div class="wo-info-field-title col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-      <h4>Subcontractor Items Total</h4>
+    <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+      <div class="wo-info-field-title"><h4>Subcontractor Items Total</h4></div>
+      <div class="wo-info-field-content"><h3>{{[(masterSubcontractorTotal|currency)]}}</h3></div>
     </div>
-    <div class="wo-info-field-title col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-      <h4>Tool/Equipment Items Total</h4>
+    <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+      <div class="wo-info-field-title"><h4>Tool/Equipment Items Total</h4></div>
+      <div class="wo-info-field-content"><h3>{{[(masterToolEquipmentTotal|currency)]}}</h3></div>
     </div>
-    <div class="wo-info-field-title col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-      <h4>Work Order Total</h4>
-    </div>
-  </div>
-
-  <div *ngIf="(loggedInRole == 'ROLE_ADMIN')||(loggedInRole =='ROLE_SUPER_ADMIN')" class="row els-custom-table-container">
-    <div class="wo-info-field-content col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-      <h3>{{[(masterInventoryTotal|currency)]}}</h3>
-    </div>
-    <div class="wo-info-field-content col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-      <h3>{{[(masterLaborTotal|currency)]}}</h3>
-    </div>
-    <div class="wo-info-field-content col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-      <h3>{{[(masterSubcontractorTotal|currency)]}}</h3>
-    </div>
-    <div class="wo-info-field-content col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-      <h3>{{[(masterToolEquipmentTotal|currency)]}}</h3>
-    </div>
-    <div class="wo-info-field-content col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-      <h3 class="master-total-currency">{{[(masterTotal|currency)]}}</h3>
+    <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+      <div class="wo-info-field-title"><h4>Work Order Total</h4></div>
+      <div class="wo-info-field-content"><h3 class="master-total-currency">{{[(masterTotal|currency)]}}</h3></div>
     </div>
   </div>
 
