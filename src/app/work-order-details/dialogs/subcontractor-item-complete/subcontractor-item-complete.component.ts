@@ -1,19 +1,19 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { SubcontractorItemService } from "../../../core/services/subcontractor-item.service";
 import { SubcontractorItem } from "../../../core/models/subcontractor-item";
 import { MatSelect } from "@angular/material/select";
 import { SubcontractorService } from "../../../core/services/subcontractor.service";
-import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
+import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
 import {AuthenticationService} from "../../../core/security/authentication.service";
 
 @Component({
-  selector: 'app-subcontractor-item-edit',
-  templateUrl: './subcontractor-item-edit.component.html',
-  styleUrls: ['./subcontractor-item-edit.component.css']
+  selector: 'app-subcontractor-item-complete',
+  templateUrl: './subcontractor-item-complete.component.html',
+  styleUrls: ['./subcontractor-item-complete.component.css']
 })
-export class SubcontractorItemEditComponent implements OnInit {
+export class SubcontractorItemCompleteComponent implements OnInit {
 
   loggedInUser!: any;
   loggedInUsername!: string;
@@ -21,7 +21,7 @@ export class SubcontractorItemEditComponent implements OnInit {
   nameToDisplay!: string;
 
   dataLoaded: boolean = false;
-  formTitle: string = "Edit Subcontractor Item";
+  formTitle: string = "Complete Subcontractor Item";
   woId: null;
   entityId: null;
   entityData!: SubcontractorItem;
@@ -32,7 +32,7 @@ export class SubcontractorItemEditComponent implements OnInit {
   subcontractorLoaded: any;
   subcontractorIdSelected: any;
 
-  constructor( private matDialogRef: MatDialogRef<SubcontractorItemEditComponent>,
+  constructor( private matDialogRef: MatDialogRef<SubcontractorItemCompleteComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
                private entityService: SubcontractorItemService,
                private subcontractorService: SubcontractorService,
@@ -61,18 +61,18 @@ export class SubcontractorItemEditComponent implements OnInit {
             'subcontractorId': new FormControl(this.entityData.subcontractorId, [Validators.required]),
             'entityName': new FormControl(this.entityData.entityName),
             'notes': new FormControl(this.entityData.notes),
-            // 'unitPrice': new FormControl(this.entityData.unitPrice, [Validators.required]),
-            // 'qty': new FormControl(this.entityData.qty, [Validators.required]),
-            // 'total': new FormControl('')
+            'unitPrice': new FormControl(this.entityData.unitPrice, [Validators.required]),
+            'qty': new FormControl(this.entityData.qty, [Validators.required]),
+            'total': new FormControl('')
           });
         })
         .catch( error => {
         })
         .finally(() => {
-          this.dataLoaded = true;
-          this.loadSubcontractorSelect();
-        }
-      );
+            this.dataLoaded = true;
+            this.loadSubcontractorSelect();
+          }
+        );
     }
   }
 
@@ -92,16 +92,16 @@ export class SubcontractorItemEditComponent implements OnInit {
     );
   }
 
-  editEntity() {
-    this.entityService.update(this.editForm.value)
+  completeEntity() {
+    this.entityService.complete(this.editForm.value)
       .subscribe(data => {
-        this.matDialogRef.close();
-        this.globalSnackBarService.success("Subcontractor Item: " + this.editForm.value.id + " has been updated.");
-      }, error => {
-        this.matDialogRef.close();
-        this.globalSnackBarService.error("An error has occurred: " + error);
-      }
-    );
+          this.matDialogRef.close();
+          this.globalSnackBarService.success("Subcontractor Item: " + this.editForm.value.id + " has been completed.");
+        }, error => {
+          this.matDialogRef.close();
+          this.globalSnackBarService.error("An error has occurred: " + error);
+        }
+      );
   }
 
 }

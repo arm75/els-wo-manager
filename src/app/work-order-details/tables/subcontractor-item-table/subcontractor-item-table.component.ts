@@ -1,4 +1,4 @@
-import {Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
@@ -9,7 +9,9 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { SubcontractorItemAddComponent } from "../../dialogs/subcontractor-item-add/subcontractor-item-add.component";
 import { SubcontractorItemEditComponent } from "../../dialogs/subcontractor-item-edit/subcontractor-item-edit.component";
 import { SubcontractorItemDeleteComponent } from "../../dialogs/subcontractor-item-delete/subcontractor-item-delete.component";
-import {map} from "rxjs/operators";
+import { map } from "rxjs/operators";
+import { SubcontractorItemCompleteComponent } from "../../dialogs/subcontractor-item-complete/subcontractor-item-complete.component";
+import {AuthenticationService} from "../../../core/security/authentication.service";
 
 @Component({
   selector: 'app-subcontractor-item-table',
@@ -17,6 +19,11 @@ import {map} from "rxjs/operators";
   styleUrls: ['./subcontractor-item-table.component.css']
 })
 export class SubcontractorItemTableComponent implements OnInit, AfterViewInit {
+
+  loggedInUser!: any;
+  loggedInUsername!: string;
+  loggedInRole!: string;
+  nameToDisplay!: string;
 
   @Input()
   passedWorkOrderId: any;
@@ -26,7 +33,7 @@ export class SubcontractorItemTableComponent implements OnInit, AfterViewInit {
 
   componentTotal: number = 0;
 
-  displayedColumns: string[] = ['createdDate', 'entityName', 'notes', 'unitPrice', 'qty', 'totalPrice', 'status', 'actions'];
+  displayedColumns: string[] = ['createdDate', 'entityName', 'notes', 'status', 'actions'];
   dataSource: any;
 
   @ViewChild(MatTable)
@@ -41,9 +48,16 @@ export class SubcontractorItemTableComponent implements OnInit, AfterViewInit {
   constructor(
     private entityService: SubcontractorItemService,
     private _liveAnnouncer: LiveAnnouncer,
+    private authenticationService: AuthenticationService,
     private dialog: MatDialog
   ) {
-    //    this.buildTable();
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
+    if(this.loggedInRole=='ROLE_ADMIN'||this.loggedInRole=='ROLE_SUPER_ADMIN') {
+      this.displayedColumns = ['createdDate', 'entityName', 'notes', 'unitPrice', 'qty', 'totalPrice', 'status', 'actions'];
+    }
   }
 
   ngOnInit() { }
@@ -61,6 +75,8 @@ export class SubcontractorItemTableComponent implements OnInit, AfterViewInit {
         data.forEach(a => this.componentTotal += a.totalPrice);
         this.totalChangedEvent.emit(this.componentTotal);
         this.dataSource = new MatTableDataSource(data);
+        this.sort.active = 'createdDate';
+        this.sort.direction = 'desc';
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
     })
@@ -71,7 +87,6 @@ export class SubcontractorItemTableComponent implements OnInit, AfterViewInit {
     if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
   }
 
-  // opens Dialog box
   openAddDialog() {
     const addDialogConfig = new MatDialogConfig();
     addDialogConfig.disableClose = true;
@@ -85,7 +100,6 @@ export class SubcontractorItemTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // opens Dialog box
   openEditDialog( _id: number) {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
@@ -99,7 +113,19 @@ export class SubcontractorItemTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // opens Dialog box
+  openCompleteDialog( _id: number) {
+    const completeDialogConfig = new MatDialogConfig();
+    completeDialogConfig.disableClose = true;
+    completeDialogConfig.autoFocus = true;
+    completeDialogConfig.width = "40%";
+    completeDialogConfig.position = { top:  '0' };
+    completeDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
+    const completeDialogRef = this.dialog.open(SubcontractorItemCompleteComponent, completeDialogConfig);
+    completeDialogRef.afterClosed().subscribe(editData => {
+      this.buildTable();
+    });
+  }
+
   openDeleteDialog( _id: number) {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;

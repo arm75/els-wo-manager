@@ -19,22 +19,22 @@
           <textarea matInput autocomplete="off" class="description-box" formControlName="notes"></textarea>
         </mat-form-field>
       </p>
-      <p>
-        <mat-form-field class="width-47" appearance="outline">
-          <mat-label>Unit Price</mat-label>
-          <input matInput autocomplete="off" formControlName="unitPrice">
-          <mat-error *ngIf="addForm.controls['unitPrice'].hasError('required')">
-            Unit Price is required
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="width-47" appearance="outline">
-          <mat-label>Quantity</mat-label>
-          <input matInput autocomplete="off" formControlName="qty">
-          <mat-error *ngIf="addForm.controls['qty'].hasError('required')">
-            Quantity is required
-          </mat-error>
-        </mat-form-field>
-      </p>
+<!--      <p>-->
+<!--        <mat-form-field class="width-47" appearance="outline">-->
+<!--          <mat-label>Unit Price</mat-label>-->
+<!--          <input matInput autocomplete="off" formControlName="unitPrice">-->
+<!--          <mat-error *ngIf="addForm.controls['unitPrice'].hasError('required')">-->
+<!--            Unit Price is required-->
+<!--          </mat-error>-->
+<!--        </mat-form-field>-->
+<!--        <mat-form-field class="width-47" appearance="outline">-->
+<!--          <mat-label>Quantity</mat-label>-->
+<!--          <input matInput autocomplete="off" formControlName="qty">-->
+<!--          <mat-error *ngIf="addForm.controls['qty'].hasError('required')">-->
+<!--            Quantity is required-->
+<!--          </mat-error>-->
+<!--        </mat-form-field>-->
+<!--      </p>-->
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>

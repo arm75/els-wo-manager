@@ -38,9 +38,9 @@ export class SubcontractorItemAddComponent implements OnInit {
       'subcontractorId': new FormControl('', [Validators.required]),
       'entityName': new FormControl(''),
       'notes': new FormControl(''),
-      'unitPrice': new FormControl('', [Validators.required]),
-      'qty': new FormControl('', [Validators.required]),
-      'total': new FormControl('')
+      // 'unitPrice': new FormControl('', [Validators.required]),
+      // 'qty': new FormControl('', [Validators.required]),
+      // 'total': new FormControl('')
     });
     this.loadSubcontractorSelect();
   }

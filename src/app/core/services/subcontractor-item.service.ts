@@ -31,6 +31,10 @@ export class SubcontractorItemService {
     return this.http.put(`${this.baseUrl}/update`, data);
   }
 
+  complete(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/complete`, data);
+  }
+
   delete(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrl}/delete/${id}`);
   }

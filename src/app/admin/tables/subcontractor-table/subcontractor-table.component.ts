@@ -9,6 +9,7 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { SubcontractorAddComponent } from "../../dialogs/subcontractor-add/subcontractor-add.component";
 import { SubcontractorEditComponent } from "../../dialogs/subcontractor-edit/subcontractor-edit.component";
 import { SubcontractorDeleteComponent } from "../../dialogs/subcontractor-delete/subcontractor-delete.component";
+import {AuthenticationService} from "../../../core/security/authentication.service";
 
 @Component({
   selector: 'app-subcontractor-table',
@@ -17,7 +18,12 @@ import { SubcontractorDeleteComponent } from "../../dialogs/subcontractor-delete
 })
 export class SubcontractorTableComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'entityName', 'phoneNumb', 'altPhoneNumb', 'emailAddress', 'status', 'actions'];
+  loggedInUser!: any;
+  loggedInUsername!: string;
+  loggedInRole!: string;
+  nameToDisplay!: string;
+
+  displayedColumns: string[] = ['id', 'entityName', 'phoneNumb', 'altPhoneNumb', 'emailAddress', 'actions'];
 
   dataSource: any;
 
@@ -33,8 +39,13 @@ export class SubcontractorTableComponent implements OnInit, AfterViewInit {
   constructor(
     private entityService: SubcontractorService,
     private _liveAnnouncer: LiveAnnouncer,
+    private authenticationService: AuthenticationService,
     private dialog: MatDialog
   ) {
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
     this.buildTable();
   }
 

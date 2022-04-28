@@ -40,6 +40,7 @@ import { WorkOrderEditTabUsersComponent } from './components/work-order-edit-tab
 import { PrintTemplateComponent } from './work-order-details/print/print-template/print-template.component';
 import { GlobalProgressSpinnerComponent } from "../shared/progress-spinner/global-progress-spinner/global-progress-spinner.component";
 import { ToolEquipmentItemReturnComponent } from './dialogs/tool-equipment-item-return/tool-equipment-item-return.component';
+import { SubcontractorItemCompleteComponent } from './dialogs/subcontractor-item-complete/subcontractor-item-complete.component';
 
 // table components array
 const WorkOrderDetailsModuleTableComponents = [
@@ -75,6 +76,7 @@ const WorkOrderDetailsModuleDialogComponents = [
     PrintTemplateComponent,
     GlobalProgressSpinnerComponent,
     ToolEquipmentItemReturnComponent,
+    SubcontractorItemCompleteComponent,
   ],
   imports: [
     CommonModule,

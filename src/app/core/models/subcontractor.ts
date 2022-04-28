@@ -1,7 +1,6 @@
 export interface Subcontractor {
   id: number;
   entityName: string;
-  status: string;
   address: string;
   unit: string;
   city: string;
