@@ -20,9 +20,13 @@ import { MatInput } from "@angular/material/input";
 })
 export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy {
 // export class WorkOrderDetailsComponent implements OnInit {
-  loggedInUser = this.authenticationService.getUserFromLocalStorage();
-  loggedInRole: any;
-  nameToDisplay: any;
+
+  loggedInUser!: any;
+  loggedInUsername!: string;
+  loggedInRole!: string;
+  nameToDisplay!: string;
+
+  // for assignedUsers
   userData: any;
 
   @Input()
@@ -68,7 +72,7 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
 
   spinning: boolean = false;
 
-  logNg: boolean = true;
+  logNg: boolean = false;
 
   constructor(
     private snackBarService: GlobalSnackBarService,
@@ -81,7 +85,15 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
     private authenticationService: AuthenticationService,
     private formBuilder: FormBuilder,
     private globalSnackBarService: GlobalSnackBarService
-  ) { }
+  ) {
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
+    console.table(this.loggedInUser);
+    console.log("loggedInRole: ", this.loggedInRole, "\n");
+    console.log("nameToDisplay: ", this.nameToDisplay, "\n");
+  }
 
   ngOnChanges() {
     if (this.logNg) { console.log("OnChanges ran.\n") }
@@ -154,32 +166,31 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
       .toPromise()
       .then(data => { this.entityData = data; })
       .finally(() => {
-        this.loggedInRole = this.loggedInUser?.role;
-        this.nameToDisplay = this.loggedInUser?.username;
-           this.updateFieldBoxes();
-           this.editForm = this.formBuilder.group({
-             'id': new FormControl(this.entityData.id),
-             'status': new FormControl(this.entityData.status),
-             'customer': new FormControl({ value: this.entityData.customer, disabled: true}, [Validators.required]),
-             'location': new FormControl({ value: this.entityData.location, disabled: true}, [Validators.required]),
-             'assignedUsers': new FormControl({ value: this.entityData.assignedUsers, disabled: true}, [Validators.required]),
-             'quickDescription': new FormControl({ value: this.entityData.quickDescription, disabled: true}, [Validators.required]),
-             'description': new FormControl({ value: this.entityData.description, disabled: true}),
-             'contactName': new FormControl({ value: this.entityData.contactName, disabled: true}, [Validators.required]),
-             'contactPhoneNumb': new FormControl({ value: this.entityData.contactPhoneNumb, disabled: true}, [Validators.required]),
-             'contactAltPhoneNumb': new FormControl({ value: this.entityData.contactAltPhoneNumb, disabled: true}),
-             'entryInstruct': new FormControl({ value: this.entityData.entryInstruct, disabled: true}, [Validators.required]),
-             'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
-             'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
-             'subcontractorItemsTotal': new FormControl(this.entityData.subcontractorItemsTotal),
-             'toolEquipmentItemsTotal': new FormControl(this.entityData.toolEquipmentItemsTotal),
-             'workOrderTotal': new FormControl(this.entityData.workOrderTotal)
-           })
-           this.dataLoaded = true;
-           this.loadLocationSelect(this.entityData.customer.id);
-           this.userData = this.entityData.assignedUsers;
-           this.loadAssignedUsersSelect();
-           //this.editForm.
+        //this.loggedInRole = this.loggedInUser?.role;
+        //this.nameToDisplay = this.loggedInUser?.username;
+        this.updateFieldBoxes();
+        this.editForm = this.formBuilder.group({
+          'id': new FormControl(this.entityData.id),
+          'status': new FormControl(this.entityData.status),
+          'customer': new FormControl({ value: this.entityData.customer, disabled: true}, [Validators.required]),
+          'location': new FormControl({ value: this.entityData.location, disabled: true}, [Validators.required]),
+          'assignedUsers': new FormControl({ value: this.entityData.assignedUsers, disabled: true}, [Validators.required]),
+          'quickDescription': new FormControl({ value: this.entityData.quickDescription, disabled: true}, [Validators.required]),
+          'description': new FormControl({ value: this.entityData.description, disabled: true}),
+          'contactName': new FormControl({ value: this.entityData.contactName, disabled: true}, [Validators.required]),
+          'contactPhoneNumb': new FormControl({ value: this.entityData.contactPhoneNumb, disabled: true}, [Validators.required]),
+          'contactAltPhoneNumb': new FormControl({ value: this.entityData.contactAltPhoneNumb, disabled: true}),
+          'entryInstruct': new FormControl({ value: this.entityData.entryInstruct, disabled: true}, [Validators.required]),
+          'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
+          'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
+          'subcontractorItemsTotal': new FormControl(this.entityData.subcontractorItemsTotal),
+          'toolEquipmentItemsTotal': new FormControl(this.entityData.toolEquipmentItemsTotal),
+          'workOrderTotal': new FormControl(this.entityData.workOrderTotal)
+        });
+        this.dataLoaded = true;
+        this.loadLocationSelect(this.entityData.customer.id);
+        this.userData = this.entityData.assignedUsers;
+        this.loadAssignedUsersSelect();
       });
   }
 
