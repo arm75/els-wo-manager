@@ -22,7 +22,7 @@
     <!-- notes -->
     <ng-container matColumnDef="notes">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Notes">Notes</th>
-      <td mat-cell *matCellDef="let element">{{element.notes}}</td>
+      <td class="table-notes" mat-cell *matCellDef="let element">{{(element.notes.length > 250)? (element.notes | slice:0:250)+'...':(element.notes) }}</td>
     </ng-container>
     <!-- unitPrice -->
     <ng-container matColumnDef="unitPrice">
