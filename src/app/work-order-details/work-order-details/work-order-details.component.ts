@@ -75,7 +75,7 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
   logNg: boolean = false;
 
   constructor(
-    private snackBarService: GlobalSnackBarService,
+    //private snackBarService: GlobalSnackBarService,
     private entityService: WorkOrderService,
     private customerService: CustomerService,
     private locationService: LocationService,
@@ -273,8 +273,9 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
   }
 
   editModeToggle() {
-    this.editFormEditMode = true;
-    this.editForm.enable();
+    this.editFormEditMode = !this.editFormEditMode;
+    if(this.editFormEditMode) { this.editForm.enable(); }
+    else { this.editForm.disable() }
   }
 
   saveWorkOrder() {

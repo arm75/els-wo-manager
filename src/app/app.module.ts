@@ -43,6 +43,7 @@ import { UserProfileComponent } from './shared/user-profile/user-profile.compone
     AuthInterceptor,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthenticationService,
+    CoreModule,
     UserService,
   ],
   bootstrap: [

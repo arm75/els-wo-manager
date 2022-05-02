@@ -7,7 +7,9 @@
     <button class="mat-flat-button mat-primary inventory-item-table-add-button" (click)="openAddDialog()">Add Inventory Item</button>
   </span>
 </div>
+
 <div class="mat-elevation-z0">
+
   <table #entityTable mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z0">
     <!-- createdDate -->
     <ng-container matColumnDef="createdDate">
@@ -50,6 +52,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
   <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Pages"></mat-paginator>
 </div>
 

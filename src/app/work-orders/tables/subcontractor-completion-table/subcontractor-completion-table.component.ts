@@ -13,6 +13,7 @@ import {SubcontractorItemEditComponent} from "../../../work-order-details/dialog
 import {SubcontractorItemCompleteComponent} from "../../../work-order-details/dialogs/subcontractor-item-complete/subcontractor-item-complete.component";
 import {SubcontractorItemDeleteComponent} from "../../../work-order-details/dialogs/subcontractor-item-delete/subcontractor-item-delete.component";
 
+
 @Component({
   selector: 'app-subcontractor-completion-table',
   templateUrl: './subcontractor-completion-table.component.html',
@@ -70,7 +71,7 @@ export class SubcontractorCompletionTableComponent implements OnInit {
     this.componentTotal = 0;
     this.entityService.getAll()
       .pipe(map(items =>
-        items.filter(item => (item.workOrder.id == this.passedWorkOrderId))))
+        items.filter(item => (item.status == "ACTIVE"))))
       .subscribe(data => {
         data.forEach(a => this.componentTotal += a.totalPrice);
         this.totalChangedEvent.emit(this.componentTotal);

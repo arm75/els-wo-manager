@@ -1,0 +1,59 @@
+<div *ngIf="dataLoaded">
+  <div class="table-toolbar">
+    <span><h2>Work Order Notes</h2></span>
+    <span class="example-fill-remaining-space"></span>
+  </div>
+  <form [formGroup]="editForm" class="" (submit)="saveWorkOrder()">
+  <div class="containing-box">
+    <div class="row">
+      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+        <mat-form-field class="width-99" appearance="outline">
+          <mat-label>Work Order Notes</mat-label>
+          <textarea matInput [rows]="15" autocomplete="off" class="" value="" formControlName="notes"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+        <mat-form-field class="width-99" appearance="outline">
+          <mat-label>Private Notes</mat-label>
+          <textarea matInput [rows]="15" autocomplete="off" class="" value="" formControlName="privateNotes"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div><button *ngIf="!editFormEditMode" class="mat-flat-button mat-primary" (click)="editModeToggle()">Edit Work Order Notes</button></div>
+        <div><button *ngIf="editFormEditMode" class="mat-flat-button edit-button-color" type="submit">Save Work Order Notes</button></div>
+        <div><button *ngIf="editFormEditMode" class="mat-raised-button" (click)="editModeToggle()">Cancel</button></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div #buttonsStatusOpen *ngIf="(entityData.status=='OPEN')">
+          <button type="button" class="mat-flat-button wo-button-complete" (click)="openCompleteDialog(entityData.id)">COMPLETE Work Order</button>
+          <button type="button" class="mat-flat-button wo-button-cancel" (click)="openCancelDialog(entityData.id)">CANCEL Work Order</button>
+        </div>
+        <div #buttonsStatusPending *ngIf="(entityData.status=='PENDING')">
+          <button type="button" class="mat-flat-button wo-button-cancel" (click)="openCancelDialog(entityData.id)">CANCEL Work Order</button>
+          <button type="button" class="mat-flat-button wo-button-reopen" (click)="openReopenDialog(entityData.id)">Re-OPEN Work Order</button>
+        </div>
+        <div #buttonsStatusComplete *ngIf="(entityData.status=='COMPLETE')">
+          <button type="button" class="mat-flat-button wo-button-close" (click)="openCloseDialog(entityData.id)">CLOSE Work Order</button>
+          <button type="button" class="mat-flat-button wo-button-reopen" (click)="openReopenDialog(entityData.id)">Re-OPEN Work Order</button>
+          <button type="button" class="mat-flat-button wo-button-cancel" (click)="openCancelDialog(entityData.id)">CANCEL Work Order</button>
+        </div>
+        <div #buttonsStatusClosed *ngIf="(entityData.status=='CLOSED')">
+        </div>
+        <div #buttonsStatusCancelled *ngIf="(entityData.status=='CANCELLED')">
+        </div>
+        <div #buttonsStatusError *ngIf="(entityData.status=='ERROR')">
+          <button type="button" class="mat-flat-button wo-button-retry" (click)="openRetryDialog(entityData.id)">RETRY Work Order Processing</button>
+        </div>
+        <div #buttonsStatusRetry *ngIf="(entityData.status=='RETRY')">
+        </div>
+        <div #buttonsStatusProcessed *ngIf="(entityData.status=='PROCESSED')">
+        </div>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>

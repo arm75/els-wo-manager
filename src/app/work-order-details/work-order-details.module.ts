@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-
 // main component of WorkOrdersModule...
 import { WorkOrderDetailsComponent } from './work-order-details/work-order-details.component';
 // material module
@@ -34,13 +33,12 @@ import { AuthenticationService } from "../core/security/authentication.service";
 import { UserService } from "../core/services/user.service";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AuthInterceptor } from "../core/security/auth.interceptor";
-import { WorkOrderEditTabFormComponent } from './components/work-order-edit-tab-form/work-order-edit-tab-form.component';
 import { NgxMaskModule } from "ngx-mask";
-import { WorkOrderEditTabUsersComponent } from './components/work-order-edit-tab-users/work-order-edit-tab-users.component';
 import { PrintTemplateComponent } from './work-order-details/print/print-template/print-template.component';
 import { GlobalProgressSpinnerComponent } from "../shared/progress-spinner/global-progress-spinner/global-progress-spinner.component";
 import { ToolEquipmentItemReturnComponent } from './dialogs/tool-equipment-item-return/tool-equipment-item-return.component';
 import { SubcontractorItemCompleteComponent } from './dialogs/subcontractor-item-complete/subcontractor-item-complete.component';
+import { NotesCompletionTabComponent } from './components/notes-completion-tab/notes-completion-tab.component';
 
 // table components array
 const WorkOrderDetailsModuleTableComponents = [
@@ -71,12 +69,11 @@ const WorkOrderDetailsModuleDialogComponents = [
     WorkOrderDetailsComponent,
     WorkOrderDetailsModuleTableComponents,
     WorkOrderDetailsModuleDialogComponents,
-    WorkOrderEditTabFormComponent,
-    WorkOrderEditTabUsersComponent,
     PrintTemplateComponent,
     GlobalProgressSpinnerComponent,
     ToolEquipmentItemReturnComponent,
     SubcontractorItemCompleteComponent,
+    NotesCompletionTabComponent,
   ],
   imports: [
     CommonModule,

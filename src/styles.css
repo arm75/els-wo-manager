@@ -181,6 +181,28 @@ body { width: 100%; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif
   color: #000000;
 }
 
+/* WORK ORDER OPERATION BUTTONS */
+.wo-button-reopen {
+  color: #fff;
+  background-color: #339933;
+}
+.wo-button-cancel {
+  color: #fff;
+  background-color: #a6a6a6;
+}
+.wo-button-complete {
+  color: #fff;
+  background-color: #0099ff;
+}
+.wo-button-close {
+  color: #fff;
+  background-color: #3333ff;
+}
+.wo-button-retry {
+  color: #fff;
+  background-color: #996633;
+}
+
 /* TOOL/EQUIPMENT ITEM RETURN STATUS DISPLAY */
 .tool-equipment-status-chip {
   font-size: 90%;
@@ -193,7 +215,7 @@ body { width: 100%; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif
 .tool-equipment-status-chip-out {
   background-color: #339933;
 }
-.tool-equipment-status-chip-returned {
+.tool-equipment-status-chip-in {
   background-color: #000000;
 }
 

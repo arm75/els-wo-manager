@@ -14,6 +14,8 @@ export interface WorkOrder {
   contactName: string;
   contactPhoneNumb: string;
   contactAltPhoneNumb: string;
+  notes: string;
+  privateNotes: string;
   entryInstruct: string;
   inventoryItemsTotal: number;
   laborItemsTotal: number;

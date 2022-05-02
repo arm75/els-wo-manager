@@ -18,6 +18,7 @@ import {
 import {
   ToolEquipmentItemReturnComponent
 } from "../../../work-order-details/dialogs/tool-equipment-item-return/tool-equipment-item-return.component";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-tool-equipment-return-table',
@@ -63,8 +64,8 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
   buildTable() {
     this.componentTotal = 0;
     this.entityService.getAll()
-      // .pipe(map(items =>
-      //   items.filter(item => (item.workOrderId == this.passedWorkOrderId))))
+      .pipe(map(items =>
+        items.filter(item => (item.status == "OUT"))))
       .subscribe(data => {
         data.forEach(a => this.componentTotal += a.totalPrice);
         this.totalChangedEvent.emit(this.componentTotal);
