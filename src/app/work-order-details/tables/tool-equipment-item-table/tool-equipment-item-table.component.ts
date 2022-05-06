@@ -10,6 +10,7 @@ import { ToolEquipmentItemAddComponent } from "../../dialogs/tool-equipment-item
 import { ToolEquipmentItemEditComponent } from "../../dialogs/tool-equipment-item-edit/tool-equipment-item-edit.component";
 import { ToolEquipmentItemDeleteComponent } from "../../dialogs/tool-equipment-item-delete/tool-equipment-item-delete.component";
 import {map} from "rxjs/operators";
+import {ToolEquipmentItemReturnComponent} from "../../dialogs/tool-equipment-item-return/tool-equipment-item-return.component";
 
 @Component({
   selector: 'app-tool-equipment-item-table',
@@ -95,6 +96,19 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
     editDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const editDialogRef = this.dialog.open(ToolEquipmentItemEditComponent, editDialogConfig);
     editDialogRef.afterClosed().subscribe(editData => {
+      this.buildTable();
+    });
+  }
+
+  openReturnDialog(_id: number) {
+    const returnDialogConfig = new MatDialogConfig();
+    returnDialogConfig.disableClose = true;
+    returnDialogConfig.autoFocus = true;
+    returnDialogConfig.width = "25%";
+    returnDialogConfig.position = { top:  '0' };
+    returnDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
+    const returnDialogRef = this.dialog.open(ToolEquipmentItemReturnComponent, returnDialogConfig);
+    returnDialogRef.afterClosed().subscribe(returnData => {
       this.buildTable();
     });
   }

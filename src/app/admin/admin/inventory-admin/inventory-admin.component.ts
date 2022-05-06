@@ -37,7 +37,7 @@ export class InventoryAdminComponent implements OnInit, AfterViewInit {
       },error => {
       }
     );
-    this.sideDrawer.toggle();
+    //this.sideDrawer.toggle();
   }
 
   ngAfterViewInit() {

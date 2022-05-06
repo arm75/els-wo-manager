@@ -1,14 +1,5 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  ViewChild,
-  Input,
-  EventEmitter,
-  Output,
-  OnChanges,
-  DoCheck, AfterContentInit, AfterContentChecked, AfterViewChecked, OnDestroy
-} from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, Input, EventEmitter, Output, OnChanges,
+  DoCheck, AfterContentInit, AfterContentChecked, AfterViewChecked, OnDestroy } from '@angular/core';
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";

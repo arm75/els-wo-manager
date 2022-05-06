@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {User} from "../../../core/models/user";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ElsWoManagerConstants} from "../../../core/els-wo-manager-constants";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {CustomerService} from "../../../core/services/customer.service";
@@ -55,11 +55,17 @@ export class WorkOrderCompleteComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-            'quickDescription': new FormControl(this.entityData.quickDescription),
             //'status': new FormControl(this.entityData.status),
             'customer': new FormControl(this.entityData.customer),
             'location': new FormControl(this.entityData.location),
+            'assignedUsers': new FormControl(this.entityData.assignedUsers),
+            'quickDescription': new FormControl(this.entityData.quickDescription),
             'description': new FormControl(this.entityData.description),
+            'contactName': new FormControl(this.entityData.contactName),
+            'contactPhoneNumb': new FormControl(this.entityData.contactPhoneNumb),
+            'contactAltPhoneNumb': new FormControl(this.entityData.contactAltPhoneNumb),
+            'notes': new FormControl(this.entityData.notes),
+            'privateNotes': new FormControl(this.entityData.privateNotes),
             'entryInstruct': new FormControl(this.entityData.entryInstruct),
             'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
             'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
@@ -67,12 +73,15 @@ export class WorkOrderCompleteComponent implements OnInit {
             'toolEquipmentItemsTotal': new FormControl(this.entityData.toolEquipmentItemsTotal),
             'workOrderTotal': new FormControl(this.entityData.workOrderTotal)
           })
-          this.dataLoaded = true;
+          //this.dataLoaded = true;
         })
         .catch(error => {
+        })
+        .finally(() => {
+          this.dataLoaded = true;
         });
     }
-    this.dataLoaded = true;
+    //this.dataLoaded = true;
   }
 
   completeEntity() {

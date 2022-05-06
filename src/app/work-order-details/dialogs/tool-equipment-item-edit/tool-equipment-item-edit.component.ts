@@ -14,6 +14,7 @@ import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.s
   styleUrls: ['./tool-equipment-item-edit.component.css']
 })
 export class ToolEquipmentItemEditComponent implements OnInit {
+
   dataLoaded: boolean = false;
   formTitle: string = "Edit Tool/Equipment Item";
   woId: null;

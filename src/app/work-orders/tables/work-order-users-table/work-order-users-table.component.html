@@ -53,13 +53,17 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let element">
-        <button mat-button class="work-order-table-edit-button mat-icon-button" [routerLink]="['/workOrderDetails', element.id]"><mat-icon color="primary">edit</mat-icon></button>
-        <button mat-button class="work-order-users-table-delete-button mat-icon-button" (click)="openDeleteDialog(element.id)"><mat-icon color="primary">delete</mat-icon></button>
-        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu"><mat-icon  color="primary">more_horiz</mat-icon></button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item *ngIf="(element.status == 'OPEN')||(element.status == 'PENDING')"><span>COMPLETE Work Order</span></button>
-          <button mat-menu-item *ngIf="element.status == 'COMPLETE'"><span>CLOSE Work Order</span></button>
-          <button mat-menu-item *ngIf="element.status == 'CLOSED'"><span>Re-OPEN Work Order</span></button>
+        <button mat-button class="work-order-table-edit-button mat-icon-button" [routerLink]="['/workOrderDetails', element.id]"><mat-icon color="primary" matTooltip="Edit">edit</mat-icon></button>
+        <button *ngIf="(loggedInRole =='ROLE_SUPER_ADMIN')" mat-button class="work-order-users-table-delete-button mat-icon-button" (click)="openDeleteDialog(element.id)"><mat-icon color="primary" matTooltip="Delete">delete</mat-icon></button>
+        <button *ngIf="(element.status == 'OPEN')" mat-icon-button  [matMenuTriggerFor]="openMenu" aria-label=""><mat-icon  color="primary">more_horiz</mat-icon></button>
+        <mat-menu #openMenu>
+          <button mat-menu-item (click)="openCompleteDialog(element.id)"><span>COMPLETE Work Order</span></button>
+          <button mat-menu-item (click)="openCancelDialog(element.id)"><span>CANCEL Work Order</span></button>
+        </mat-menu>
+        <button *ngIf="(element.status == 'PENDING')" mat-icon-button  [matMenuTriggerFor]="pendingMenu" aria-label=""><mat-icon  color="primary">more_horiz</mat-icon></button>
+        <mat-menu #pendingMenu>
+          <button mat-menu-item (click)="openReopenDialog(element.id)"><span>Re-OPEN Work Order</span></button>
+          <button mat-menu-item (click)="openCancelDialog(element.id)"><span>CANCEL Work Order</span></button>
         </mat-menu>
       </td>
     </ng-container>
@@ -70,6 +74,6 @@
 </div>
 <br>
 <br>
-<!--<button (click)="home()">CLICK ME</button> -->
+
 
 

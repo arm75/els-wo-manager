@@ -12,6 +12,10 @@ import {WorkOrderUsersDeleteComponent} from "../../dialogs/work-order-users-dele
 import {UserService} from "../../../core/services/user.service";
 import {map} from "rxjs/operators";
 import {WorkOrderStatus} from "../../../core/types/work-order-status";
+import {AuthenticationService} from "../../../core/security/authentication.service";
+import {WorkOrderCompleteComponent} from "../../../admin/dialogs/work-order-complete/work-order-complete.component";
+import {WorkOrderCancelComponent} from "../../../admin/dialogs/work-order-cancel/work-order-cancel.component";
+import {WorkOrderReopenComponent} from "../../../admin/dialogs/work-order-reopen/work-order-reopen.component";
 
 @Component({
   selector: 'app-work-order-users-table',
@@ -20,11 +24,16 @@ import {WorkOrderStatus} from "../../../core/types/work-order-status";
 })
 export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
 
+  loggedInUser!: any;
+  loggedInUsername!: string;
+  loggedInRole!: string;
+  nameToDisplay!: string;
+
   displayedColumns: string[] = ['createdDate', 'id', 'quickDescription', 'customer', 'location',  'status', 'actions'];
 
   dataSource: any;
 
-  dataSource2: any;
+  // dataSource2: any;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<WorkOrder>;
@@ -39,8 +48,15 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
     private entityService: WorkOrderService,
     private userService: UserService,
     private _liveAnnouncer: LiveAnnouncer,
+    private authenticationService: AuthenticationService,
     private dialog: MatDialog
   ) {
+
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
+
     this.buildTable();
   }
 
@@ -50,19 +66,25 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
     this.buildTable();
   }
 
- home() {
-    this.userService.get(1001340).subscribe((data) => {
-      this.dataSource2 = data;
-    }, error => {
-    });
- }
+ // home() {
+ //    this.userService.get(1001340).subscribe((data) => {
+ //      this.dataSource2 = data;
+ //    }, error => {
+ //    });
+ // }
 
  buildTable() {
    this.entityService.getAll()
      .pipe(map(items =>
-       items.filter(item => ((item.status == WorkOrderStatus.OPEN)||(item.status == WorkOrderStatus.PENDING)))))
+       items.filter(item => ((
+         (item.status == WorkOrderStatus.OPEN) ||
+         (item.status == WorkOrderStatus.PENDING)) &&
+         (item.assignedUsers.map((thisUser) => thisUser.username)).includes(this.loggedInUsername) ))
+       ))
      .subscribe(data => {
        this.dataSource = new MatTableDataSource(data);
+       this.sort.active = 'createdDate';
+       this.sort.direction = 'desc';
        this.dataSource.sort = this.sort;
        this.dataSource.paginator = this.paginator;
      });
@@ -92,6 +114,45 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
     editDialogConfig.data = { entityId: _id };
     const editDialogRef = this.dialog.open(WorkOrderUsersEditComponent, editDialogConfig);
     editDialogRef.afterClosed().subscribe(editData => {
+      this.buildTable();
+    });
+  }
+
+  openCompleteDialog( _id: number) {
+    const completeDialogConfig = new MatDialogConfig();
+    completeDialogConfig.disableClose = true;
+    completeDialogConfig.autoFocus = true;
+    completeDialogConfig.width = "25%";
+    completeDialogConfig.position = { top:  '0' };
+    completeDialogConfig.data = { entityId: _id };
+    const completeDialogRef = this.dialog.open(WorkOrderCompleteComponent, completeDialogConfig);
+    completeDialogRef.afterClosed().subscribe(completeData => {
+      this.buildTable();
+    });
+  }
+
+  openCancelDialog( _id: number) {
+    const cancelDialogConfig = new MatDialogConfig();
+    cancelDialogConfig.disableClose = true;
+    cancelDialogConfig.autoFocus = true;
+    cancelDialogConfig.width = "25%";
+    cancelDialogConfig.position = { top:  '0' };
+    cancelDialogConfig.data = { entityId: _id };
+    const cancelDialogRef = this.dialog.open(WorkOrderCancelComponent, cancelDialogConfig);
+    cancelDialogRef.afterClosed().subscribe(cancelData => {
+      this.buildTable();
+    });
+  }
+
+  openReopenDialog( _id: number) {
+    const reOpenDialogConfig = new MatDialogConfig();
+    reOpenDialogConfig.disableClose = true;
+    reOpenDialogConfig.autoFocus = true;
+    reOpenDialogConfig.width = "25%";
+    reOpenDialogConfig.position = { top:  '0' };
+    reOpenDialogConfig.data = { entityId: _id };
+    const reOpenDialogRef = this.dialog.open(WorkOrderReopenComponent, reOpenDialogConfig);
+    reOpenDialogRef.afterClosed().subscribe(reOpenData => {
       this.buildTable();
     });
   }

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 import {WorkOrderService} from "../../../core/services/work-order.service";
@@ -33,6 +33,9 @@ export class NotesCompletionTabComponent implements OnInit {
 
   @Input()
   passedWorkOrderId: any;
+
+  @Output()
+  statusChangedEvent: EventEmitter<number> = new EventEmitter();
 
   dataLoaded: boolean = false;
   entityData!: WorkOrder;
@@ -136,6 +139,10 @@ export class NotesCompletionTabComponent implements OnInit {
     const completeDialogRef = this.dialog.open(WorkOrderCompleteComponent, completeDialogConfig);
     completeDialogRef.afterClosed().subscribe(completeData => {
       //this.buildTable();
+      this.statusChangedEvent.emit(1);
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.onSameUrlNavigation = 'reload';
+      this.router.navigate(['./'], { relativeTo: this.route });
     });
   }
 
@@ -149,6 +156,10 @@ export class NotesCompletionTabComponent implements OnInit {
     const closeDialogRef = this.dialog.open(WorkOrderCloseComponent, closeDialogConfig);
     closeDialogRef.afterClosed().subscribe(closeData => {
       //this.buildTable();
+      this.statusChangedEvent.emit(1);
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.onSameUrlNavigation = 'reload';
+      this.router.navigate(['./'], { relativeTo: this.route });
     });
   }
 
@@ -161,7 +172,10 @@ export class NotesCompletionTabComponent implements OnInit {
     cancelDialogConfig.data = { entityId: _id };
     const cancelDialogRef = this.dialog.open(WorkOrderCancelComponent, cancelDialogConfig);
     cancelDialogRef.afterClosed().subscribe(cancelData => {
-      //this.buildTable();
+      this.statusChangedEvent.emit(1);
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.onSameUrlNavigation = 'reload';
+      this.router.navigate(['./'], { relativeTo: this.route });
     });
   }
 
@@ -174,7 +188,10 @@ export class NotesCompletionTabComponent implements OnInit {
     reOpenDialogConfig.data = { entityId: _id };
     const reOpenDialogRef = this.dialog.open(WorkOrderReopenComponent, reOpenDialogConfig);
     reOpenDialogRef.afterClosed().subscribe(reOpenData => {
-      //this.buildTable();
+      this.statusChangedEvent.emit(1);
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.onSameUrlNavigation = 'reload';
+      this.router.navigate(['./'], { relativeTo: this.route });
     });
   }
 
@@ -187,7 +204,10 @@ export class NotesCompletionTabComponent implements OnInit {
     reTryDialogConfig.data = { entityId: _id };
     const reTryDialogRef = this.dialog.open(WorkOrderRetryComponent, reTryDialogConfig);
     reTryDialogRef.afterClosed().subscribe(reTryData => {
-      //this.buildTable();
+      this.statusChangedEvent.emit(1);
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.onSameUrlNavigation = 'reload';
+      this.router.navigate(['./'], { relativeTo: this.route });
     });
   }
 

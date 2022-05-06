@@ -20,6 +20,11 @@ import {waitForAsync} from "@angular/core/testing";
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
+  loggedInUser!: any;
+  loggedInUsername!: string;
+  loggedInRole!: string;
+  nameToDisplay!: string;
+
   formTitle: string = "Login";
   loginFormGroup: FormGroup = new FormGroup({});
   public showLoading: boolean = false;
@@ -35,7 +40,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     private userService: UserService
 
     //private matSnackBar: MatSnackBar
-  ) { }
+  ) {
+    // this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    // //console.table(this.loggedInUser);
+    // this.loggedInUsername = this.loggedInUser.username;
+    // this.loggedInRole = this.loggedInUser.role;
+    // this.nameToDisplay = this.loggedInUser!.firstName;
+  }
 
   ngOnInit(): void {
 

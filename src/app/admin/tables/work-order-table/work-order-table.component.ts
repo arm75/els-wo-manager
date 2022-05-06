@@ -19,6 +19,7 @@ import {WorkOrderCloseComponent} from "../../dialogs/work-order-close/work-order
 import {WorkOrderCancelComponent} from "../../dialogs/work-order-cancel/work-order-cancel.component";
 import {WorkOrderRetryComponent} from "../../dialogs/work-order-retry/work-order-retry.component";
 import {WorkOrderReopenComponent} from "../../dialogs/work-order-reopen/work-order-reopen.component";
+import {AuthenticationService} from "../../../core/security/authentication.service";
 
 @Component({
   selector: 'app-work-order-table',
@@ -26,6 +27,11 @@ import {WorkOrderReopenComponent} from "../../dialogs/work-order-reopen/work-ord
   styleUrls: ['./work-order-table.component.css']
 })
 export class WorkOrderTableComponent implements OnInit, AfterViewInit {
+
+  loggedInUser!: any;
+  loggedInUsername!: string;
+  loggedInRole!: string;
+  nameToDisplay!: string;
 
   displayedColumns: string[] = ['createdDate', 'id', 'quickDescription', 'customer', 'location', 'status', 'workOrderTotal', 'actions'];
 
@@ -53,12 +59,17 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
 
   constructor(
     private entityService: WorkOrderService,
-    private customerService: CustomerService, ///////////////////////////////
+    private customerService: CustomerService,
     private _liveAnnouncer: LiveAnnouncer,
+    private authenticationService: AuthenticationService,
     private dialog: MatDialog,
     //private spinner: GlobalProgressSpinnerComponent
   ) {
 
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
 
     this.buildTable();
 

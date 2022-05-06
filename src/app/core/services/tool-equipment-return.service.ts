@@ -10,7 +10,7 @@ import {environment} from "../../../environments/environment";
 })
 export class ToolEquipmentReturnService {
 
-  private baseUrl: string = environment.apiBaseUrl + "/tool-equipment";
+  private baseUrl: string = environment.apiBaseUrl + "/tool-equipment-return";
   // private baseUrl: string = "http://127.0.0.1:8090/tool-equipment";
 
   constructor( private http: HttpClient ) { }

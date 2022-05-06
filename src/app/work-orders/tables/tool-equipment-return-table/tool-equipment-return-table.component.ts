@@ -19,6 +19,11 @@ import {
   ToolEquipmentItemReturnComponent
 } from "../../../work-order-details/dialogs/tool-equipment-item-return/tool-equipment-item-return.component";
 import {map} from "rxjs/operators";
+import {AuthenticationService} from "../../../core/security/authentication.service";
+import {WorkOrderService} from "../../../core/services/work-order.service";
+import {WorkOrder} from "../../../core/models/work-order";
+import {WorkOrderStatus} from "../../../core/types/work-order-status";
+import {flatMap} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-tool-equipment-return-table',
@@ -26,6 +31,13 @@ import {map} from "rxjs/operators";
   styleUrls: ['./tool-equipment-return-table.component.css']
 })
 export class ToolEquipmentReturnTableComponent implements OnInit {
+
+  loggedInUser!: any;
+  loggedInUsername!: string;
+  loggedInRole!: string;
+  nameToDisplay!: string;
+
+  thisUsersWorkOrders!: any;
 
   @Input()
   passedWorkOrderId: any;
@@ -35,8 +47,9 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
 
   componentTotal: number = 0;
 
-  displayedColumns: string[] = ['createdDate', 'entityName', 'workOrder', 'notes', 'pricePerDay', 'days', 'totalPrice', 'status', 'actions'];
+  displayedColumns: string[] = ['createdDate', 'entityName', 'workOrder', 'notes', 'days', 'status', 'actions'];
   dataSource: any;
+  data: any;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<ToolEquipmentItem>;
@@ -49,30 +62,107 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
 
   constructor(
     private entityService: ToolEquipmentItemService,
+    private workOrderService: WorkOrderService,
     private _liveAnnouncer: LiveAnnouncer,
+    private authenticationService: AuthenticationService,
     private dialog: MatDialog
   ) {
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
+
+    if((this.loggedInRole=='ROLE_ADMIN')||(this.loggedInRole=='ROLE_SUPER_ADMIN')) {
+      this.displayedColumns = ['createdDate', 'entityName', 'workOrder', 'notes', 'pricePerDay', 'days', 'totalPrice', 'status', 'actions'];
+    }
+
     //  this.buildTable();
   }
 
-  ngOnInit() { }
-
-  ngAfterViewInit() {
-    this.buildTable();
+  ngOnInit() {
+    this.start().finally(() => console.log("start finally"));
   }
 
-  buildTable() {
-    this.componentTotal = 0;
-    this.entityService.getAll()
+  ngAfterViewInit() {
+    //this.buildTable();
+  }
+
+  async start() {
+    console.log("before the awaits");
+    console.log("before getUsersWorkorders method:");
+    await this.getUsersWorkOrders();
+    console.log("after getUsersWorkorders method:", this.thisUsersWorkOrders);
+    console.log("before buildTable method:");
+    await this.buildTable();
+    console.log("after buildTable method:", this.data);
+    console.log("after the awaits");
+
+    this.dataSource = new MatTableDataSource(this.data);
+    this.sort.active = 'createdDate';
+    this.sort.direction = 'desc';
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  async buildTable() {
+    // this.getUsersWorkOrders();
+    //console.log("thisUsersWorkOrders before: ", this.thisUsersWorkOrders);
+    // this.thisUsersWorkOrders = this.thisUsersWorkOrders.map((data: WorkOrder) => data.id);
+    console.log("before getAll()\n");
+    //this.componentTotal = 0;
+    await this.entityService.getAll()
       .pipe(map(items =>
-        items.filter(item => (item.status == "OUT"))))
-      .subscribe(data => {
-        data.forEach(a => this.componentTotal += a.totalPrice);
+        items.filter(item => ((item.status == "OUT") && (this.thisUsersWorkOrders.includes(item.workOrder.id))))))
+      .toPromise()
+      .then(data => {
+        this.data = data;
+        this.data.forEach((a: { totalPrice: number; }) => this.componentTotal += a.totalPrice);
         this.totalChangedEvent.emit(this.componentTotal);
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+
       })
+      .finally( () => {
+        console.log("Finally on promise");
+      });
+
+      // .pipe(map(items =>
+      //   items.filter(item => ((item.status == "OUT") && (this.thisUsersWorkOrders.includes(item.workOrder.id))))))
+      // .subscribe(
+      //   data => {
+      //     data.forEach(a => this.componentTotal += a.totalPrice);
+      //     this.totalChangedEvent.emit(this.componentTotal);
+      //     this.dataSource = new MatTableDataSource(data);
+      //     this.sort.active = 'createdDate';
+      //     this.sort.direction = 'desc';
+      //     this.dataSource.sort = this.sort;
+      //     this.dataSource.paginator = this.paginator;
+      //   },
+      //   error => { },
+      //   async () => { await this.testCompleteMethod() }
+      //   ).toPromise
+    console.log("RIGHT AFTER getAll, outside");
+  }
+
+  testCompleteMethod() {
+    console.log("complete method:");
+  }
+
+
+  async getUsersWorkOrders() {
+    // get the user's work orders
+    await this.workOrderService.getAll()
+      .pipe(map(items =>
+        items.filter(item => ((
+            (item.status == WorkOrderStatus.OPEN) ||
+            (item.status == WorkOrderStatus.PENDING)) &&
+          (item.assignedUsers.map((thisUser) => thisUser.username)).includes(this.loggedInUsername) ))
+      ))
+      .toPromise()
+      .then(data => {
+        this.thisUsersWorkOrders = data; });
+      // .subscribe(
+      //   data => { this.thisUsersWorkOrders = data; },
+      //   error => { },
+      //   () => { console.log("complete method:", this.thisUsersWorkOrders); });
   }
 
   applyFilter(event: Event) {
@@ -108,6 +198,19 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     });
   }
 
+  openReturnItemDialog(_id: number) {
+    const returnDialogConfig = new MatDialogConfig();
+    returnDialogConfig.disableClose = true;
+    returnDialogConfig.autoFocus = true;
+    returnDialogConfig.width = "25%";
+    returnDialogConfig.position = { top:  '0' };
+    returnDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
+    const returnDialogRef = this.dialog.open(ToolEquipmentItemReturnComponent, returnDialogConfig);
+    returnDialogRef.afterClosed().subscribe(returnData => {
+      this.buildTable();
+    });
+  }
+
   // opens Dialog box
   openDeleteDialog( _id: number) {
     const deleteDialogConfig = new MatDialogConfig();
@@ -118,19 +221,6 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     deleteDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const deleteDialogRef = this.dialog.open(ToolEquipmentItemDeleteComponent, deleteDialogConfig);
     deleteDialogRef.afterClosed().subscribe(deleteData => {
-      this.buildTable();
-    });
-  }
-
-  openReturnItemDialog(_id: number) {
-    const returnDialogConfig = new MatDialogConfig();
-    returnDialogConfig.disableClose = true;
-    returnDialogConfig.autoFocus = true;
-    returnDialogConfig.width = "25%";
-    returnDialogConfig.position = { top:  '0' };
-    returnDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
-    const returnDialogRef = this.dialog.open(ToolEquipmentItemReturnComponent, returnDialogConfig);
-    returnDialogRef.afterClosed().subscribe(returnData => {
       this.buildTable();
     });
   }
@@ -148,7 +238,5 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
   //   }
   //  }
 
-  alert(returnedToolEquipment: string) {
-    alert(returnedToolEquipment);
-  }
+
 }

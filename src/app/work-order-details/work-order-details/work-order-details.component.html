@@ -174,7 +174,7 @@
         <mat-tab label="Labor Items"><app-labor-item-table (totalChangedEvent)="getNewLaborTotal($event)" [passedWorkOrderId]="entityData.id"></app-labor-item-table></mat-tab>
         <mat-tab label="Subcontractor Items"><app-subcontractor-item-table (totalChangedEvent)="getNewSubcontractorTotal($event)" [passedWorkOrderId]="entityData.id"></app-subcontractor-item-table></mat-tab>
         <mat-tab label="Tool/Equipment Items"><app-tool-equipment-item-table (totalChangedEvent)="getNewToolEquipmentTotal($event)" [passedWorkOrderId]="entityData.id"></app-tool-equipment-item-table></mat-tab>
-        <mat-tab label="Complete Work Order"><app-notes-completion-tab [passedWorkOrderId]="entityData.id"></app-notes-completion-tab></mat-tab>
+        <mat-tab label="Complete Work Order"><app-notes-completion-tab (statusChangedEvent)="processStatusChange($event)" [passedWorkOrderId]="entityData.id"></app-notes-completion-tab></mat-tab>
       </mat-tab-group>
     <!-- end everything whitespace -->
     </div>

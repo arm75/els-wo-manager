@@ -53,11 +53,17 @@ export class WorkOrderCloseComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-            'quickDescription': new FormControl(this.entityData.quickDescription),
             //'status': new FormControl(this.entityData.status),
             'customer': new FormControl(this.entityData.customer),
             'location': new FormControl(this.entityData.location),
+            'assignedUsers': new FormControl(this.entityData.assignedUsers),
+            'quickDescription': new FormControl(this.entityData.quickDescription),
             'description': new FormControl(this.entityData.description),
+            'contactName': new FormControl(this.entityData.contactName),
+            'contactPhoneNumb': new FormControl(this.entityData.contactPhoneNumb),
+            'contactAltPhoneNumb': new FormControl(this.entityData.contactAltPhoneNumb),
+            'notes': new FormControl(this.entityData.notes),
+            'privateNotes': new FormControl(this.entityData.privateNotes),
             'entryInstruct': new FormControl(this.entityData.entryInstruct),
             'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
             'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),

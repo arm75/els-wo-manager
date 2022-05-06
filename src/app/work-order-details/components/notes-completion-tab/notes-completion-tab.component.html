@@ -33,8 +33,8 @@
           <button type="button" class="mat-flat-button wo-button-cancel" (click)="openCancelDialog(entityData.id)">CANCEL Work Order</button>
         </div>
         <div #buttonsStatusPending *ngIf="(entityData.status=='PENDING')">
-          <button type="button" class="mat-flat-button wo-button-cancel" (click)="openCancelDialog(entityData.id)">CANCEL Work Order</button>
           <button type="button" class="mat-flat-button wo-button-reopen" (click)="openReopenDialog(entityData.id)">Re-OPEN Work Order</button>
+          <button type="button" class="mat-flat-button wo-button-cancel" (click)="openCancelDialog(entityData.id)">CANCEL Work Order</button>
         </div>
         <div #buttonsStatusComplete *ngIf="(entityData.status=='COMPLETE')">
           <button type="button" class="mat-flat-button wo-button-close" (click)="openCloseDialog(entityData.id)">CLOSE Work Order</button>

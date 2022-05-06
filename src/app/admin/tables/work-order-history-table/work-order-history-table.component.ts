@@ -19,6 +19,7 @@ import {WorkOrderCancelComponent} from "../../dialogs/work-order-cancel/work-ord
 import {WorkOrderReopenComponent} from "../../dialogs/work-order-reopen/work-order-reopen.component";
 import {WorkOrderRetryComponent} from "../../dialogs/work-order-retry/work-order-retry.component";
 import {WorkOrderDeleteComponent} from "../../dialogs/work-order-delete/work-order-delete.component";
+import {AuthenticationService} from "../../../core/security/authentication.service";
 
 @Component({
   selector: 'app-work-order-history-table',
@@ -26,6 +27,11 @@ import {WorkOrderDeleteComponent} from "../../dialogs/work-order-delete/work-ord
   styleUrls: ['./work-order-history-table.component.css']
 })
 export class WorkOrderHistoryTableComponent implements OnInit {
+
+  loggedInUser!: any;
+  loggedInUsername!: string;
+  loggedInRole!: string;
+  nameToDisplay!: string;
 
   displayedColumns: string[] = ['createdDate', 'id', 'quickDescription', 'customer', 'location', 'status', 'workOrderTotal', 'actions'];
 
@@ -55,8 +61,15 @@ export class WorkOrderHistoryTableComponent implements OnInit {
     private entityService: WorkOrderService,
     private customerService: CustomerService,
     private _liveAnnouncer: LiveAnnouncer,
+    private authenticationService: AuthenticationService,
     private dialog: MatDialog,
   ) {
+
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
+
     this.buildTable();
 
     /////////////////////////////////////////////////////////////////

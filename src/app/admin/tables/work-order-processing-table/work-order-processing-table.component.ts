@@ -15,6 +15,11 @@ import {WorkOrderEditComponent} from "../../dialogs/work-order-edit/work-order-e
 import {WorkOrderCompleteComponent} from "../../dialogs/work-order-complete/work-order-complete.component";
 import {WorkOrderDeleteComponent} from "../../dialogs/work-order-delete/work-order-delete.component";
 import {WorkOrderStatus} from "../../../core/types/work-order-status";
+import {WorkOrderCloseComponent} from "../../dialogs/work-order-close/work-order-close.component";
+import {WorkOrderCancelComponent} from "../../dialogs/work-order-cancel/work-order-cancel.component";
+import {WorkOrderReopenComponent} from "../../dialogs/work-order-reopen/work-order-reopen.component";
+import {WorkOrderRetryComponent} from "../../dialogs/work-order-retry/work-order-retry.component";
+import {AuthenticationService} from "../../../core/security/authentication.service";
 
 @Component({
   selector: 'app-work-order-processing-table',
@@ -22,6 +27,11 @@ import {WorkOrderStatus} from "../../../core/types/work-order-status";
   styleUrls: ['./work-order-processing-table.component.css']
 })
 export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit {
+
+  loggedInUser!: any;
+  loggedInUsername!: string;
+  loggedInRole!: string;
+  nameToDisplay!: string;
 
   displayedColumns: string[] = ['createdDate', 'id', 'quickDescription', 'customer', 'location', 'status', 'workOrderTotal', 'actions'];
 
@@ -51,9 +61,16 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
     private entityService: WorkOrderService,
     private customerService: CustomerService, ///////////////////////////////
     private _liveAnnouncer: LiveAnnouncer,
+    private authenticationService: AuthenticationService,
     private dialog: MatDialog,
     //private spinner: GlobalProgressSpinnerComponent
   ) {
+
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
+
     this.buildTable();
 
     /////////////////////////////////////////////////////////////////
@@ -160,8 +177,7 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
     });
   }
 
-  // opens Complete Work Order box
-  completeDialog( _id: number) {
+  openCompleteDialog( _id: number) {
     const completeDialogConfig = new MatDialogConfig();
     completeDialogConfig.disableClose = true;
     completeDialogConfig.autoFocus = true;
@@ -170,6 +186,58 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
     completeDialogConfig.data = { entityId: _id };
     const completeDialogRef = this.dialog.open(WorkOrderCompleteComponent, completeDialogConfig);
     completeDialogRef.afterClosed().subscribe(completeData => {
+      this.buildTable();
+    });
+  }
+
+  openCloseDialog( _id: number) {
+    const closeDialogConfig = new MatDialogConfig();
+    closeDialogConfig.disableClose = true;
+    closeDialogConfig.autoFocus = true;
+    closeDialogConfig.width = "25%";
+    closeDialogConfig.position = { top:  '0' };
+    closeDialogConfig.data = { entityId: _id };
+    const closeDialogRef = this.dialog.open(WorkOrderCloseComponent, closeDialogConfig);
+    closeDialogRef.afterClosed().subscribe(closeData => {
+      this.buildTable();
+    });
+  }
+
+  openCancelDialog( _id: number) {
+    const cancelDialogConfig = new MatDialogConfig();
+    cancelDialogConfig.disableClose = true;
+    cancelDialogConfig.autoFocus = true;
+    cancelDialogConfig.width = "25%";
+    cancelDialogConfig.position = { top:  '0' };
+    cancelDialogConfig.data = { entityId: _id };
+    const cancelDialogRef = this.dialog.open(WorkOrderCancelComponent, cancelDialogConfig);
+    cancelDialogRef.afterClosed().subscribe(cancelData => {
+      this.buildTable();
+    });
+  }
+
+  openReopenDialog( _id: number) {
+    const reOpenDialogConfig = new MatDialogConfig();
+    reOpenDialogConfig.disableClose = true;
+    reOpenDialogConfig.autoFocus = true;
+    reOpenDialogConfig.width = "25%";
+    reOpenDialogConfig.position = { top:  '0' };
+    reOpenDialogConfig.data = { entityId: _id };
+    const reOpenDialogRef = this.dialog.open(WorkOrderReopenComponent, reOpenDialogConfig);
+    reOpenDialogRef.afterClosed().subscribe(reOpenData => {
+      this.buildTable();
+    });
+  }
+
+  openRetryDialog( _id: number) {
+    const reTryDialogConfig = new MatDialogConfig();
+    reTryDialogConfig.disableClose = true;
+    reTryDialogConfig.autoFocus = true;
+    reTryDialogConfig.width = "25%";
+    reTryDialogConfig.position = { top:  '0' };
+    reTryDialogConfig.data = { entityId: _id };
+    const reTryDialogRef = this.dialog.open(WorkOrderRetryComponent, reTryDialogConfig);
+    reTryDialogRef.afterClosed().subscribe(reTryData => {
       this.buildTable();
     });
   }

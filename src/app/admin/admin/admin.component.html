@@ -14,7 +14,11 @@
   </div>
 
   <div class="row els-admin-tabs">
-    <mat-tab-group mat-stretch-tabs class="admin-tab-group">
+    <mat-tab-group mat-stretch-tabs class="admin-tab-group"
+                   (focusChange)="myTabFocusChange($event)"
+                   (selectedIndexChange)="myTabSelectedIndexChange($event)"
+                   (selectedTabChange)="myTabSelectedTabChange($event)"
+                   (animationDone)="myTabAnimationDone()">
       <mat-tab label="Work Orders">
         <mat-tab-group mat-stretch-tabs class="admin-wo-tab-group">
           <mat-tab label="In-Progess"><app-work-order-table></app-work-order-table></mat-tab>

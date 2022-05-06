@@ -34,7 +34,7 @@ export class SubcontractorCompletionTableComponent implements OnInit {
 
   componentTotal: number = 0;
 
-  displayedColumns: string[] = ['createdDate', 'entityName', 'notes', 'status', 'actions'];
+  displayedColumns: string[] = ['createdDate', 'entityName', 'notes', 'qty', 'status', 'actions'];
   dataSource: any;
 
   @ViewChild(MatTable)
@@ -56,7 +56,8 @@ export class SubcontractorCompletionTableComponent implements OnInit {
     this.loggedInUsername = this.loggedInUser.username;
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
-    if(this.loggedInRole=='ROLE_ADMIN'||this.loggedInRole=='ROLE_SUPER_ADMIN') {
+
+    if((this.loggedInRole=='ROLE_ADMIN')||(this.loggedInRole=='ROLE_SUPER_ADMIN')) {
       this.displayedColumns = ['createdDate', 'entityName', 'notes', 'unitPrice', 'qty', 'totalPrice', 'status', 'actions'];
     }
   }

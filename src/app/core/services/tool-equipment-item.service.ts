@@ -23,16 +23,16 @@ export class ToolEquipmentItemService {
     return this.http.get<ToolEquipmentItem>(`${this.baseUrl}/find/${id}`);
   }
 
-  return(id: any): Observable<ToolEquipmentItem> {
-    return this.http.get<ToolEquipmentItem>(`${this.baseUrl}/return/${id}`);
-  }
-
   create(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/add`, data);
   }
 
   update(data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/update`, data);
+  }
+
+  return(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/return/`, data);
   }
 
   delete(id: any): Observable<any> {

@@ -180,6 +180,8 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
           'contactName': new FormControl({ value: this.entityData.contactName, disabled: true}, [Validators.required]),
           'contactPhoneNumb': new FormControl({ value: this.entityData.contactPhoneNumb, disabled: true}, [Validators.required]),
           'contactAltPhoneNumb': new FormControl({ value: this.entityData.contactAltPhoneNumb, disabled: true}),
+          'notes': new FormControl({ value: this.entityData.notes, disabled: true}),
+          'privateNotes': new FormControl({ value: this.entityData.privateNotes, disabled: true}),
           'entryInstruct': new FormControl({ value: this.entityData.entryInstruct, disabled: true}, [Validators.required]),
           'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
           'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
@@ -276,6 +278,10 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
     this.editFormEditMode = !this.editFormEditMode;
     if(this.editFormEditMode) { this.editForm.enable(); }
     else { this.editForm.disable() }
+  }
+
+  processStatusChange(eventData: number) {
+    this.loadWorkOrderIntoView();
   }
 
   saveWorkOrder() {

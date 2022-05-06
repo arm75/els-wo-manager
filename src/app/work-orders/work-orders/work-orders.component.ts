@@ -9,9 +9,11 @@ import {AuthenticationService} from "../../core/security/authentication.service"
 })
 export class WorkOrdersComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
-  loggedInUser: any;
-  loggedInRole: any;
-  nameToDisplay: any;
+  loggedInUser!: any;
+  loggedInUsername!: string;
+  loggedInRole!: string;
+  nameToDisplay!: string;
+
   dataLoaded = false;
 
   constructor(
@@ -19,11 +21,13 @@ export class WorkOrdersComponent implements OnInit, AfterViewInit, AfterViewChec
     private authenticationService: AuthenticationService
   ) {
     this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    console.table(this.loggedInUser);
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
   }
 
   ngOnInit(): void {
-    this.nameToDisplay = this.loggedInUser?.username;
-    this.loggedInRole = this.loggedInUser?.role;
     this.dataLoaded = true;
   }
 
