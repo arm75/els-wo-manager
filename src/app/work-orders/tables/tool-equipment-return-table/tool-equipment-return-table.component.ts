@@ -6,24 +6,15 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {ToolEquipmentItemService} from "../../../core/services/tool-equipment-item.service";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {
-  ToolEquipmentItemAddComponent
-} from "../../../work-order-details/dialogs/tool-equipment-item-add/tool-equipment-item-add.component";
-import {
-  ToolEquipmentItemEditComponent
-} from "../../../work-order-details/dialogs/tool-equipment-item-edit/tool-equipment-item-edit.component";
-import {
-  ToolEquipmentItemDeleteComponent
-} from "../../../work-order-details/dialogs/tool-equipment-item-delete/tool-equipment-item-delete.component";
-import {
-  ToolEquipmentItemReturnComponent
-} from "../../../work-order-details/dialogs/tool-equipment-item-return/tool-equipment-item-return.component";
+import {ToolEquipmentItemAddComponent} from "../../../work-order-details/dialogs/tool-equipment-item-add/tool-equipment-item-add.component";
+import {ToolEquipmentItemEditComponent} from "../../../work-order-details/dialogs/tool-equipment-item-edit/tool-equipment-item-edit.component";
+import {ToolEquipmentItemDeleteComponent} from "../../../work-order-details/dialogs/tool-equipment-item-delete/tool-equipment-item-delete.component";
+import {ToolEquipmentItemReturnComponent} from "../../../work-order-details/dialogs/tool-equipment-item-return/tool-equipment-item-return.component";
 import {map} from "rxjs/operators";
 import {AuthenticationService} from "../../../core/security/authentication.service";
 import {WorkOrderService} from "../../../core/services/work-order.service";
 import {WorkOrder} from "../../../core/models/work-order";
 import {WorkOrderStatus} from "../../../core/types/work-order-status";
-import {flatMap} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-tool-equipment-return-table',
@@ -37,7 +28,7 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
   loggedInRole!: string;
   nameToDisplay!: string;
 
-  thisUsersWorkOrders!: any;
+  workOrdersToShow!: any;
 
   @Input()
   passedWorkOrderId: any;
@@ -45,8 +36,7 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
   @Output()
   totalChangedEvent: EventEmitter<number> = new EventEmitter();
 
-  componentTotal: number = 0;
-
+  componentTotal!: number;
   displayedColumns: string[] = ['createdDate', 'entityName', 'workOrder', 'notes', 'days', 'status', 'actions'];
   dataSource: any;
   data: any;
@@ -71,98 +61,52 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     this.loggedInUsername = this.loggedInUser.username;
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
-
     if((this.loggedInRole=='ROLE_ADMIN')||(this.loggedInRole=='ROLE_SUPER_ADMIN')) {
       this.displayedColumns = ['createdDate', 'entityName', 'workOrder', 'notes', 'pricePerDay', 'days', 'totalPrice', 'status', 'actions'];
     }
-
-    //  this.buildTable();
   }
 
   ngOnInit() {
-    this.start().finally(() => console.log("start finally"));
+    this.setupComponent().finally(() => console.log("Finished setting up component\n"));
   }
 
-  ngAfterViewInit() {
-    //this.buildTable();
-  }
-
-  async start() {
-    console.log("before the awaits");
-    console.log("before getUsersWorkorders method:");
-    await this.getUsersWorkOrders();
-    console.log("after getUsersWorkorders method:", this.thisUsersWorkOrders);
-    console.log("before buildTable method:");
+  async setupComponent() {
+    // get an array of the IDs, of the work orders to show...
+    await this.getWorkOrdersToShow();
+    // get the table data, but only from the IDs in workOrdersToShow..
     await this.buildTable();
-    console.log("after buildTable method:", this.data);
-    console.log("after the awaits");
+    // sum the items' totals...
+    await this.data.forEach((item: { totalPrice: number; }) => this.componentTotal += item.totalPrice);
+    this.totalChangedEvent.emit(this.componentTotal);
 
-    this.dataSource = new MatTableDataSource(this.data);
     this.sort.active = 'createdDate';
     this.sort.direction = 'desc';
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
   }
 
-  async buildTable() {
-    // this.getUsersWorkOrders();
-    //console.log("thisUsersWorkOrders before: ", this.thisUsersWorkOrders);
-    // this.thisUsersWorkOrders = this.thisUsersWorkOrders.map((data: WorkOrder) => data.id);
-    console.log("before getAll()\n");
-    //this.componentTotal = 0;
-    await this.entityService.getAll()
-      .pipe(map(items =>
-        items.filter(item => ((item.status == "OUT") && (this.thisUsersWorkOrders.includes(item.workOrder.id))))))
-      .toPromise()
-      .then(data => {
-        this.data = data;
-        this.data.forEach((a: { totalPrice: number; }) => this.componentTotal += a.totalPrice);
-        this.totalChangedEvent.emit(this.componentTotal);
-
-      })
-      .finally( () => {
-        console.log("Finally on promise");
-      });
-
-      // .pipe(map(items =>
-      //   items.filter(item => ((item.status == "OUT") && (this.thisUsersWorkOrders.includes(item.workOrder.id))))))
-      // .subscribe(
-      //   data => {
-      //     data.forEach(a => this.componentTotal += a.totalPrice);
-      //     this.totalChangedEvent.emit(this.componentTotal);
-      //     this.dataSource = new MatTableDataSource(data);
-      //     this.sort.active = 'createdDate';
-      //     this.sort.direction = 'desc';
-      //     this.dataSource.sort = this.sort;
-      //     this.dataSource.paginator = this.paginator;
-      //   },
-      //   error => { },
-      //   async () => { await this.testCompleteMethod() }
-      //   ).toPromise
-    console.log("RIGHT AFTER getAll, outside");
-  }
-
-  testCompleteMethod() {
-    console.log("complete method:");
-  }
-
-
-  async getUsersWorkOrders() {
-    // get the user's work orders
+  async getWorkOrdersToShow() {
+    // get the user's open and pending work orders, and map them to an array of those work orders' id's
     await this.workOrderService.getAll()
-      .pipe(map(items =>
-        items.filter(item => ((
-            (item.status == WorkOrderStatus.OPEN) ||
-            (item.status == WorkOrderStatus.PENDING)) &&
+      .pipe(map((items: WorkOrder[]) => items.filter(
+        (item: WorkOrder) => ((
+          (item.status == WorkOrderStatus.OPEN) ||
+          (item.status == WorkOrderStatus.PENDING)) &&
           (item.assignedUsers.map((thisUser) => thisUser.username)).includes(this.loggedInUsername) ))
       ))
+      .pipe(map((items: WorkOrder[]) => items.map((item: WorkOrder) => item.id)))
       .toPromise()
-      .then(data => {
-        this.thisUsersWorkOrders = data; });
-      // .subscribe(
-      //   data => { this.thisUsersWorkOrders = data; },
-      //   error => { },
-      //   () => { console.log("complete method:", this.thisUsersWorkOrders); });
+      .then(data => { this.workOrdersToShow = data });
+  }
+
+  async buildTable() {
+    this.componentTotal = 0;
+    await this.entityService.getAll()
+      .pipe(map(items =>
+        items.filter(item => ((item.status == "OUT") && (this.workOrdersToShow.includes(item.workOrder.id))))))
+      .toPromise()
+      .then(data => { this.data = data })
+      .finally(() => { this.dataSource = new MatTableDataSource(this.data) });
   }
 
   applyFilter(event: Event) {
@@ -170,7 +114,6 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
   }
 
-  // opens Dialog box
   openAddDialog() {
     const addDialogConfig = new MatDialogConfig();
     addDialogConfig.disableClose = true;
@@ -184,7 +127,6 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     });
   }
 
-  // opens Dialog box
   openEditDialog( _id: number) {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
@@ -211,7 +153,6 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     });
   }
 
-  // opens Dialog box
   openDeleteDialog( _id: number) {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
@@ -224,19 +165,5 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
       this.buildTable();
     });
   }
-
-  /** Announce the change in sort state for assistive technology. */
-  // announceSortChange(sortState: Sort) {
-  //   // This example uses English messages. If your application supports
-  //   // multiple language, you would internationalize these strings.
-  //   // Furthermore, you can customize the message to add additional
-  //   // details about the values being sorted.
-  //   if (sortState.direction) {
-  //     this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-  //   } else {
-  //     this._liveAnnouncer.announce('Sorting cleared');
-  //   }
-  //  }
-
 
 }

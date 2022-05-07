@@ -5,21 +5,21 @@
   <span class="example-fill-remaining-space"></span>
 </div>
 <div class="mat-elevation-z0">
-  <table #entityTable mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="mat-elevation-z0">
+  <table #entityTable mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
     <!-- createdDate -->
     <ng-container matColumnDef="createdDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Created Date">Created Date</th>
       <td mat-cell *matCellDef="let element">{{element.createdDate|date:'MMM d, y, h:mm a'}}</td>
     </ng-container>
-    <!-- updatedDate -->
-    <!--    <ng-container matColumnDef="updatedDate">-->
-    <!--      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Updated Date">Updated Date</th>-->
-    <!--      <td mat-cell *matCellDef="let element">{{element.updatedDate|date:'MMM d, y, h:mm a'}}</td>-->
-    <!--    </ng-container>-->
     <!-- entityName -->
     <ng-container matColumnDef="entityName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Subcontractor Name">Subcontractor Name</th>
       <td mat-cell *matCellDef="let element">{{element.entityName}}</td>
+    </ng-container>
+    <!-- workOrder -->
+    <ng-container matColumnDef="workOrder">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Work Order">Work Order</th>
+      <td mat-cell *matCellDef="let element"><a [routerLink]="['/workOrderDetails', element.workOrder.id]">{{element.workOrder.id}}</a></td>
     </ng-container>
     <!-- notes -->
     <ng-container matColumnDef="notes">

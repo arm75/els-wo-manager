@@ -12,6 +12,9 @@ import {SubcontractorItemAddComponent} from "../../../work-order-details/dialogs
 import {SubcontractorItemEditComponent} from "../../../work-order-details/dialogs/subcontractor-item-edit/subcontractor-item-edit.component";
 import {SubcontractorItemCompleteComponent} from "../../../work-order-details/dialogs/subcontractor-item-complete/subcontractor-item-complete.component";
 import {SubcontractorItemDeleteComponent} from "../../../work-order-details/dialogs/subcontractor-item-delete/subcontractor-item-delete.component";
+import {WorkOrder} from "../../../core/models/work-order";
+import {WorkOrderStatus} from "../../../core/types/work-order-status";
+import {WorkOrderService} from "../../../core/services/work-order.service";
 
 
 @Component({
@@ -26,6 +29,8 @@ export class SubcontractorCompletionTableComponent implements OnInit {
   loggedInRole!: string;
   nameToDisplay!: string;
 
+  workOrdersToShow!: any;
+
   @Input()
   passedWorkOrderId: any;
 
@@ -34,8 +39,9 @@ export class SubcontractorCompletionTableComponent implements OnInit {
 
   componentTotal: number = 0;
 
-  displayedColumns: string[] = ['createdDate', 'entityName', 'notes', 'qty', 'status', 'actions'];
+  displayedColumns: string[] = ['createdDate', 'entityName', 'workOrder', 'notes', 'qty', 'status', 'actions'];
   dataSource: any;
+  data: any;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<SubcontractorItem>;
@@ -48,6 +54,7 @@ export class SubcontractorCompletionTableComponent implements OnInit {
 
   constructor(
     private entityService: SubcontractorItemService,
+    private workOrderService: WorkOrderService,
     private _liveAnnouncer: LiveAnnouncer,
     private authenticationService: AuthenticationService,
     private dialog: MatDialog
@@ -58,30 +65,50 @@ export class SubcontractorCompletionTableComponent implements OnInit {
     this.nameToDisplay = this.loggedInUser!.firstName;
 
     if((this.loggedInRole=='ROLE_ADMIN')||(this.loggedInRole=='ROLE_SUPER_ADMIN')) {
-      this.displayedColumns = ['createdDate', 'entityName', 'notes', 'unitPrice', 'qty', 'totalPrice', 'status', 'actions'];
+      this.displayedColumns = ['createdDate', 'entityName', 'workOrder', 'notes', 'unitPrice', 'qty', 'totalPrice', 'status', 'actions'];
     }
   }
 
-  ngOnInit() { }
-
-  ngAfterViewInit() {
-    this.buildTable();
+  ngOnInit() {
+    this.setupComponent().finally(() => console.log("Finished setting up component\n"));
   }
 
-  buildTable() {
+  async setupComponent() {
+    // get an array of the IDs, of the work orders to show...
+    await this.getWorkOrdersToShow();
+    // get the table data, but only from the IDs in workOrdersToShow..
+    await this.buildTable();
+    // sum the items' totals...
+    await this.data.forEach((item: { totalPrice: number; }) => this.componentTotal += item.totalPrice);
+    this.totalChangedEvent.emit(this.componentTotal);
+    this.sort.active = 'createdDate';
+    this.sort.direction = 'desc';
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  async getWorkOrdersToShow() {
+    // get the user's open and pending work orders, and map them to an array of those work orders' id's
+    await this.workOrderService.getAll()
+      .pipe(map((items: WorkOrder[]) => items.filter(
+        (item: WorkOrder) => ((
+          (item.status == WorkOrderStatus.OPEN) ||
+          (item.status == WorkOrderStatus.PENDING)) &&
+          (item.assignedUsers.map((thisUser) => thisUser.username)).includes(this.loggedInUsername) ))
+      ))
+      .pipe(map((items: WorkOrder[]) => items.map((item: WorkOrder) => item.id)))
+      .toPromise()
+      .then(data => { this.workOrdersToShow = data });
+  }
+
+  async buildTable() {
     this.componentTotal = 0;
-    this.entityService.getAll()
+    await this.entityService.getAll()
       .pipe(map(items =>
-        items.filter(item => (item.status == "ACTIVE"))))
-      .subscribe(data => {
-        data.forEach(a => this.componentTotal += a.totalPrice);
-        this.totalChangedEvent.emit(this.componentTotal);
-        this.dataSource = new MatTableDataSource(data);
-        this.sort.active = 'createdDate';
-        this.sort.direction = 'desc';
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-      })
+        items.filter(item => ((item.status == "ACTIVE") && (this.workOrdersToShow.includes(item.workOrder.id))))))
+      .toPromise()
+      .then(data => { this.data = data })
+      .finally(() => { this.dataSource = new MatTableDataSource(this.data) });
   }
 
   applyFilter(event: Event) {
@@ -139,19 +166,6 @@ export class SubcontractorCompletionTableComponent implements OnInit {
     deleteDialogRef.afterClosed().subscribe(deleteData => {
       this.buildTable();
     });
-  }
-
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
   }
 
 }
