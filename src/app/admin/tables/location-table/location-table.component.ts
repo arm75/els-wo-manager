@@ -1,16 +1,6 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  ViewChild,
-  AfterViewChecked,
-  OnChanges,
-  DoCheck,
-  AfterContentInit, AfterContentChecked, OnDestroy
-} from '@angular/core';
-import { LiveAnnouncer } from "@angular/cdk/a11y";
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { MatTable, MatTableDataSource } from "@angular/material/table";
-import { MatSort, Sort } from "@angular/material/sort";
+import { MatSort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
 import { LocationService } from "../../../core/services/location.service";
 import { Location } from "../../../core/models/location";
@@ -18,20 +8,24 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { LocationAddComponent } from "../../dialogs/location-add/location-add.component";
 import { LocationEditComponent } from "../../dialogs/location-edit/location-edit.component";
 import { LocationDeleteComponent } from "../../dialogs/location-delete/location-delete.component";
+import {AuthenticationService} from "../../../core/security/authentication.service";
 
 @Component({
   selector: 'app-location-table',
   templateUrl: './location-table.component.html',
   styleUrls: ['./location-table.component.css']
 })
-export class LocationTableComponent implements OnChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy {
-//export class LocationTableComponent implements OnChanges, OnInit, AfterViewInit {
+export class LocationTableComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'entityName', 'customer', 'actions'];
+  loggedInUser: any;
+  loggedInUsername: any;
+  loggedInRole: any;
+  nameToDisplay: any;
 
+  displayedColumns: any;
   dataSource: any;
-
-  logNg: boolean = false;
+  data: any;
+  filter: any;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<Location>;
@@ -44,77 +38,65 @@ export class LocationTableComponent implements OnChanges, OnInit, DoCheck, After
 
   constructor(
     private entityService: LocationService,
-    private _liveAnnouncer: LiveAnnouncer,
+    private authenticationService: AuthenticationService,
     private dialog: MatDialog
   ) {
-    if (this.logNg) { console.log("Constructor ran.\n") }
-    this.buildTable();
-  }
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
 
-  ngOnChanges() {
-    if (this.logNg) { console.log("ngOnChanges ran.\n") }
+    this.displayedColumns = ['id', 'entityName', 'customer', 'actions'];
   }
 
   ngOnInit() {
-    if (this.logNg) { console.log("ngOnInit ran.\n") }
+    this.setupComponent().finally(() => {});
   }
 
-  ngDoCheck() {
-    if (this.logNg) { console.log("ngDoCheck ran.\n") }
+  async setupComponent() {
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.configTable();
   }
 
-  ngAfterContentInit() {
-    if (this.logNg) { console.log("ngAfterContentInit ran.\n") }
+  async buildTable() {
+    await this.entityService.getAll()
+      .toPromise()
+      .then(data => { this.data = data })
+      .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
   }
 
-  ngAfterContentChecked() {
-    if (this.logNg) { console.log("ngAfterContentChecked ran.\n") }
-  }
-
-  ngAfterViewInit() {
-    if (this.logNg) { console.log("ngAfterViewInit ran.\n") }
-    this.buildTable();
-  }
-
-  ngAfterViewChecked() {
-    if (this.logNg) { console.log("ngAfterViewChecked ran.\n") }
-  }
-
-  ngOnDestroy() {
-    if (this.logNg) { console.log("ngOnDestroy ran.\n") }
-  }
-
-  buildTable() {
-    this.entityService.getAll().subscribe(data => {
-      //console.log(data);
-      this.dataSource = new MatTableDataSource(data);
-      this.sort.active = 'id';
-      this.sort.direction = 'desc';
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-    })
+  async configTable() {
+    this.sort.active = 'id';
+    this.sort.direction = 'desc';
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
   }
 
   applyFilter(event: Event) {
     const filterTarget = (event.target as HTMLInputElement).value;
-    if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
+    if (filterTarget == '') { this.clearFilter(); }
+    if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase(); }
   }
 
-  // opens Dialog box
-  openAddDialog() {
+  clearFilter() {
+    this.dataSource.filter = '';
+    this.filter = '';
+  }
+
+  async openAddDialog() {
     const addDialogConfig = new MatDialogConfig();
     addDialogConfig.disableClose = true;
     addDialogConfig.autoFocus = true;
     addDialogConfig.width = "40%";
     addDialogConfig.position = { top:  '0' };
     const addDialogRef = this.dialog.open(LocationAddComponent, addDialogConfig);
-    addDialogRef.afterClosed().subscribe(addData => {
-      this.buildTable();
-    });
+    await addDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  // opens Dialog box
-  openEditDialog( _id: number) {
+  async openEditDialog( _id: number) {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
     editDialogConfig.autoFocus = true;
@@ -122,13 +104,11 @@ export class LocationTableComponent implements OnChanges, OnInit, DoCheck, After
     editDialogConfig.position = { top:  '0' };
     editDialogConfig.data = { entityId: _id };
     const editDialogRef = this.dialog.open(LocationEditComponent, editDialogConfig);
-    editDialogRef.afterClosed().subscribe(editData => {
-      this.buildTable();
-    });
+    await editDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  // opens Dialog box
-  openDeleteDialog( _id: number) {
+  async openDeleteDialog( _id: number) {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
     deleteDialogConfig.autoFocus = true;
@@ -136,22 +116,8 @@ export class LocationTableComponent implements OnChanges, OnInit, DoCheck, After
     deleteDialogConfig.position = { top:  '0' };
     deleteDialogConfig.data = { entityId: _id };
     const deleteDialogRef = this.dialog.open(LocationDeleteComponent, deleteDialogConfig);
-    deleteDialogRef.afterClosed().subscribe(deleteData => {
-      this.buildTable();
-    });
+    await deleteDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
 }
-

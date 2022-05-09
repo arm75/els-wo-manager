@@ -1,15 +1,15 @@
 <mat-drawer-container class="" autosize>
   <mat-drawer-content>
-    <button mat-icon-button aria-label="Toggle Sidebar" (click)="sideDrawer.toggle()">
-      <mat-icon>output</mat-icon>
-    </button>
+<!--    <button mat-icon-button aria-label="Toggle Sidebar" (click)="sideDrawer.toggle()">-->
+<!--      <mat-icon>output</mat-icon>-->
+<!--    </button>-->
     <app-inventory-table [filterGroupId]="filterGroupId"></app-inventory-table>
   </mat-drawer-content>
   <mat-drawer #sideDrawer class="example-sidenav" mode="side" opened>
     <div class="add-group-button">
     <button class="mat-flat-button mat-primary work-order-table-add-button">Add Group</button>
     </div>
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
+    <mat-tree #tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
       <!-- This is the tree node template for leaf nodes -->
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
         <mat-icon aria-hidden="false" aria-label="Example home icon">folder</mat-icon>

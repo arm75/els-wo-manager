@@ -60,7 +60,6 @@ import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {AuthInterceptor} from "../core/security/auth.interceptor";
 import { WorkOrderCompleteComponent } from './dialogs/work-order-complete/work-order-complete.component';
 import { WorkOrderCloseComponent } from './dialogs/work-order-close/work-order-close.component';
-import { ProcessingTableComponent } from './tables/processing-table/processing-table.component';
 import { WorkOrderCancelComponent } from './dialogs/work-order-cancel/work-order-cancel.component';
 import { WorkOrderRetryComponent } from './dialogs/work-order-retry/work-order-retry.component';
 import { MatTableTestComponent } from './admin/mat-table-test/mat-table-test.component';
@@ -131,7 +130,6 @@ const maskConfig: Partial<IConfig> = {
     AdminModuleDialogComponents,
     WorkOrderCompleteComponent,
     WorkOrderCloseComponent,
-    ProcessingTableComponent,
     WorkOrderCancelComponent,
     WorkOrderRetryComponent,
     MatTableTestComponent,

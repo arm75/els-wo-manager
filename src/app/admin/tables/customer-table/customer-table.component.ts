@@ -1,5 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { LiveAnnouncer } from "@angular/cdk/a11y";
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
@@ -9,17 +8,24 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { CustomerAddComponent } from "../../dialogs/customer-add/customer-add.component";
 import { CustomerEditComponent } from "../../dialogs/customer-edit/customer-edit.component";
 import { CustomerDeleteComponent } from "../../dialogs/customer-delete/customer-delete.component";
+import {AuthenticationService} from "../../../core/security/authentication.service";
 
 @Component({
   selector: 'app-customer-table',
   templateUrl: './customer-table.component.html',
   styleUrls: ['./customer-table.component.css']
 })
-export class CustomerTableComponent implements OnInit, AfterViewInit {
+export class CustomerTableComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'entityName', 'phoneNumb', 'emailAddress', 'actions'];
+  loggedInUser: any;
+  loggedInUsername: any;
+  loggedInRole: any;
+  nameToDisplay: any;
 
+  displayedColumns: any;
   dataSource: any;
+  data: any;
+  filter: any;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<Customer>;
@@ -32,50 +38,65 @@ export class CustomerTableComponent implements OnInit, AfterViewInit {
 
   constructor(
     private entityService: CustomerService,
-    private _liveAnnouncer: LiveAnnouncer,
+    private authenticationService: AuthenticationService,
     private dialog: MatDialog
   ) {
-    this.buildTable();
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
+
+    this.displayedColumns = ['id', 'entityName', 'phoneNumb', 'emailAddress', 'actions'];
   }
 
-  async ngOnInit() {
+  ngOnInit() {
+    this.setupComponent().finally(() => {});
+  }
+
+  async setupComponent() {
+    // get the table..
     await this.buildTable();
-
+    // configure table
+    await this.configTable();
   }
 
-  async ngAfterViewInit() {
+   async buildTable() {
+     await this.entityService.getAll()
+       .toPromise()
+       .then(data => { this.data = data })
+       .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
   }
 
-   buildTable() {
-     this.entityService.getAll().subscribe(data => {
-       this.dataSource = new MatTableDataSource(data);
-       this.sort.active = 'id';
-       this.sort.direction = 'desc';
-       this.dataSource.sort = this.sort;
-       this.dataSource.paginator = this.paginator;
-     })
+  async configTable() {
+    this.sort.active = 'id';
+    this.sort.direction = 'desc';
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
   }
 
   applyFilter(event: Event) {
     const filterTarget = (event.target as HTMLInputElement).value;
-    if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
+    if (filterTarget == '') { this.clearFilter(); }
+    if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase(); }
   }
 
-  // opens Dialog box
-  openAddDialog() {
+  clearFilter() {
+    this.dataSource.filter = '';
+    this.filter = '';
+  }
+
+  async openAddDialog() {
     const addDialogConfig = new MatDialogConfig();
     addDialogConfig.disableClose = true;
     addDialogConfig.autoFocus = true;
     addDialogConfig.width = "40%";
     addDialogConfig.position = { top:  '0' };
     const addDialogRef = this.dialog.open(CustomerAddComponent, addDialogConfig);
-    addDialogRef.afterClosed().subscribe(addData => {
-      this.buildTable();
-    });
+    await addDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  // opens Dialog box
-  openEditDialog( _id: number) {
+  async openEditDialog( _id: number) {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
     editDialogConfig.autoFocus = true;
@@ -83,13 +104,11 @@ export class CustomerTableComponent implements OnInit, AfterViewInit {
     editDialogConfig.position = { top:  '0' };
     editDialogConfig.data = { entityId: _id };
     const editDialogRef = this.dialog.open(CustomerEditComponent, editDialogConfig);
-    editDialogRef.afterClosed().subscribe(editData => {
-      this.buildTable();
-    });
+    await editDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  // opens Dialog box
-  openDeleteDialog( _id: number) {
+  async openDeleteDialog( _id: number) {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
     deleteDialogConfig.autoFocus = true;
@@ -97,9 +116,8 @@ export class CustomerTableComponent implements OnInit, AfterViewInit {
     deleteDialogConfig.position = { top:  '0' };
     deleteDialogConfig.data = { entityId: _id };
     const deleteDialogRef = this.dialog.open(CustomerDeleteComponent, deleteDialogConfig);
-    deleteDialogRef.afterClosed().subscribe(deleteData => {
-      this.buildTable();
-    });
+    await deleteDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
 }

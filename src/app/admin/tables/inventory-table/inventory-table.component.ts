@@ -1,5 +1,4 @@
 import {Component, OnInit, AfterViewInit, ViewChild, Input, OnChanges} from '@angular/core';
-import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
@@ -10,17 +9,24 @@ import { InventoryAddComponent } from "../../dialogs/inventory-add/inventory-add
 import { InventoryEditComponent } from "../../dialogs/inventory-edit/inventory-edit.component";
 import { InventoryDeleteComponent } from "../../dialogs/inventory-delete/inventory-delete.component";
 import {map} from "rxjs/operators";
+import {AuthenticationService} from "../../../core/security/authentication.service";
 
 @Component({
   selector: 'app-inventory-table',
   templateUrl: './inventory-table.component.html',
   styleUrls: ['./inventory-table.component.css']
 })
-export class InventoryTableComponent implements OnInit, OnChanges, AfterViewInit {
+export class InventoryTableComponent implements OnInit, OnChanges {
 
-  displayedColumns: string[] = ['id', 'entityName', 'inventoryGroup', 'totalInStock', 'unitCost', 'unitPrice', 'actions'];
+  loggedInUser: any;
+  loggedInUsername: any;
+  loggedInRole: any;
+  nameToDisplay: any;
 
+  displayedColumns: any;
   dataSource: any;
+  data: any;
+  filter: any;
 
   @Input()
   filterGroupId: number = 0;
@@ -36,15 +42,18 @@ export class InventoryTableComponent implements OnInit, OnChanges, AfterViewInit
 
   constructor(
     private entityService: InventoryService,
-    private _liveAnnouncer: LiveAnnouncer,
+    private authenticationService: AuthenticationService,
     private dialog: MatDialog
   ) {
-    this.buildTable();
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
+
+    this.displayedColumns = ['id', 'entityName', 'inventoryGroup', 'totalInStock', 'unitCost', 'unitPrice', 'actions'];
   }
 
-  ngOnInit() { }
-
-  ngAfterViewInit() {
+  ngOnInit() {
     this.buildTable();
   }
 
@@ -52,9 +61,8 @@ export class InventoryTableComponent implements OnInit, OnChanges, AfterViewInit
     this.filterTable();
   }
 
- buildTable() {
-    this.entityService.getAll().subscribe(data => {
-      // console.log(data);
+  async buildTable() {
+    await this.entityService.getAll().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
       this.sort.active = 'id';
       this.sort.direction = 'desc';
@@ -62,7 +70,6 @@ export class InventoryTableComponent implements OnInit, OnChanges, AfterViewInit
       this.dataSource.paginator = this.paginator;
     })
   }
-
 
   filterTable() {
     switch(this.filterGroupId) {
@@ -91,27 +98,28 @@ export class InventoryTableComponent implements OnInit, OnChanges, AfterViewInit
     }
   }
 
-
   applyFilter(event: Event) {
     const filterTarget = (event.target as HTMLInputElement).value;
-    if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
+    if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase(); }
   }
 
-  // opens Dialog box
-  openAddDialog() {
+  clearFilter() {
+    this.dataSource.filter = '';
+    this.filter = '';
+  }
+
+  async openAddDialog() {
     const addDialogConfig = new MatDialogConfig();
     addDialogConfig.disableClose = true;
     addDialogConfig.autoFocus = true;
     addDialogConfig.width = "40%";
     addDialogConfig.position = { top:  '0' };
     const addDialogRef = this.dialog.open(InventoryAddComponent, addDialogConfig);
-    addDialogRef.afterClosed().subscribe(addData => {
-      this.buildTable();
-    });
+    await addDialogRef.afterClosed().toPromise()
+      .finally( () => { this.buildTable(); });
   }
 
-  // opens Dialog box
-  openEditDialog( _id: number) {
+  async openEditDialog( _id: number) {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
     editDialogConfig.autoFocus = true;
@@ -119,13 +127,11 @@ export class InventoryTableComponent implements OnInit, OnChanges, AfterViewInit
     editDialogConfig.position = { top:  '0' };
     editDialogConfig.data = { entityId: _id };
     const editDialogRef = this.dialog.open(InventoryEditComponent, editDialogConfig);
-    editDialogRef.afterClosed().subscribe(editData => {
-      this.buildTable();
-    });
+    await editDialogRef.afterClosed().toPromise()
+      .finally( () => { this.buildTable(); });
   }
 
-  // opens Dialog box
-  openDeleteDialog( _id: number) {
+  async openDeleteDialog( _id: number) {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
     deleteDialogConfig.autoFocus = true;
@@ -133,22 +139,8 @@ export class InventoryTableComponent implements OnInit, OnChanges, AfterViewInit
     deleteDialogConfig.position = { top:  '0' };
     deleteDialogConfig.data = { entityId: _id };
     const deleteDialogRef = this.dialog.open(InventoryDeleteComponent, deleteDialogConfig);
-    deleteDialogRef.afterClosed().subscribe(deleteData => {
-      this.buildTable();
-    });
+    await deleteDialogRef.afterClosed().toPromise()
+      .finally( () => { this.buildTable(); });
   }
 
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
 }
-

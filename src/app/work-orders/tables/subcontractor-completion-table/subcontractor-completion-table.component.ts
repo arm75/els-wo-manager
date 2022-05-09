@@ -15,7 +15,7 @@ import {SubcontractorItemDeleteComponent} from "../../../work-order-details/dial
 import {WorkOrder} from "../../../core/models/work-order";
 import {WorkOrderStatus} from "../../../core/types/work-order-status";
 import {WorkOrderService} from "../../../core/services/work-order.service";
-
+import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
   selector: 'app-subcontractor-completion-table',
@@ -24,24 +24,26 @@ import {WorkOrderService} from "../../../core/services/work-order.service";
 })
 export class SubcontractorCompletionTableComponent implements OnInit {
 
-  loggedInUser!: any;
-  loggedInUsername!: string;
-  loggedInRole!: string;
-  nameToDisplay!: string;
+  loggedInUser: any;
+  loggedInUsername: any;
+  loggedInRole: any;
+  nameToDisplay: any;
 
-  workOrdersToShow!: any;
+  dataSource: any;
+  data: any;
+  workOrdersToShow: any;
+  componentTotal: any;
+  displayedColumns: any;
+
+  rightNow = Date.now();
+  oneWeeks: number = 604800000;
+  twoWeeks: number = 1209600000;
 
   @Input()
   passedWorkOrderId: any;
 
   @Output()
   totalChangedEvent: EventEmitter<number> = new EventEmitter();
-
-  componentTotal: number = 0;
-
-  displayedColumns: string[] = ['createdDate', 'entityName', 'workOrder', 'notes', 'qty', 'status', 'actions'];
-  dataSource: any;
-  data: any;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<SubcontractorItem>;
@@ -55,7 +57,6 @@ export class SubcontractorCompletionTableComponent implements OnInit {
   constructor(
     private entityService: SubcontractorItemService,
     private workOrderService: WorkOrderService,
-    private _liveAnnouncer: LiveAnnouncer,
     private authenticationService: AuthenticationService,
     private dialog: MatDialog
   ) {
@@ -64,6 +65,7 @@ export class SubcontractorCompletionTableComponent implements OnInit {
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
+    this.displayedColumns = ['createdDate', 'entityName', 'workOrder', 'notes', 'qty', 'status', 'actions'];
     if((this.loggedInRole=='ROLE_ADMIN')||(this.loggedInRole=='ROLE_SUPER_ADMIN')) {
       this.displayedColumns = ['createdDate', 'entityName', 'workOrder', 'notes', 'unitPrice', 'qty', 'totalPrice', 'status', 'actions'];
     }
@@ -114,6 +116,14 @@ export class SubcontractorCompletionTableComponent implements OnInit {
   applyFilter(event: Event) {
     const filterTarget = (event.target as HTMLInputElement).value;
     if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
+  }
+
+  getRowAgeColor(datePassed: any) {
+    let dateToCompare = Date.parse(datePassed);
+    let time = this.rightNow - dateToCompare;
+    if((time >= this.oneWeeks)&&(time < this.twoWeeks)) { return 'is-orange'; }
+    if(time >= this.twoWeeks) { return 'is-red'; }
+    return;
   }
 
   openAddDialog() {

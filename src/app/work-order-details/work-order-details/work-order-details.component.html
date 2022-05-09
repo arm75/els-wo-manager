@@ -112,7 +112,7 @@
               <p>
                 <mat-form-field class="width-99 els-form-fields-second-column" appearance="outline">
                   <mat-label>Quick Description</mat-label>
-                  <input matInput autocomplete="off" formControlName="quickDescription">
+                  <input type="text" matInput autocomplete="off" formControlName="quickDescription">
                   <mat-error *ngIf="editForm.controls['quickDescription'].hasError('required')">
                     Quick Description is required
                   </mat-error>
@@ -121,7 +121,7 @@
               <p>
                 <mat-form-field class="example-full-width width-99 els-form-fields-second-column" appearance="outline">
                   <mat-label>Description</mat-label>
-                  <textarea matInput autocomplete="off" class="description-box" value="" formControlName="description"></textarea>
+                  <textarea type="text" matInput autocomplete="off" class="description-box" formControlName="description"></textarea>
                 </mat-form-field>
               </p>
             </div>
@@ -129,7 +129,7 @@
               <p>
                 <mat-form-field class="width-99 els-form-fields-third-column" appearance="outline">
                   <mat-label>Contact Name</mat-label>
-                  <input matInput autocomplete="off" formControlName="contactName">
+                  <input type="text" matInput autocomplete="off" formControlName="contactName">
                   <mat-error *ngIf="editForm.controls['contactName'].hasError('required')">
                     Contact Name is required
                   </mat-error>
@@ -138,20 +138,20 @@
               <p>
                 <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
                   <mat-label>Contact Phone Number</mat-label>
-                  <input matInput autocomplete="off" mask="(000)000-0000" formControlName="contactPhoneNumb">
+                  <input type="text" matInput autocomplete="off" mask="(000)000-0000" formControlName="contactPhoneNumb">
                   <mat-error *ngIf="editForm.controls['contactPhoneNumb'].hasError('required')">
                     Contact Phone Number is required
                   </mat-error>
                 </mat-form-field>
                 <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
-                  <mat-label>Customer Alt Phone NUmber</mat-label>
-                  <input matInput autocomplete="off" mask="(000)000-0000" formControlName="contactAltPhoneNumb">
+                  <mat-label>Contact Alt Phone NUmber</mat-label>
+                  <input type="text" matInput autocomplete="off" mask="(000)000-0000" formControlName="contactAltPhoneNumb">
                 </mat-form-field>
               </p>
               <p>
-                <mat-form-field class="example-full-width width-99 els-form-fields-third-column" appearance="outline">
+                <mat-form-field class="width-99 els-form-fields-third-column" appearance="outline">
                   <mat-label>Entry Instructions</mat-label>
-                  <textarea matInput autocomplete="off" class="description-box" value="" formControlName="entryInstruct"></textarea>
+                  <textarea type="text" matInput autocomplete="off" class="description-box" formControlName="entryInstruct"></textarea>
                   <mat-error *ngIf="editForm.controls['entryInstruct'].hasError('required')">
                     Entry Instructions is required
                   </mat-error>
@@ -219,11 +219,11 @@
   <!-- end top -->
   </div>
 
-  <!-- print template -->
-  <app-print-template [passedWorkOrder]="entityData" ></app-print-template>
-
-  <!-- global spinner -->
-  <app-global-progress-spinner *ngIf="spinning"></app-global-progress-spinner>
-
 <!-- end ngIf dataLoaded -->
 </div>
+
+<!-- print template -->
+<app-print-template *ngIf="dataLoaded" [passedWOId]="entityData.id"></app-print-template>
+
+<!-- global spinner -->
+<app-global-progress-spinner *ngIf="spinning"></app-global-progress-spinner>

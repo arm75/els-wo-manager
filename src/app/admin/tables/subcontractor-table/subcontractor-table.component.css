@@ -26,3 +26,7 @@ button.subcontractor-table-edit-button, button.subcontractor-table-delete-button
 .example-fill-remaining-space {
   flex: 1 1 auto;
 }
+
+.reset-button {
+  margin-left: 20px;
+}

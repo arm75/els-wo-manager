@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {WorkOrder} from "../../../../core/models/work-order";
+import {WorkOrderService} from "../../../../core/services/work-order.service";
 
 @Component({
   selector: 'app-print-template',
@@ -8,12 +9,26 @@ import {WorkOrder} from "../../../../core/models/work-order";
 })
 export class PrintTemplateComponent implements OnInit {
 
-  @Input()
+  data: any;
   passedWorkOrder!: WorkOrder;
+  dataLoaded: boolean = false;
 
-  constructor() { }
+  @Input()
+  passedWOId: any;
 
-  ngOnInit(): void {
+  constructor(
+    private entityService: WorkOrderService
+  ) { }
+
+  ngOnInit() {
+    this.setupComponent().finally(() => {});
+  }
+
+  async setupComponent() {
+    await this.entityService.get(this.passedWOId)
+      .toPromise()
+      .then(data => { this.passedWorkOrder = data; })
+      .finally(() => { this.dataLoaded = true; });
   }
 
 }

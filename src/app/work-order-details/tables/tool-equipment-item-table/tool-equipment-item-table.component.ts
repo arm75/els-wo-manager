@@ -1,5 +1,4 @@
 import {Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter} from '@angular/core';
-import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
@@ -11,24 +10,30 @@ import { ToolEquipmentItemEditComponent } from "../../dialogs/tool-equipment-ite
 import { ToolEquipmentItemDeleteComponent } from "../../dialogs/tool-equipment-item-delete/tool-equipment-item-delete.component";
 import {map} from "rxjs/operators";
 import {ToolEquipmentItemReturnComponent} from "../../dialogs/tool-equipment-item-return/tool-equipment-item-return.component";
+import {AuthenticationService} from "../../../core/security/authentication.service";
 
 @Component({
   selector: 'app-tool-equipment-item-table',
   templateUrl: './tool-equipment-item-table.component.html',
   styleUrls: ['./tool-equipment-item-table.component.css']
 })
-export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
+export class ToolEquipmentItemTableComponent implements OnInit {
+
+  loggedInUser: any;
+  loggedInUsername: any;
+  loggedInRole: any;
+  nameToDisplay: any;
+
+  componentTotal: any;
+  displayedColumns: any;
+  dataSource: any;
+  data: any;
 
   @Input()
   passedWorkOrderId: any;
 
   @Output()
   totalChangedEvent: EventEmitter<number> = new EventEmitter();
-
-  componentTotal: number = 0;
-
-  displayedColumns: string[] = ['createdDate', 'entityName', 'notes', 'pricePerDay', 'days', 'totalPrice', 'status', 'actions'];
-  dataSource: any;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<ToolEquipmentItem>;
@@ -41,39 +46,48 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
 
   constructor(
     private entityService: ToolEquipmentItemService,
-    private _liveAnnouncer: LiveAnnouncer,
+    private authenticationService: AuthenticationService,
     private dialog: MatDialog
   ) {
-    //  this.buildTable();
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
+
+    this.componentTotal = 0;
+    this.displayedColumns = ['createdDate', 'entityName', 'notes', 'days', 'status', 'actions'];
+    if(this.loggedInRole=='ROLE_ADMIN'||this.loggedInRole=='ROLE_SUPER_ADMIN') {
+      this.displayedColumns = ['createdDate', 'entityName', 'notes', 'pricePerDay', 'days', 'totalPrice', 'status', 'actions'];
+    }
   }
 
-  ngOnInit() { }
-
-  ngAfterViewInit() {
-    this.buildTable();
+  ngOnInit() {
+    this.setupComponent().finally(() => {});
   }
 
- buildTable() {
-   this.componentTotal = 0;
-    this.entityService.getAll()
-      .pipe(map(items =>
-        items.filter(item => (item.workOrder.id == this.passedWorkOrderId))))
-      .subscribe(data => {
-        data.forEach(a => this.componentTotal += a.totalPrice);
-        this.totalChangedEvent.emit(this.componentTotal);
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
-    })
+  async setupComponent() {
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.configTable();
   }
 
-  applyFilter(event: Event) {
-    const filterTarget = (event.target as HTMLInputElement).value;
-    if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
+  async buildTable() {
+    await this.entityService.getAll().pipe(map(items =>
+      items.filter(item => (item.workOrder.id == this.passedWorkOrderId))))
+      .toPromise()
+      .then(data => { this.data = data })
+      .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
   }
 
-  // opens Dialog box
-  openAddDialog() {
+  async configTable() {
+    this.sort.active = 'id';
+    this.sort.direction = 'desc';
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  async openAddDialog() {
     const addDialogConfig = new MatDialogConfig();
     addDialogConfig.disableClose = true;
     addDialogConfig.autoFocus = true;
@@ -81,13 +95,11 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
     addDialogConfig.position = { top:  '0' };
     addDialogConfig.data = { woId: this.passedWorkOrderId };
     const addDialogRef = this.dialog.open(ToolEquipmentItemAddComponent, addDialogConfig);
-    addDialogRef.afterClosed().subscribe(addData => {
-      this.buildTable();
-    });
+    await addDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  // opens Dialog box
-  openEditDialog( _id: number) {
+  async openEditDialog( _id: number) {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
     editDialogConfig.autoFocus = true;
@@ -95,12 +107,11 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
     editDialogConfig.position = { top:  '0' };
     editDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const editDialogRef = this.dialog.open(ToolEquipmentItemEditComponent, editDialogConfig);
-    editDialogRef.afterClosed().subscribe(editData => {
-      this.buildTable();
-    });
+    await editDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  openReturnDialog(_id: number) {
+  async openReturnDialog(_id: number) {
     const returnDialogConfig = new MatDialogConfig();
     returnDialogConfig.disableClose = true;
     returnDialogConfig.autoFocus = true;
@@ -108,13 +119,11 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
     returnDialogConfig.position = { top:  '0' };
     returnDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const returnDialogRef = this.dialog.open(ToolEquipmentItemReturnComponent, returnDialogConfig);
-    returnDialogRef.afterClosed().subscribe(returnData => {
-      this.buildTable();
-    });
+    await returnDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  // opens Dialog box
-  openDeleteDialog( _id: number) {
+  async openDeleteDialog( _id: number) {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
     deleteDialogConfig.autoFocus = true;
@@ -122,22 +131,8 @@ export class ToolEquipmentItemTableComponent implements OnInit, AfterViewInit {
     deleteDialogConfig.position = { top:  '0' };
     deleteDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const deleteDialogRef = this.dialog.open(ToolEquipmentItemDeleteComponent, deleteDialogConfig);
-    deleteDialogRef.afterClosed().subscribe(deleteData => {
-      this.buildTable();
-    });
+    await deleteDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
 }
-

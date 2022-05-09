@@ -26,3 +26,11 @@ button.work-order-users-table-edit-button, button.work-order-users-table-delete-
 .example-fill-remaining-space {
   flex: 1 1 auto;
 }
+
+/* colors for WorkOrdersUsers table... */
+.is-orange td {
+  color: orange;
+}
+.is-red td {
+  color: red;
+}

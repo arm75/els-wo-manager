@@ -1,4 +1,4 @@
-
+<div *ngIf="dataLoaded">
 <header>
   <div class="row print-template-row">
     <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 print-template-element print-template-header-left">
@@ -23,11 +23,11 @@
       Quick Description: {{passedWorkOrder.quickDescription}}<br>
       Description: {{passedWorkOrder.description}}<br>
       Contact Name: {{passedWorkOrder.contactName}}<br>
-      Contact Phone Number: {{passedWorkOrder.contactAltPhoneNumb}}<br>
+      Contact Phone Number: {{passedWorkOrder.contactPhoneNumb}}<br>
       Contact Alt Phone Number: {{passedWorkOrder.contactAltPhoneNumb}}<br>
       Entry Instructions: {{passedWorkOrder.entryInstruct}}<br>
     </div>
   </div>
-
 </header>
+</div>
 

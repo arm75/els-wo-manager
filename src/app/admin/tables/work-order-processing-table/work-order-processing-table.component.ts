@@ -26,16 +26,19 @@ import {AuthenticationService} from "../../../core/security/authentication.servi
   templateUrl: './work-order-processing-table.component.html',
   styleUrls: ['./work-order-processing-table.component.css']
 })
-export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit {
+export class WorkOrderProcessingTableComponent implements OnInit {
 
-  loggedInUser!: any;
-  loggedInUsername!: string;
-  loggedInRole!: string;
-  nameToDisplay!: string;
+  loggedInUser: any;
+  loggedInUsername: any;
+  loggedInRole: any;
+  nameToDisplay: any;
 
-  displayedColumns: string[] = ['createdDate', 'id', 'quickDescription', 'customer', 'location', 'status', 'workOrderTotal', 'actions'];
-
+  displayedColumns: any;
   dataSource: any;
+  data: any;
+  workOrderFilterSelected: any;
+  dropdownFilterSelected: any;
+  dropdownFilterArray: any;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<WorkOrder>;
@@ -46,65 +49,28 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
   @ViewChild(MatSort)
   sort: MatSort = new MatSort;
 
-  /////////////////////////////////////////////////////////////////////////////////////
-
   @ViewChild('workOrderFilterSelect')
   workOrderFilterSelect!: MatSelect;
-  workOrderFilterSelected: string = 'ALL';
-  loadedCustomers: any;
-
-  //////////////////////////////////////////////////////////////////////////////////////
-  dropdownFilterSelected: any;
-  dropdownFilterArray = ElsWoManagerConstants.processingWorkOrderStatusFilterArray;
 
   constructor(
     private entityService: WorkOrderService,
-    private customerService: CustomerService, ///////////////////////////////
-    private _liveAnnouncer: LiveAnnouncer,
+    private customerService: CustomerService,
     private authenticationService: AuthenticationService,
     private dialog: MatDialog,
-    //private spinner: GlobalProgressSpinnerComponent
   ) {
-
     this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
     this.loggedInUsername = this.loggedInUser.username;
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
-    this.buildTable();
-
-    /////////////////////////////////////////////////////////////////
-    this.customerService.getAll().subscribe(
-      data => {
-        //console.log(data);
-        this.loadedCustomers = data;
-      },
-      error => {
-        //console.log(error);
-      }
-    );
-    /////////////////////////////////////////////////////////////////
-
-
-
-
-
+    this.workOrderFilterSelected = 'ALL';
+    this.dropdownFilterArray = ElsWoManagerConstants.processingWorkOrderStatusFilterArray;
+    this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customer', 'location', 'status', 'workOrderTotal', 'actions'];
   }
 
   ngOnInit(): void {
-  }
-
-  ngAfterViewInit() {
     this.buildTable();
-    // this.spinner.initiate();  |  does not work yet...
   }
-
-  menuButtonClick() {
-    alert("Click");
-
-  }
-
-
 
   buildTable() {
     switch(this.workOrderFilterSelected) {
@@ -113,7 +79,6 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
           .pipe(map(items =>
             items.filter(item => ( (item.status == WorkOrderStatus.COMPLETE) || (item.status == WorkOrderStatus.CLOSED) || (item.status == WorkOrderStatus.ERROR) || (item.status == WorkOrderStatus.RETRY) ))))
           .subscribe(data => {
-            //console.log(data);
             this.dataSource = new MatTableDataSource(data);
             this.sort.active = 'createdDate';
             this.sort.direction = 'desc';
@@ -127,7 +92,6 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
           .pipe(map(items =>
             items.filter(item => ((item.status == this.workOrderFilterSelected)))))
           .subscribe(data => {
-            //console.log(data);
             this.dataSource = new MatTableDataSource(data);
             this.sort.active = 'createdDate';
             this.sort.direction = 'desc';
@@ -140,17 +104,14 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
   }
 
   selectChange() {
-    // console.log(this.workOrderFilterSelected)
-    // alert("You selected" + this.workOrderFilterSelected);
     this.buildTable();
   }
 
   applyFilter(event: Event) {
     const filterTarget = (event.target as HTMLInputElement).value;
-    if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
+    if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase(); }
   }
 
-  // opens Dialog box
   openAddDialog() {
     const addDialogConfig = new MatDialogConfig();
     addDialogConfig.disableClose = true;
@@ -163,7 +124,6 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
     });
   }
 
-  // opens Dialog box
   openEditDialog( _id: number) {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
@@ -242,7 +202,6 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
     });
   }
 
-  // opens Dialog box
   openDeleteDialog( _id: number) {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
@@ -254,19 +213,6 @@ export class WorkOrderProcessingTableComponent implements OnInit, AfterViewInit 
     deleteDialogRef.afterClosed().subscribe(deleteData => {
       this.buildTable();
     });
-  }
-
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
   }
 
 }

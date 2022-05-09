@@ -28,14 +28,17 @@ import {AuthenticationService} from "../../../core/security/authentication.servi
 })
 export class WorkOrderHistoryTableComponent implements OnInit {
 
-  loggedInUser!: any;
-  loggedInUsername!: string;
-  loggedInRole!: string;
-  nameToDisplay!: string;
+  loggedInUser: any;
+  loggedInUsername: any;
+  loggedInRole: any;
+  nameToDisplay: any;
 
-  displayedColumns: string[] = ['createdDate', 'id', 'quickDescription', 'customer', 'location', 'status', 'workOrderTotal', 'actions'];
-
+  displayedColumns: any;
   dataSource: any;
+  data: any;
+  workOrderFilterSelected: any;
+  dropdownFilterSelected: any;
+  dropdownFilterArray: any;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<WorkOrder>;
@@ -46,61 +49,35 @@ export class WorkOrderHistoryTableComponent implements OnInit {
   @ViewChild(MatSort)
   sort: MatSort = new MatSort;
 
-  /////////////////////////////////////////////////////////////////////////////////////
-
   @ViewChild('workOrderFilterSelect')
   workOrderFilterSelect!: MatSelect;
-  workOrderFilterSelected: string = 'ALL';
-  loadedCustomers: any;
-
-  //////////////////////////////////////////////////////////////////////////////////////
-  dropdownFilterSelected: any;
-  dropdownFilterArray = ElsWoManagerConstants.historyWorkOrderStatusFilterArray;
 
   constructor(
     private entityService: WorkOrderService,
-    private customerService: CustomerService,
-    private _liveAnnouncer: LiveAnnouncer,
     private authenticationService: AuthenticationService,
     private dialog: MatDialog,
   ) {
-
     this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
     this.loggedInUsername = this.loggedInUser.username;
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
+    this.workOrderFilterSelected = 'ALL';
+    this.dropdownFilterArray = ElsWoManagerConstants.historyWorkOrderStatusFilterArray;
+    this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customer', 'location', 'status', 'workOrderTotal', 'actions'];
+  }
+
+  ngOnInit() {
     this.buildTable();
-
-    /////////////////////////////////////////////////////////////////
-    this.customerService.getAll().subscribe(
-      data => {
-        //console.log(data);
-        this.loadedCustomers = data;
-      },
-      error => {
-        //console.log(error);
-      }
-    );
-    /////////////////////////////////////////////////////////////////
   }
 
-  ngOnInit(): void {
-  }
-
-  ngAfterViewInit() {
-    this.buildTable();
-    // this.spinner.initiate();  |  does not work yet...
-  }
-
-  buildTable() {
+  async buildTable() {
     switch(this.workOrderFilterSelected) {
       case 'ALL': {
-        this.entityService.getAll()
+        await this.entityService.getAll()
           .pipe(map(items =>
             items.filter(item => ( (item.status == WorkOrderStatus.PROCESSED) || (item.status == WorkOrderStatus.CANCELLED) ) ) ) )
           .subscribe(data => {
-            //console.log(data);
             this.dataSource = new MatTableDataSource(data);
             this.sort.active = 'createdDate';
             this.sort.direction = 'desc';
@@ -110,11 +87,10 @@ export class WorkOrderHistoryTableComponent implements OnInit {
         break;
       }
       default: {
-        this.entityService.getAll()
+        await this.entityService.getAll()
           .pipe(map(items =>
             items.filter(item => ((item.status == this.workOrderFilterSelected)))))
           .subscribe(data => {
-            //console.log(data);
             this.dataSource = new MatTableDataSource(data);
             this.sort.active = 'createdDate';
             this.sort.direction = 'desc';
@@ -135,7 +111,6 @@ export class WorkOrderHistoryTableComponent implements OnInit {
     if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
   }
 
-  // opens Dialog box
   openAddDialog() {
     const addDialogConfig = new MatDialogConfig();
     addDialogConfig.disableClose = true;
@@ -148,7 +123,6 @@ export class WorkOrderHistoryTableComponent implements OnInit {
     });
   }
 
-  // opens Dialog box
   openEditDialog( _id: number) {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
@@ -227,7 +201,6 @@ export class WorkOrderHistoryTableComponent implements OnInit {
     });
   }
 
-  // opens Dialog box
   openDeleteDialog( _id: number) {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
@@ -239,19 +212,6 @@ export class WorkOrderHistoryTableComponent implements OnInit {
     deleteDialogRef.afterClosed().subscribe(deleteData => {
       this.buildTable();
     });
-  }
-
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
   }
 
 }

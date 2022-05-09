@@ -37,3 +37,7 @@ mat-header-row{
   z-index: 100;
   background: white;
 }
+
+.reset-button {
+  margin-left: 20px;
+}

@@ -1,8 +1,9 @@
 <div class="table-toolbar">
   <span>
     <mat-form-field class="table-search-box" appearance="outline">
-      <input matInput type="text" class="table-filer-box" (keyup)="applyFilter($event)" placeholder="Search">
+      <input matInput type="text" class="table-filer-box" autocomplete="off" [(ngModel)]="filter" (keyup)="applyFilter($event)" placeholder="Search">
     </mat-form-field>
+    <button class="mat-flat-button mat-primary reset-button" (click)="clearFilter()">Reset Filter</button>
   </span>
   <span class="example-fill-remaining-space"></span>
   <span>
@@ -44,5 +45,3 @@
   </table>
   <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Pages"></mat-paginator>
 </div>
-
-<!-- (matSortChange)="announceSortChange($event)" -->

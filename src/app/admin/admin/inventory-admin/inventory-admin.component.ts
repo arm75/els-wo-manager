@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import { MatTreeNestedDataSource} from "@angular/material/tree";
+import {MatTree, MatTreeNestedDataSource} from "@angular/material/tree";
 import { NestedTreeControl} from "@angular/cdk/tree";
 import { InventoryGroup } from "../../../core/models/inventory-group";
 import { InventoryGroupService } from "../../../core/services/inventory-group.service";
@@ -18,15 +18,19 @@ export class InventoryAdminComponent implements OnInit, AfterViewInit {
   dataSource = new MatTreeNestedDataSource<InventoryGroup>();
 
   filterGroupId!: number;
+  nodes: any;
 
   @ViewChild(MatDrawer)
   sideDrawer!: MatDrawer;
+
+  // @ViewChild(MatTree)
+  // tree!: MatTree<InventoryGroup>;
 
   constructor(
     private entityService: InventoryGroupService,
     private matIconRegistry: MatIconRegistry
   ) {
-    this.matIconRegistry.addSvgIcon('openedfolder', '/src/assets/icons8-opened-folder.svg');
+    //this.matIconRegistry.addSvgIcon('openedfolder', '/src/assets/icons8-opened-folder.svg');
   }
 
   ngOnInit(): void {
@@ -37,6 +41,9 @@ export class InventoryAdminComponent implements OnInit, AfterViewInit {
       },error => {
       }
     );
+    //this.treeControl.dataNodes = this.nodes;
+    //this.treeControl.expandAll();
+
     //this.sideDrawer.toggle();
   }
 

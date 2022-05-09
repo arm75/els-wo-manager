@@ -26,16 +26,20 @@ import {AuthenticationService} from "../../../core/security/authentication.servi
   templateUrl: './work-order-table.component.html',
   styleUrls: ['./work-order-table.component.css']
 })
-export class WorkOrderTableComponent implements OnInit, AfterViewInit {
+export class WorkOrderTableComponent implements OnInit {
 
-  loggedInUser!: any;
-  loggedInUsername!: string;
-  loggedInRole!: string;
-  nameToDisplay!: string;
+  loggedInUser: any;
+  loggedInUsername: any;
+  loggedInRole: any;
+  nameToDisplay: any;
 
-  displayedColumns: string[] = ['createdDate', 'id', 'quickDescription', 'customer', 'location', 'status', 'workOrderTotal', 'actions'];
-
+  displayedColumns: any;
   dataSource: any;
+  data: any;
+  filter: any;
+
+  workOrderFilterSelected: any;
+  dropdownFilterArray: any;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<WorkOrder>;
@@ -46,89 +50,66 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort)
   sort: MatSort = new MatSort;
 
-  /////////////////////////////////////////////////////////////////////////////////////
-
   @ViewChild('workOrderFilterSelect')
   workOrderFilterSelect!: MatSelect;
-  workOrderFilterSelected: string = 'ALL';
-  loadedCustomers: any;
-
-  //////////////////////////////////////////////////////////////////////////////////////
-  dropdownFilterSelected: any;
-  dropdownFilterArray = ElsWoManagerConstants.inProgressWorkOrderStatusFilterArray;
 
   constructor(
     private entityService: WorkOrderService,
     private customerService: CustomerService,
-    private _liveAnnouncer: LiveAnnouncer,
     private authenticationService: AuthenticationService,
     private dialog: MatDialog,
-    //private spinner: GlobalProgressSpinnerComponent
   ) {
-
     this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
     this.loggedInUsername = this.loggedInUser.username;
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
-    this.buildTable();
-
-    /////////////////////////////////////////////////////////////////
-    this.customerService.getAll().subscribe(
-      data => {
-        //console.log(data);
-        this.loadedCustomers = data;
-      },
-      error => {
-        //console.log(error);
-      }
-    );
-    /////////////////////////////////////////////////////////////////
-
+    this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customer', 'location', 'status', 'workOrderTotal', 'actions'];
+    this.workOrderFilterSelected = 'ALL';
+    this.dropdownFilterArray = ElsWoManagerConstants.inProgressWorkOrderStatusFilterArray;
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.setupComponent().finally(() => {});
   }
 
-  ngAfterViewInit() {
-    this.buildTable();
+  async setupComponent() {
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.configTable();
   }
 
-  buildTable() {
+  async buildTable() {
     switch(this.workOrderFilterSelected) {
       case 'ALL': {
-        this.entityService.getAll()
-          .pipe(map(items =>
+        await this.entityService.getAll().pipe(map(items =>
             items.filter(item => ( (item.status == WorkOrderStatus.OPEN) || (item.status == WorkOrderStatus.PENDING) ))))
-          .subscribe(data => {
-            //console.log(data);
-            this.dataSource = new MatTableDataSource(data);
-            this.sort.active = 'createdDate';
-            this.sort.direction = 'desc';
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
-          });
+          .toPromise()
+          .then(data => { this.data = data })
+          .finally( () => { this.dataSource = new MatTableDataSource(this.data) });
         break;
       }
       default: {
-        this.entityService.getAll()
-          .pipe(map(items =>
+        await this.entityService.getAll().pipe(map(items =>
             items.filter(item => ((item.status == this.workOrderFilterSelected)))))
-          .subscribe(data => {
-            //console.log(data);
-            this.dataSource = new MatTableDataSource(data);
-            this.sort.direction = 'desc';
-            this.sort.active = 'createdDate';
-            this.sort.direction = 'desc';
-            this.dataSource.paginator = this.paginator;
-          });
+          .toPromise()
+          .then(data => { this.data = data })
+          .finally( () => { this.dataSource = new MatTableDataSource(this.data) });
         break;
       }
     }
   }
 
+  async configTable() {
+    this.sort.active = 'createdDate';
+    this.sort.direction = 'desc';
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
   selectChange() {
-    this.buildTable();
+    this.setupComponent().finally(() => {});
   }
 
   applyFilter(event: Event) {
@@ -136,21 +117,23 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
   }
 
-  // opens Dialog box
-  openAddDialog() {
+  clearFilter() {
+    this.dataSource.filter = '';
+    this.filter = '';
+  }
+
+  async openAddDialog() {
     const addDialogConfig = new MatDialogConfig();
     addDialogConfig.disableClose = true;
     addDialogConfig.autoFocus = true;
     addDialogConfig.width = "40%";
     addDialogConfig.position = { top:  '0' };
     const addDialogRef = this.dialog.open(WorkOrderAddComponent, addDialogConfig);
-    addDialogRef.afterClosed().subscribe(addData => {
-      this.buildTable();
-    });
+    await addDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  // opens Dialog box
-  openEditDialog( _id: number) {
+  async openEditDialog( _id: number) {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
     editDialogConfig.autoFocus = true;
@@ -158,12 +141,11 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     editDialogConfig.position = { top:  '0' };
     editDialogConfig.data = { entityId: _id };
     const editDialogRef = this.dialog.open(WorkOrderEditComponent, editDialogConfig);
-    editDialogRef.afterClosed().subscribe(editData => {
-      this.buildTable();
-    });
+    await editDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  openCompleteDialog( _id: number) {
+  async openCompleteDialog( _id: number) {
     const completeDialogConfig = new MatDialogConfig();
     completeDialogConfig.disableClose = true;
     completeDialogConfig.autoFocus = true;
@@ -171,12 +153,11 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     completeDialogConfig.position = { top:  '0' };
     completeDialogConfig.data = { entityId: _id };
     const completeDialogRef = this.dialog.open(WorkOrderCompleteComponent, completeDialogConfig);
-    completeDialogRef.afterClosed().subscribe(completeData => {
-      this.buildTable();
-    });
+    await completeDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  openCloseDialog( _id: number) {
+  async openCloseDialog( _id: number) {
     const closeDialogConfig = new MatDialogConfig();
     closeDialogConfig.disableClose = true;
     closeDialogConfig.autoFocus = true;
@@ -184,12 +165,11 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     closeDialogConfig.position = { top:  '0' };
     closeDialogConfig.data = { entityId: _id };
     const closeDialogRef = this.dialog.open(WorkOrderCloseComponent, closeDialogConfig);
-    closeDialogRef.afterClosed().subscribe(closeData => {
-      this.buildTable();
-    });
+    await closeDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  openCancelDialog( _id: number) {
+  async openCancelDialog( _id: number) {
     const cancelDialogConfig = new MatDialogConfig();
     cancelDialogConfig.disableClose = true;
     cancelDialogConfig.autoFocus = true;
@@ -197,12 +177,11 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     cancelDialogConfig.position = { top:  '0' };
     cancelDialogConfig.data = { entityId: _id };
     const cancelDialogRef = this.dialog.open(WorkOrderCancelComponent, cancelDialogConfig);
-    cancelDialogRef.afterClosed().subscribe(cancelData => {
-      this.buildTable();
-    });
+    await cancelDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  openReopenDialog( _id: number) {
+  async openReopenDialog( _id: number) {
     const reOpenDialogConfig = new MatDialogConfig();
     reOpenDialogConfig.disableClose = true;
     reOpenDialogConfig.autoFocus = true;
@@ -210,12 +189,11 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     reOpenDialogConfig.position = { top:  '0' };
     reOpenDialogConfig.data = { entityId: _id };
     const reOpenDialogRef = this.dialog.open(WorkOrderReopenComponent, reOpenDialogConfig);
-    reOpenDialogRef.afterClosed().subscribe(reOpenData => {
-      this.buildTable();
-    });
+    await reOpenDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  openRetryDialog( _id: number) {
+  async openRetryDialog( _id: number) {
     const reTryDialogConfig = new MatDialogConfig();
     reTryDialogConfig.disableClose = true;
     reTryDialogConfig.autoFocus = true;
@@ -223,13 +201,11 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     reTryDialogConfig.position = { top:  '0' };
     reTryDialogConfig.data = { entityId: _id };
     const reTryDialogRef = this.dialog.open(WorkOrderRetryComponent, reTryDialogConfig);
-    reTryDialogRef.afterClosed().subscribe(reTryData => {
-      this.buildTable();
-    });
+    await reTryDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  // opens Dialog box
-  openDeleteDialog( _id: number) {
+  async openDeleteDialog( _id: number) {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
     deleteDialogConfig.autoFocus = true;
@@ -237,22 +213,8 @@ export class WorkOrderTableComponent implements OnInit, AfterViewInit {
     deleteDialogConfig.position = { top:  '0' };
     deleteDialogConfig.data = { entityId: _id };
     const deleteDialogRef = this.dialog.open(WorkOrderDeleteComponent, deleteDialogConfig);
-    deleteDialogRef.afterClosed().subscribe(deleteData => {
-      this.buildTable();
-    });
-  }
-
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
+    await deleteDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
 }

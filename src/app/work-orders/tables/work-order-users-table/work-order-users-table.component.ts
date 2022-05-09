@@ -16,24 +16,27 @@ import {AuthenticationService} from "../../../core/security/authentication.servi
 import {WorkOrderCompleteComponent} from "../../../admin/dialogs/work-order-complete/work-order-complete.component";
 import {WorkOrderCancelComponent} from "../../../admin/dialogs/work-order-cancel/work-order-cancel.component";
 import {WorkOrderReopenComponent} from "../../../admin/dialogs/work-order-reopen/work-order-reopen.component";
+import {formatDate} from "@angular/common";
 
 @Component({
   selector: 'app-work-order-users-table',
   templateUrl: './work-order-users-table.component.html',
   styleUrls: ['./work-order-users-table.component.css']
 })
-export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
+export class WorkOrderUsersTableComponent implements OnInit {
 
-  loggedInUser!: any;
-  loggedInUsername!: string;
-  loggedInRole!: string;
-  nameToDisplay!: string;
+  loggedInUser: any;
+  loggedInUsername: any;
+  loggedInRole: any;
+  nameToDisplay: any;
 
-  displayedColumns: string[] = ['createdDate', 'id', 'quickDescription', 'customer', 'location',  'status', 'actions'];
-
+  displayedColumns: any;
   dataSource: any;
+  data: any;
 
-  // dataSource2: any;
+  rightNow = Date.now();
+  oneWeeks: number = 604800000;
+  twoWeeks: number = 1209600000;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<WorkOrder>;
@@ -51,43 +54,37 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
     private authenticationService: AuthenticationService,
     private dialog: MatDialog
   ) {
-
     this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
     this.loggedInUsername = this.loggedInUser.username;
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
-
-    this.buildTable();
+    this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customer', 'location',  'status', 'actions'];
   }
 
-  ngOnInit() { }
-
-  ngAfterViewInit() {
-    this.buildTable();
+  ngOnInit() {
+    this.setupComponent().finally(() => console.log("Finished setting up component\n"));
   }
 
- // home() {
- //    this.userService.get(1001340).subscribe((data) => {
- //      this.dataSource2 = data;
- //    }, error => {
- //    });
- // }
+  async setupComponent() {
+    // get the table..
+    await this.buildTable();
+    this.sort.active = 'createdDate';
+    this.sort.direction = 'desc';
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
 
- buildTable() {
-   this.entityService.getAll()
+  async buildTable() {
+   await this.entityService.getAll()
      .pipe(map(items =>
        items.filter(item => ((
          (item.status == WorkOrderStatus.OPEN) ||
          (item.status == WorkOrderStatus.PENDING)) &&
          (item.assignedUsers.map((thisUser) => thisUser.username)).includes(this.loggedInUsername) ))
        ))
-     .subscribe(data => {
-       this.dataSource = new MatTableDataSource(data);
-       this.sort.active = 'createdDate';
-       this.sort.direction = 'desc';
-       this.dataSource.sort = this.sort;
-       this.dataSource.paginator = this.paginator;
-     });
+     .toPromise()
+     .then(data => { this.data = data })
+     .finally( () => { this.dataSource = new MatTableDataSource(this.data) });
   }
 
   applyFilter(event: Event) {
@@ -95,7 +92,14 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
     if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
   }
 
-  // opens Dialog box
+  getRowAgeColor(datePassed: any) {
+    let dateToCompare = Date.parse(datePassed);
+    let time = this.rightNow - dateToCompare;
+    if((time >= this.oneWeeks)&&(time < this.twoWeeks)) { return 'is-orange'; }
+    if(time >= this.twoWeeks) { return 'is-red'; }
+    return;
+  }
+
   openAddDialog() {
     const addDialogConfig = new MatDialogConfig();
     addDialogConfig.disableClose = true;
@@ -106,7 +110,6 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // opens Dialog box
   openEditDialog( _id: number) {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
@@ -157,7 +160,6 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // opens Dialog box
   openDeleteDialog( _id: number) {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
@@ -169,17 +171,4 @@ export class WorkOrderUsersTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
 }
-

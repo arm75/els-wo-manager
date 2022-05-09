@@ -26,3 +26,7 @@ button.location-table-edit-button, button.location-table-delete-button  {
 .example-fill-remaining-space {
   flex: 1 1 auto;
 }
+
+.reset-button {
+  margin-left: 20px;
+}

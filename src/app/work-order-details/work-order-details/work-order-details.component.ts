@@ -18,15 +18,13 @@ import { MatInput } from "@angular/material/input";
   templateUrl: './work-order-details.component.html',
   styleUrls: ['./work-order-details.component.css']
 })
-export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, AfterContentInit, AfterContentChecked, AfterViewInit, AfterViewChecked, OnDestroy {
-// export class WorkOrderDetailsComponent implements OnInit {
+export class WorkOrderDetailsComponent implements OnInit {
 
   loggedInUser!: any;
   loggedInUsername!: string;
   loggedInRole!: string;
   nameToDisplay!: string;
 
-  // for assignedUsers
   userData: any;
 
   @Input()
@@ -75,7 +73,6 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
   logNg: boolean = false;
 
   constructor(
-    //private snackBarService: GlobalSnackBarService,
     private entityService: WorkOrderService,
     private customerService: CustomerService,
     private locationService: LocationService,
@@ -90,17 +87,9 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
     this.loggedInUsername = this.loggedInUser.username;
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
-    console.table(this.loggedInUser);
-    console.log("loggedInRole: ", this.loggedInRole, "\n");
-    console.log("nameToDisplay: ", this.nameToDisplay, "\n");
-  }
-
-  ngOnChanges() {
-    if (this.logNg) { console.log("OnChanges ran.\n") }
   }
 
   ngOnInit(): void {
-    if (this.logNg) { console.log("ngOnInit ran.\n") }
     this.dataLoaded = false;
     this.getIdFromRoute();
     this.editFormEditMode = false;
@@ -108,30 +97,6 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
     if (this.passedWorkOrderId) {
       this.loadWorkOrderIntoView();
     }
-  }
-
-  ngDoCheck() {
-    if (this.logNg) { console.log("ngDoCheck ran.\n") }
-  }
-
-  ngAfterContentInit() {
-    if (this.logNg) { console.log("ngAfterContentInit ran.\n") }
-  }
-
-  ngAfterContentChecked() {
-    if (this.logNg) { console.log("ngAfterContentChecked ran.\n") }
-  }
-
-  ngAfterViewInit() {
-    if (this.logNg) { console.log("ngAfterViewInit ran.\n") }
-  }
-
-  ngAfterViewChecked() {
-    if (this.logNg) { console.log("ngAfterViewChecked ran.\n") }
-  }
-
-  ngOnDestroy() {
-    if (this.logNg) { console.log("ngOnDestroy ran.\n") }
   }
 
   addUserToWorkOrder() {
@@ -152,8 +117,6 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
   compareObjects(o1: any, o2: any): boolean {
     return o1.entityName === o2.entityName && o1.id === o2.id;
   }
-
-  doSomething($event: number) { }
 
   getIdFromRoute(): void {
     this.route.paramMap.subscribe( params => {
@@ -294,7 +257,6 @@ export class WorkOrderDetailsComponent implements OnChanges, OnInit, DoCheck, Af
     this.editForm.controls['workOrderTotal'].setValue(this.masterTotal);
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        //this.globalSnackBarService.success("Work Order: " + this.editForm.value.id + " has been updated.");
         this.loadWorkOrderIntoView();
         this.updateFieldBoxes();
         this.editForm.disable();

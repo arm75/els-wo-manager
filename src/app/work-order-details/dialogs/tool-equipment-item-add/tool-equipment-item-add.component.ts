@@ -4,7 +4,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { ToolEquipmentItemService } from "../../../core/services/tool-equipment-item.service";
 import { MatSelect } from "@angular/material/select";
 import { ToolEquipmentService } from "../../../core/services/tool-equipment.service";
-import {finalize} from "rxjs/operators";
+import {finalize, map} from "rxjs/operators";
 import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
@@ -61,7 +61,9 @@ export class ToolEquipmentItemAddComponent implements OnInit {
   }
 
   loadToolEquipmentSelect() {
-    this.toolEquipmentService.getAll().subscribe(data => {
+    this.toolEquipmentService.getAll().pipe(map(items =>
+      items.filter(item => (item.status == 'IN'))))
+      .subscribe(data => {
       this.toolEquipmentLoaded = data;
       },error => {
       }
