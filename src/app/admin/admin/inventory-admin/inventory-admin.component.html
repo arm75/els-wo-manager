@@ -7,7 +7,7 @@
   </mat-drawer-content>
   <mat-drawer #sideDrawer class="example-sidenav" mode="side" opened>
     <div class="add-group-button">
-    <button class="mat-flat-button mat-primary work-order-table-add-button">Add Group</button>
+    <button class="mat-flat-button mat-primary work-order-table-add-button" (click)="setFilterGroupId()">Reset Group Filter</button>
     </div>
     <mat-tree #tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
       <!-- This is the tree node template for leaf nodes -->

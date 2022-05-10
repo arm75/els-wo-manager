@@ -1,76 +1,65 @@
 <form [formGroup]="addForm" class="" (submit)="addEntity()">
-    <h2 mat-dialog-title>{{formTitle}}</h2>
-    <mat-dialog-content>
+  <h2 mat-dialog-title>{{formTitle}}</h2>
+  <mat-dialog-content>
     <h4 mat-dialog-title>Inventory Details</h4>
-      <p>
-      <mat-form-field class="width-99" appearance="outline">
-        <mat-label>Inventory Name</mat-label>
-        <input matInput autocomplete="off" formControlName="entityName">
-        <mat-error *ngIf="addForm.controls['entityName'].hasError('required')">
-          Inventory Name is required
-        </mat-error>
-      </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="width-99" appearance="outline">
-          <mat-label>Inventory Group</mat-label>
-          <mat-select #inventoryGroupSelect [(value)]="inventoryGroupSelected" (selectionChange)="selectChange()" formControlName="inventoryGroup">
-            <mat-option *ngFor="let invGroup of inventoryGroupLoaded" [value]="invGroup">{{invGroup.entityName}}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="addForm.controls['inventoryGroup'].hasError('required')">
-            Inventory Group is required
-          </mat-error>
+    <mat-form-field class="width-47" appearance="outline">
+      <mat-label>Inventory Name</mat-label>
+      <input matInput autocomplete="off" formControlName="entityName">
+      <mat-error *ngIf="addForm.controls['entityName'].hasError('required')">
+        Inventory Name is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="width-47" appearance="outline">
+      <mat-label>Inventory Group</mat-label>
+      <mat-select #inventoryGroupSelect [(value)]="inventoryGroupSelected" (selectionChange)="selectChange()" formControlName="inventoryGroup">
+        <mat-option *ngFor="let invGroup of inventoryGroupLoaded" [value]="invGroup">{{invGroup.entityName}}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="addForm.controls['inventoryGroup'].hasError('required')">
+        Inventory Group is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="width-99" appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput autocomplete="off" class="description-box" formControlName="description"></textarea>
+    </mat-form-field>
+    <h4>Inventory Locations</h4>
+    <span formArrayName="buckets" *ngFor="let bucket of this.buckets.controls; index as i">
+      <span formGroupName="{{i}}">
+        <mat-form-field class="width-47" appearance="outline">
+          <mat-label>{{bucket.value.location.entityName}} | Qty in Stock</mat-label>
+          <input matInput autocomplete="off" [value]="bucket.value.qtyInStock" (keyup)="calcTotalInStock()" (change)="calcTotalInStock()" formControlName="qtyInStock">
+          <button class="x-button" type="button" [disabled]="bucket.value.qtyInStock > 0" matSuffix mat-icon-button aria-label="Remove Location" (click)="removeInventoryBucket(i, bucket.value)"><mat-icon>close</mat-icon></button>
         </mat-form-field>
-      </p>
-
-      <h4>Inventory Locations</h4>
-      <span formArrayName="buckets" *ngFor="let bucket of this.buckets.controls; index as i">
-        <span formGroupName="{{i}}">
-          <mat-form-field class="width-47" appearance="outline">
-            <mat-label>{{bucket.value.location.entityName}} | Qty in Stock</mat-label>
-            <input matInput autocomplete="off" [value]="bucket.value.qtyInStock" formControlName="qtyInStock">
-            <button class="x-button" type="button" [disabled]="bucket.value.qtyInStock > 0" matSuffix mat-icon-button aria-label="Remove Location" (click)="removeInventoryBucket(i, bucket.value)"><mat-icon>close</mat-icon></button>
-          </mat-form-field>
-        </span>
       </span>
-      <mat-form-field class="width-75" appearance="outline">
-        <mat-label>Inventory Location</mat-label>
-        <mat-select #inventoryLocationSelect [(value)]="inventoryLocationSelected">
-          <mat-option *ngFor="let invLoc of inventoryLocationsLoaded" [value]="invLoc">{{invLoc.entityName}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <span class="width-20"><button type="button" class="mat-flat-button mat-primary add-user-to-workorder" [disabled]="!inventoryLocationSelected" (click)="createNewInventoryBucket(inventoryLocationSelected)">Add Location</button></span>
-
-      <p>
-        <mat-form-field class="width-99" appearance="outline">
-          <mat-label>Description</mat-label>
-          <textarea matInput autocomplete="off" class="description-box" formControlName="description"></textarea>
-        </mat-form-field>
-      </p>
-
-      <p>
-        <mat-form-field class="" appearance="outline">
-          <mat-label>Total in Stock</mat-label>
-          <input matInput readonly autocomplete="off" formControlName="totalInStock">
-          <mat-error *ngIf="addForm.controls['totalInStock'].hasError('required')">
-            Total in Stock is required
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="" appearance="outline">
-          <mat-label>Unit Cost</mat-label>
-          <input matInput autocomplete="off" prefix="$" mask="0*.00" formControlName="unitCost">
-          <mat-error *ngIf="addForm.controls['unitCost'].hasError('required')">
-            Unit Cost is required
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="" appearance="outline">
-          <mat-label>Unit Price</mat-label>
-          <input matInput autocomplete="off" prefix="$" mask="0*.00" formControlName="unitPrice">
-          <mat-error *ngIf="addForm.controls['unitPrice'].hasError('required')">
-            Unit Price is required
-          </mat-error>
-        </mat-form-field>
-      </p>
+    </span>
+    <mat-form-field class="width-75" appearance="outline">
+      <mat-label>Inventory Location</mat-label>
+      <mat-select #inventoryLocationSelect [(value)]="inventoryLocationSelected">
+        <mat-option *ngFor="let invLoc of inventoryLocationsLoaded" [value]="invLoc">{{invLoc.entityName}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <span class="width-20"><button type="button" class="mat-flat-button mat-primary add-user-to-workorder" [disabled]="!inventoryLocationSelected" (click)="createNewInventoryBucket(inventoryLocationSelected)">Add Location</button></span>
+    <mat-form-field class="" appearance="outline">
+      <mat-label>Total in Stock</mat-label>
+      <input matInput readonly autocomplete="off" formControlName="totalInStock">
+      <mat-error *ngIf="addForm.controls['totalInStock'].hasError('required')">
+        Total in Stock is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="" appearance="outline">
+      <mat-label>Unit Cost</mat-label>
+      <input matInput autocomplete="off" prefix="$" mask="0*.00" formControlName="unitCost">
+      <mat-error *ngIf="addForm.controls['unitCost'].hasError('required')">
+        Unit Cost is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="" appearance="outline">
+      <mat-label>Unit Price</mat-label>
+      <input matInput autocomplete="off" prefix="$" mask="0*.00" formControlName="unitPrice">
+      <mat-error *ngIf="addForm.controls['unitPrice'].hasError('required')">
+        Unit Price is required
+      </mat-error>
+    </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>

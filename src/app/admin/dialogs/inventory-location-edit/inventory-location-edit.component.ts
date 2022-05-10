@@ -44,9 +44,8 @@ export class InventoryLocationEditComponent implements OnInit {
 	          'state': new FormControl(this.entityData.state, [Validators.required]),
 	          'zipCode': new FormControl(this.entityData.zipCode, [Validators.required]),
 	          'phoneNumb': new FormControl(this.entityData.phoneNumb),
-	          'altPhoneNumb': new FormControl(this.entityData.altPhoneNumb),
-	          'emailAddress': new FormControl(this.entityData.emailAddress, [Validators.email])
-          })
+	          'altPhoneNumb': new FormControl(this.entityData.altPhoneNumb)
+          });
           this.dataLoaded = true;
         })
         .catch(error => {

@@ -12,6 +12,7 @@ import { SubcontractorItemDeleteComponent } from "../../dialogs/subcontractor-it
 import { SubcontractorItemCompleteComponent } from "../../dialogs/subcontractor-item-complete/subcontractor-item-complete.component";
 import {AuthenticationService} from "../../../core/security/authentication.service";
 import {map} from "rxjs/operators";
+import {InventoryItem} from "../../../core/models/inventory-item";
 
 @Component({
   selector: 'app-subcontractor-item-table',
@@ -78,7 +79,11 @@ export class SubcontractorItemTableComponent implements OnInit {
       items.filter(item => (item.workOrder.id == this.passedWorkOrderId))))
       .toPromise()
       .then(data => { this.data = data })
-      .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
+      .finally( () => {
+        this.data.forEach((item: SubcontractorItem) => this.componentTotal += item.totalPrice);
+        this.dataSource = new MatTableDataSource(this.data);
+        this.totalChangedEvent.emit(this.componentTotal);
+      });
   }
 
   async configTable() {

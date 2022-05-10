@@ -164,6 +164,11 @@ export class InventoryEditComponent implements OnInit {
     console.table(this.buckets.value);
   }
 
+  calcTotalInStock() {
+    let total = this.buckets.value.reduce((sum: any, item: any) => sum + +item.qtyInStock, 0);
+    this.editForm.controls['totalInStock'].setValue(total);
+  }
+
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {

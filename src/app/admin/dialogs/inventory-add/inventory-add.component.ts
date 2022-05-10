@@ -114,6 +114,11 @@ export class InventoryAddComponent implements OnInit {
     this.inventoryLocationsLoaded.push(bucketToRemove.location);
   }
 
+  calcTotalInStock() {
+    let total = this.buckets.value.reduce((sum: any, item: any) => sum + +item.qtyInStock, 0);
+    this.addForm.controls['totalInStock'].setValue(total);
+  }
+
   addEntity() {
     this.entityService.create(this.addForm.value)
       .subscribe(data => {

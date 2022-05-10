@@ -1,5 +1,4 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort} from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
@@ -47,7 +46,7 @@ export class InventoryGroupTableComponent implements OnInit {
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
-    this.displayedColumns = ['id', 'entityName', 'parent', 'description', 'actions'];
+    this.displayedColumns = ['id', 'entityName', 'description', 'actions'];
   }
 
   ngOnInit() {

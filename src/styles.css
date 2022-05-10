@@ -254,11 +254,15 @@ body {
 
 h6.hint-text-box {
   padding: 10px 30px 10px 30px;
-  background-color: lightgoldenrodyellow;
-  font-size: 2rem;
-  color: #996633;
-  border: 1px solid #996633;
+  font-size: 3rem;
+  color: #333;
+  border: 0px;
   text-align: center;
   margin: 0 0 0 0;
   width: 400px;
+}
+
+button.work-order-table-process-button {
+  background-color: #339933;
+  color: white;
 }

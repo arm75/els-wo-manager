@@ -1,10 +1,8 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryGroupService } from "../../../core/services/inventory-group.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { InventoryGroup } from "../../../core/models/inventory-group";
-import {MatSelect} from "@angular/material/select";
 import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 
 @Component({
@@ -19,11 +17,6 @@ export class InventoryGroupEditComponent implements OnInit {
   entityId: null;
   entityData!: InventoryGroup;
   editForm: FormGroup = new FormGroup({});
-
-  @ViewChild('parentSelect')
-  parentSelect!: MatSelect;
-  parentLoaded: any;
-  parentSelected: any;
 
   constructor( private matDialogRef: MatDialogRef<InventoryGroupEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
@@ -46,37 +39,16 @@ export class InventoryGroupEditComponent implements OnInit {
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
 	          'entityName': new FormControl(this.entityData.entityName, [Validators.required]),
-            'parent': new FormControl(this.entityData.parent),
 	          'description': new FormControl(this.entityData.description)
           })
         })
-        .catch(error => {
-        })
-        .finally(() => {
-        this.dataLoaded = true;
-        this.loadParentSelect();
-        }
-      );
+        .catch(error => { })
+        .finally(() => { this.dataLoaded = true; });
     }
   }
 
   compareObjects(o1: any, o2: any): boolean {
     return o1.entityName === o2.entityName && o1.id === o2.id;
-  }
-
-  selectChange() {
-    //console.log(this.selected);
-    // alert("You selected" + this.selected);
-  }
-
-  loadParentSelect() {
-    this.entityService.getAll().subscribe(
-      data => {
-        //console.log(data);
-        this.parentLoaded = data;
-      },error => {
-      }
-    );
   }
 
   editEntity() {
@@ -89,4 +61,5 @@ export class InventoryGroupEditComponent implements OnInit {
         this.globalSnackBarService.error(error.error.message);
       });
   }
+
 }

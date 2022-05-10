@@ -66,7 +66,6 @@ export class WorkOrderDetailsComponent implements OnInit {
   woUpdatedDateFieldBox: any;
   woCustomerFieldBox: any;
   woLocationFieldBox: any;
-  woPoFieldBox: any;
 
   spinning: boolean = false;
 

@@ -30,3 +30,7 @@ button.work-order-table-edit-button, button.work-order-table-delete-button  {
 mat-grid-tile {
   background-color: lightblue;
 }
+
+.reset-button {
+  margin-left: 20px;
+}

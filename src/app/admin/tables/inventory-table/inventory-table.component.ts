@@ -16,7 +16,7 @@ import {AuthenticationService} from "../../../core/security/authentication.servi
   templateUrl: './inventory-table.component.html',
   styleUrls: ['./inventory-table.component.css']
 })
-export class InventoryTableComponent implements OnInit, OnChanges {
+export class InventoryTableComponent implements OnInit {
 
   loggedInUser: any;
   loggedInUsername: any;
@@ -27,6 +27,9 @@ export class InventoryTableComponent implements OnInit, OnChanges {
   dataSource: any;
   data: any;
   filter: any;
+
+  inventoryGroupFilterSelected: any;
+  dropdownFilterArray: any;
 
   @Input()
   filterGroupId: number = 0;
@@ -54,21 +57,27 @@ export class InventoryTableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.buildTable();
+    this.setupComponent().finally(() => {});
   }
 
-  ngOnChanges() {
-    this.filterTable();
+  async setupComponent() {
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.configTable();
   }
 
   async buildTable() {
     await this.entityService.getAll().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
-      this.sort.active = 'id';
-      this.sort.direction = 'desc';
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-    })
+    });
+  }
+
+  async configTable() {
+    this.sort.active = 'id';
+    this.sort.direction = 'desc';
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
   }
 
   filterTable() {
@@ -88,7 +97,6 @@ export class InventoryTableComponent implements OnInit, OnChanges {
           .pipe(map(items =>
             items.filter(item => ((item.inventoryGroup.id == this.filterGroupId)))))
           .subscribe(data => {
-            //console.log(data);
             this.dataSource = new MatTableDataSource(data);
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
@@ -96,6 +104,9 @@ export class InventoryTableComponent implements OnInit, OnChanges {
         break;
       }
     }
+  }
+
+  selectChange() {
   }
 
   applyFilter(event: Event) {

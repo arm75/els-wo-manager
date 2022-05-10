@@ -2,7 +2,7 @@
   <span>
     <mat-form-field class="example-full-width width-99 els-custom-customer-select" appearance="outline">
         <mat-label>Filter Work Orders</mat-label>
-        <mat-select #customerSelect [(value)]="workOrderFilterSelected" (selectionChange)="selectChange()">
+        <mat-select [(value)]="workOrderFilterSelected" (selectionChange)="selectChange()">
           <mat-option value="ALL">ALL Work Orders</mat-option>
           <mat-option *ngFor="let status of dropdownFilterArray"
                       [value]="status.value">

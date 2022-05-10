@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { InventoryLocationService } from "../../../core/services/inventory-location.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { InventoryLocation } from "../../../core/models/inventory-location";
 import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 

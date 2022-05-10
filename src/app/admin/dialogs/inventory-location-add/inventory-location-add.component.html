@@ -1,74 +1,57 @@
 <form [formGroup]="addForm" class="" (submit)="addEntity()">
-    <h2 mat-dialog-title>{{formTitle}}</h2>
-    <mat-dialog-content>
+  <h2 mat-dialog-title>{{formTitle}}</h2>
+  <mat-dialog-content>
     <h4 mat-dialog-title>Inventory Location Details</h4>
-      <p>
-        <mat-form-field class="width-99" appearance="outline">
-          <mat-label>Inventory Location Name</mat-label>
-          <input matInput autocomplete="off" formControlName="entityName">
-          <mat-error *ngIf="addForm.controls['entityName'].hasError('required')">
-            Inventory Location Name is required
-          </mat-error>
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="width-31" appearance="outline">
-          <mat-label>Phone Number</mat-label>
-          <input matInput autocomplete="off" mask="(000)000-0000" formControlName="phoneNumb">
-        </mat-form-field>
-        <mat-form-field class="width-31" appearance="outline">
-          <mat-label>Alt Phone Number</mat-label>
-          <input matInput autocomplete="off" mask="(000)000-0000" formControlName="altPhoneNumb">
-        </mat-form-field>
-        <mat-form-field class="width-33" appearance="outline">
-          <mat-label>Email Address</mat-label>
-          <input matInput autocomplete="off" formControlName="emailAddress">
-          <mat-error *ngIf="addForm.controls['emailAddress'].hasError('email')">
-            Enter a VALID email address
-          </mat-error>
-        </mat-form-field>
-      </p>
-      <h4 mat-dialog-title>Address</h4>
-      <p>
-        <mat-form-field class="width-75" appearance="outline">
-          <mat-label>Address</mat-label>
-          <input matInput autocomplete="off" formControlName="address">
-          <mat-error *ngIf="addForm.controls['address'].hasError('required')">
-            Address is required
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="width-21" appearance="outline">
-          <mat-label>Unit</mat-label>
-          <input matInput autocomplete="off" formControlName="unit">
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="width-47" appearance="outline">
-          <mat-label>City</mat-label>
-          <input matInput autocomplete="off" formControlName="city">
-          <mat-error *ngIf="addForm.controls['city'].hasError('required')">
-            City is required
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="width-25" appearance="outline">
-          <mat-label>State</mat-label>
-          <mat-select formControlName="state">
-            <mat-option *ngFor="let state of usStates" [value]="state.value">
-              {{ state.name }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="addForm.controls['state'].hasError('required')">
-            State is required
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="width-20" appearance="outline">
-          <mat-label>Zip Code</mat-label>
-          <input matInput #postalCode autocomplete="off" maxlength="5" formControlName="zipCode">
-          <mat-error *ngIf="addForm.controls['zipCode'].hasError('required')">
-            Zip Code is required
-          </mat-error>
-        </mat-form-field>
-      </p>
+    <mat-form-field class="width-99" appearance="outline">
+      <mat-label>Inventory Location Name</mat-label>
+      <input matInput autocomplete="off" formControlName="entityName">
+      <mat-error *ngIf="addForm.controls['entityName'].hasError('required')">
+        Inventory Location Name is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="width-47" appearance="outline">
+      <mat-label>Phone Number</mat-label>
+      <input matInput autocomplete="off" mask="(000)000-0000" formControlName="phoneNumb">
+    </mat-form-field>
+    <mat-form-field class="width-47" appearance="outline">
+      <mat-label>Alt Phone Number</mat-label>
+      <input matInput autocomplete="off" mask="(000)000-0000" formControlName="altPhoneNumb">
+    </mat-form-field>
+    <h4 mat-dialog-title>Address</h4>
+    <mat-form-field class="width-75" appearance="outline">
+      <mat-label>Address</mat-label>
+      <input matInput autocomplete="off" formControlName="address">
+      <mat-error *ngIf="addForm.controls['address'].hasError('required')">
+        Address is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="width-21" appearance="outline">
+      <mat-label>Unit</mat-label>
+      <input matInput autocomplete="off" formControlName="unit">
+    </mat-form-field>
+    <mat-form-field class="width-47" appearance="outline">
+      <mat-label>City</mat-label>
+      <input matInput autocomplete="off" formControlName="city">
+      <mat-error *ngIf="addForm.controls['city'].hasError('required')">
+        City is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="width-25" appearance="outline">
+      <mat-label>State</mat-label>
+      <mat-select formControlName="state">
+        <mat-option *ngFor="let state of usStates" [value]="state.value">{{ state.name }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="addForm.controls['state'].hasError('required')">
+        State is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="width-20" appearance="outline">
+      <mat-label>Zip Code</mat-label>
+      <input matInput #postalCode autocomplete="off" maxlength="5" formControlName="zipCode">
+      <mat-error *ngIf="addForm.controls['zipCode'].hasError('required')">
+        Zip Code is required
+      </mat-error>
+    </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>

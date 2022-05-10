@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, Input, EventEmitter, Output } from '@angular/core';
-import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
@@ -79,7 +78,12 @@ export class InventoryItemTableComponent implements OnInit {
       items.filter(item => (item.workOrder.id == this.passedWorkOrderId))))
       .toPromise()
       .then(data => { this.data = data })
-      .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
+      .finally( () => {
+        this.data.forEach((item: InventoryItem) => this.componentTotal += item.totalPrice);
+        this.dataSource = new MatTableDataSource(this.data);
+        this.totalChangedEvent.emit(this.componentTotal);
+      });
+
   }
 
   async configTable() {

@@ -11,6 +11,7 @@ import { LaborItemEditComponent } from "../../dialogs/labor-item-edit/labor-item
 import { LaborItemDeleteComponent } from "../../dialogs/labor-item-delete/labor-item-delete.component";
 import {map} from "rxjs/operators";
 import {AuthenticationService} from "../../../core/security/authentication.service";
+import {InventoryItem} from "../../../core/models/inventory-item";
 
 @Component({
   selector: 'app-labor-item-table',
@@ -77,7 +78,11 @@ export class LaborItemTableComponent implements OnInit {
       items.filter(item => (item.workOrder.id == this.passedWorkOrderId))))
       .toPromise()
       .then(data => { this.data = data })
-      .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
+      .finally( () => {
+        this.data.forEach((item: LaborItem) => this.componentTotal += item.totalPrice);
+        this.dataSource = new MatTableDataSource(this.data);
+        this.totalChangedEvent.emit(this.componentTotal);
+      });
   }
 
   async configTable() {

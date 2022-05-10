@@ -28,7 +28,7 @@
         <span formGroupName="{{i}}">
           <mat-form-field class="width-47" appearance="outline">
             <mat-label>{{bucket.value.location.entityName}} | Qty in Stock</mat-label>
-            <input matInput autocomplete="off" [value]="bucket.value.qtyInStock" formControlName="qtyInStock">
+            <input matInput autocomplete="off" [value]="bucket.value.qtyInStock" (keyup)="calcTotalInStock()" (change)="calcTotalInStock()" formControlName="qtyInStock">
             <button class="x-button" type="button" [disabled]="bucket.value.qtyInStock > 0" matSuffix mat-icon-button aria-label="Remove Location" (click)="removeInventoryBucket(i, bucket.value)"><mat-icon>close</mat-icon></button>
           </mat-form-field>
         </span>

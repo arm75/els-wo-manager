@@ -36,8 +36,10 @@ export class WorkOrderHistoryTableComponent implements OnInit {
   displayedColumns: any;
   dataSource: any;
   data: any;
+  filter: any;
+
   workOrderFilterSelected: any;
-  dropdownFilterSelected: any;
+  // dropdownFilterSelected: any;
   dropdownFilterArray: any;
 
   @ViewChild(MatTable)
@@ -109,6 +111,11 @@ export class WorkOrderHistoryTableComponent implements OnInit {
   applyFilter(event: Event) {
     const filterTarget = (event.target as HTMLInputElement).value;
     if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
+  }
+
+  clearFilter() {
+    this.dataSource.filter = '';
+    this.filter = '';
   }
 
   openAddDialog() {

@@ -54,9 +54,10 @@ export class InventoryAdminComponent implements OnInit, AfterViewInit {
 
   hasChild = (_: number, node: InventoryGroup) => !!node.children && node.children.length > 0;
 
-  setFilterGroupId(groupId: number) {
+  setFilterGroupId(groupId?: number) {
     //console.log("setFilterGroupId ran. number is: " + groupId);
-    this.filterGroupId = groupId;
+    if(groupId) { this.filterGroupId = groupId; }
+    if(!groupId) { this.filterGroupId = 0 }
   }
 
 }

@@ -10,13 +10,14 @@
   </span>
   <span>
     <mat-form-field class="table-search-box" appearance="outline">
-      <input matInput type="text" class="table-filer-box" (keyup)="applyFilter($event)" placeholder="Search">
+      <input matInput type="text" class="table-filer-box" autocomplete="off" [(ngModel)]="filter" (keyup)="applyFilter($event)" placeholder="Search">
     </mat-form-field>
+    <button class="mat-flat-button mat-primary reset-button" (click)="clearFilter()">Reset Filter</button>
   </span>
   <span class="example-fill-remaining-space"></span>
-  <span>
-    <button class="mat-flat-button mat-primary work-order-table-add-button" (click)="openAddDialog()">Add Work Order</button>
-  </span>
+<!--  <span>-->
+<!--    <button class="mat-flat-button mat-primary work-order-table-add-button" (click)="openAddDialog()">Add Work Order</button>-->
+<!--  </span>-->
 </div>
 <div class="mat-elevation-z0">
   <table #entityTable mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">

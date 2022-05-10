@@ -31,8 +31,7 @@ export class InventoryLocationAddComponent implements OnInit {
       'state': new FormControl('', [Validators.required]),
       'zipCode': new FormControl('', [Validators.required]),
       'phoneNumb': new FormControl(''),
-      'altPhoneNumb': new FormControl(''),
-      'emailAddress': new FormControl('', [Validators.email])
+      'altPhoneNumb': new FormControl('')
     });
   }
 

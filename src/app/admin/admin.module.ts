@@ -27,7 +27,7 @@ import { CustomerDeleteComponent } from './dialogs/customer-delete/customer-dele
 import { LocationAddComponent } from './dialogs/location-add/location-add.component';
 import { LocationEditComponent } from './dialogs/location-edit/location-edit.component';
 import { LocationDeleteComponent } from './dialogs/location-delete/location-delete.component';
-import { InventoryAdminComponent } from './admin/inventory-admin/inventory-admin.component';
+// import { InventoryAdminComponent } from './admin/inventory-admin/inventory-admin.component';
 import { WorkOrderAddComponent } from './dialogs/work-order-add/work-order-add.component';
 import { WorkOrderEditComponent } from './dialogs/work-order-edit/work-order-edit.component';
 import { WorkOrderDeleteComponent } from './dialogs/work-order-delete/work-order-delete.component';
@@ -90,7 +90,7 @@ const AdminModuleDialogComponents = [
   LocationAddComponent,
   LocationEditComponent,
   LocationDeleteComponent,
-  InventoryAdminComponent,
+  // InventoryAdminComponent,
   WorkOrderAddComponent,
   WorkOrderEditComponent,
   WorkOrderDeleteComponent,

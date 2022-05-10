@@ -1,9 +1,5 @@
 import { Component, OnDestroy, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
-import { MatDialogRef } from "@angular/material/dialog";
-import { CustomerService } from "../../services/customer.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MaterialKitModule } from "../../../shared/material-kit/material-kit.module";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../authentication.service";
 import { User } from "../../models/user";
@@ -11,7 +7,6 @@ import { Observable, Subscription } from "rxjs";
 import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { HeaderType } from "../header-type";
 import {UserService} from "../../services/user.service";
-import {waitForAsync} from "@angular/core/testing";
 
 @Component({
   selector: 'app-login',
@@ -49,7 +44,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     if(this.authenticationService.isLoggedIn()) {
       if((this.authenticationService.getUserFromLocalStorage()?.role == 'ROLE_ADMIN')||(this.authenticationService.getUserFromLocalStorage()?.role == 'ROLE_SUPER_ADMIN')) {
         this.router.navigateByUrl('/admin');

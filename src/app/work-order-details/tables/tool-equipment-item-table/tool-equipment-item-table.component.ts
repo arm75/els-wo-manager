@@ -11,6 +11,7 @@ import { ToolEquipmentItemDeleteComponent } from "../../dialogs/tool-equipment-i
 import {map} from "rxjs/operators";
 import {ToolEquipmentItemReturnComponent} from "../../dialogs/tool-equipment-item-return/tool-equipment-item-return.component";
 import {AuthenticationService} from "../../../core/security/authentication.service";
+import {InventoryItem} from "../../../core/models/inventory-item";
 
 @Component({
   selector: 'app-tool-equipment-item-table',
@@ -77,7 +78,11 @@ export class ToolEquipmentItemTableComponent implements OnInit {
       items.filter(item => (item.workOrder.id == this.passedWorkOrderId))))
       .toPromise()
       .then(data => { this.data = data })
-      .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
+      .finally( () => {
+        this.data.forEach((item: ToolEquipmentItem) => this.componentTotal += item.totalPrice);
+        this.dataSource = new MatTableDataSource(this.data);
+        this.totalChangedEvent.emit(this.componentTotal);
+      });
   }
 
   async configTable() {
