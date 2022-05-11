@@ -2,9 +2,8 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angula
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {ToolEquipmentItem} from "../../../core/models/tool-equipment-item";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatSort, Sort} from "@angular/material/sort";
+import {MatSort} from "@angular/material/sort";
 import {ToolEquipmentItemService} from "../../../core/services/tool-equipment-item.service";
-import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ToolEquipmentItemAddComponent} from "../../../work-order-details/dialogs/tool-equipment-item-add/tool-equipment-item-add.component";
 import {ToolEquipmentItemEditComponent} from "../../../work-order-details/dialogs/tool-equipment-item-edit/tool-equipment-item-edit.component";
@@ -33,7 +32,6 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
   workOrdersToShow: any;
   componentTotal: any;
   displayedColumns: any;
-
   rightNow = Date.now();
   oneWeeks: number = 604800000;
   twoWeeks: number = 1209600000;
@@ -77,15 +75,14 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
   async setupComponent() {
     // get an array of the IDs, of the work orders to show...
     await this.getWorkOrdersToShow();
-    // get the table data, but only from the IDs in workOrdersToShow..
+    // get the table data, but only from the IDs in workOrdersToShow..,
     await this.buildTable();
+    // configure the table...
+    await this.configTable();
     // sum the items' totals...
     await this.data.forEach((item: { totalPrice: number; }) => this.componentTotal += item.totalPrice);
+    // run the first changed event, to get the total...
     this.totalChangedEvent.emit(this.componentTotal);
-    this.sort.active = 'createdDate';
-    this.sort.direction = 'desc';
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
   }
 
   async getWorkOrdersToShow() {
@@ -112,6 +109,13 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
       .finally(() => { this.dataSource = new MatTableDataSource(this.data) });
   }
 
+  async configTable() {
+    this.sort.active = 'createdDate';
+    this.sort.direction = 'desc';
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
   applyFilter(event: Event) {
     const filterTarget = (event.target as HTMLInputElement).value;
     if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
@@ -125,7 +129,7 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     return;
   }
 
-  openAddDialog() {
+  async openAddDialog() {
     const addDialogConfig = new MatDialogConfig();
     addDialogConfig.disableClose = true;
     addDialogConfig.autoFocus = true;
@@ -133,12 +137,11 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     addDialogConfig.position = { top:  '0' };
     addDialogConfig.data = { woId: this.passedWorkOrderId };
     const addDialogRef = this.dialog.open(ToolEquipmentItemAddComponent, addDialogConfig);
-    addDialogRef.afterClosed().subscribe(addData => {
-      this.buildTable();
-    });
+    await addDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  openEditDialog( _id: number) {
+  async openEditDialog( _id: number) {
     const editDialogConfig = new MatDialogConfig();
     editDialogConfig.disableClose = true;
     editDialogConfig.autoFocus = true;
@@ -146,12 +149,11 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     editDialogConfig.position = { top:  '0' };
     editDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const editDialogRef = this.dialog.open(ToolEquipmentItemEditComponent, editDialogConfig);
-    editDialogRef.afterClosed().subscribe(editData => {
-      this.buildTable();
-    });
+    await editDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  openReturnItemDialog(_id: number) {
+  async openReturnItemDialog(_id: number) {
     const returnDialogConfig = new MatDialogConfig();
     returnDialogConfig.disableClose = true;
     returnDialogConfig.autoFocus = true;
@@ -159,12 +161,11 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     returnDialogConfig.position = { top:  '0' };
     returnDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const returnDialogRef = this.dialog.open(ToolEquipmentItemReturnComponent, returnDialogConfig);
-    returnDialogRef.afterClosed().subscribe(returnData => {
-      this.buildTable();
-    });
+    await returnDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
-  openDeleteDialog( _id: number) {
+  async openDeleteDialog( _id: number) {
     const deleteDialogConfig = new MatDialogConfig();
     deleteDialogConfig.disableClose = true;
     deleteDialogConfig.autoFocus = true;
@@ -172,9 +173,8 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     deleteDialogConfig.position = { top:  '0' };
     deleteDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const deleteDialogRef = this.dialog.open(ToolEquipmentItemDeleteComponent, deleteDialogConfig);
-    deleteDialogRef.afterClosed().subscribe(deleteData => {
-      this.buildTable();
-    });
+    await deleteDialogRef.afterClosed().toPromise()
+      .finally( () => { this.setupComponent(); });
   }
 
 }
