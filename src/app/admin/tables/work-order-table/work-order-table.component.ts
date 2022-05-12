@@ -120,6 +120,8 @@ export class WorkOrderTableComponent implements OnInit {
   clearFilter() {
     this.dataSource.filter = '';
     this.filter = '';
+    this.workOrderFilterSelected = 'ALL';
+    this.selectChange();
   }
 
   async openAddDialog() {

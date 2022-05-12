@@ -116,6 +116,8 @@ export class WorkOrderHistoryTableComponent implements OnInit {
   clearFilter() {
     this.dataSource.filter = '';
     this.filter = '';
+    this.workOrderFilterSelected = 'ALL';
+    this.selectChange();
   }
 
   openAddDialog() {

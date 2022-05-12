@@ -1,10 +1,10 @@
 <div class="table-toolbar">
   <span>
     <mat-form-field class="example-full-width width-99 els-custom-customer-select" appearance="outline">
-        <mat-label>Filter Inventory Group</mat-label>
+        <mat-label>Filter by GROUP</mat-label>
         <mat-select [(value)]="inventoryGroupFilterSelected" (selectionChange)="selectChange()">
-          <mat-option value="ALL">ALL Work Orders</mat-option>
-          <mat-option *ngFor="let status of dropdownFilterArray" [value]="status.value">{{status.name}}</mat-option>
+          <mat-option value="ALL">ALL Inventory Groups</mat-option>
+          <mat-option *ngFor="let group of inventoryGroupFilterArray" [value]="group.id">{{group.entityName}}</mat-option>
         </mat-select>
       </mat-form-field>
   </span>

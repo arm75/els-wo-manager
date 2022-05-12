@@ -10,6 +10,8 @@ import { InventoryEditComponent } from "../../dialogs/inventory-edit/inventory-e
 import { InventoryDeleteComponent } from "../../dialogs/inventory-delete/inventory-delete.component";
 import {map} from "rxjs/operators";
 import {AuthenticationService} from "../../../core/security/authentication.service";
+import {InventoryGroupService} from "../../../core/services/inventory-group.service";
+import {WorkOrderStatus} from "../../../core/types/work-order-status";
 
 @Component({
   selector: 'app-inventory-table',
@@ -29,7 +31,7 @@ export class InventoryTableComponent implements OnInit {
   filter: any;
 
   inventoryGroupFilterSelected: any;
-  dropdownFilterArray: any;
+  inventoryGroupFilterArray: any;
 
   @Input()
   filterGroupId: number = 0;
@@ -45,6 +47,7 @@ export class InventoryTableComponent implements OnInit {
 
   constructor(
     private entityService: InventoryService,
+    private inventoryGroupService: InventoryGroupService,
     private authenticationService: AuthenticationService,
     private dialog: MatDialog
   ) {
@@ -54,6 +57,7 @@ export class InventoryTableComponent implements OnInit {
     this.nameToDisplay = this.loggedInUser!.firstName;
 
     this.displayedColumns = ['id', 'entityName', 'inventoryGroup', 'totalInStock', 'unitCost', 'unitPrice', 'actions'];
+    this.inventoryGroupFilterSelected = 'ALL';
   }
 
   ngOnInit() {
@@ -65,48 +69,52 @@ export class InventoryTableComponent implements OnInit {
     await this.buildTable();
     // configure table
     await this.configTable();
+    // load group filter select
+    await this.loadInventoryGroupSelect();
   }
 
   async buildTable() {
-    await this.entityService.getAll().subscribe(data => {
-      this.dataSource = new MatTableDataSource(data);
-    });
-  }
-
-  async configTable() {
-    this.sort.active = 'id';
-    this.sort.direction = 'desc';
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-  }
-
-  filterTable() {
-    switch(this.filterGroupId) {
-      case 0: {
-        this.entityService.getAll()
-          .subscribe(data => {
-            //console.log(data);
-            this.dataSource = new MatTableDataSource(data);
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
-          });
+    switch(this.inventoryGroupFilterSelected) {
+      case 'ALL': {
+        await this.entityService.getAll()
+          .toPromise()
+          .then(data => { this.data = data })
+          .finally( () => { this.dataSource = new MatTableDataSource(this.data) });
         break;
       }
       default: {
-        this.entityService.getAll()
-          .pipe(map(items =>
-            items.filter(item => ((item.inventoryGroup.id == this.filterGroupId)))))
-          .subscribe(data => {
-            this.dataSource = new MatTableDataSource(data);
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
-          });
+        await this.entityService.getAll().pipe(map(items =>
+          items.filter(item => (item.inventoryGroup.id == this.inventoryGroupFilterSelected))))
+          .toPromise()
+          .then(data => { this.data = data })
+          .finally( () => { this.dataSource = new MatTableDataSource(this.data) });
         break;
       }
     }
   }
 
+  async buildTable2() {
+    await this.entityService.getAll().toPromise()
+      .then(data => { this.data = data })
+      .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
+  }
+
+  async configTable() {
+    this.sort.active = 'id';
+    this.sort.direction = 'asc';
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  async loadInventoryGroupSelect() {
+    await this.inventoryGroupService.getAll().toPromise()
+      .then(data => { this.data = data })
+      .finally(() => { this.inventoryGroupFilterArray = this.data });
+  }
+
+
   selectChange() {
+    this.setupComponent().finally(() => {});
   }
 
   applyFilter(event: Event) {
@@ -117,6 +125,8 @@ export class InventoryTableComponent implements OnInit {
   clearFilter() {
     this.dataSource.filter = '';
     this.filter = '';
+    this.inventoryGroupFilterSelected = 'ALL';
+    this.selectChange();
   }
 
   async openAddDialog() {
@@ -127,7 +137,7 @@ export class InventoryTableComponent implements OnInit {
     addDialogConfig.position = { top:  '0' };
     const addDialogRef = this.dialog.open(InventoryAddComponent, addDialogConfig);
     await addDialogRef.afterClosed().toPromise()
-      .finally( () => { this.buildTable(); });
+      .finally( () => { this.setupComponent(); });
   }
 
   async openEditDialog( _id: number) {
@@ -139,7 +149,7 @@ export class InventoryTableComponent implements OnInit {
     editDialogConfig.data = { entityId: _id };
     const editDialogRef = this.dialog.open(InventoryEditComponent, editDialogConfig);
     await editDialogRef.afterClosed().toPromise()
-      .finally( () => { this.buildTable(); });
+      .finally( () => { this.setupComponent(); });
   }
 
   async openDeleteDialog( _id: number) {
@@ -151,7 +161,7 @@ export class InventoryTableComponent implements OnInit {
     deleteDialogConfig.data = { entityId: _id };
     const deleteDialogRef = this.dialog.open(InventoryDeleteComponent, deleteDialogConfig);
     await deleteDialogRef.afterClosed().toPromise()
-      .finally( () => { this.buildTable(); });
+      .finally( () => { this.setupComponent(); });
   }
 
 }

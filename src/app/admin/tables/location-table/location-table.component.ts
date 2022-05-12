@@ -9,6 +9,9 @@ import { LocationAddComponent } from "../../dialogs/location-add/location-add.co
 import { LocationEditComponent } from "../../dialogs/location-edit/location-edit.component";
 import { LocationDeleteComponent } from "../../dialogs/location-delete/location-delete.component";
 import {AuthenticationService} from "../../../core/security/authentication.service";
+import {map} from "rxjs/operators";
+import {WorkOrderStatus} from "../../../core/types/work-order-status";
+import {CustomerService} from "../../../core/services/customer.service";
 
 @Component({
   selector: 'app-location-table',
@@ -27,6 +30,9 @@ export class LocationTableComponent implements OnInit {
   data: any;
   filter: any;
 
+  customerFilterSelected: any;
+  customerFilterArray: any;
+
   @ViewChild(MatTable)
   entityTable!: MatTable<Location>;
 
@@ -38,6 +44,7 @@ export class LocationTableComponent implements OnInit {
 
   constructor(
     private entityService: LocationService,
+    private customerService: CustomerService,
     private authenticationService: AuthenticationService,
     private dialog: MatDialog
   ) {
@@ -47,6 +54,7 @@ export class LocationTableComponent implements OnInit {
     this.nameToDisplay = this.loggedInUser!.firstName;
 
     this.displayedColumns = ['id', 'entityName', 'customer', 'actions'];
+    this.customerFilterSelected = 'ALL';
   }
 
   ngOnInit() {
@@ -58,20 +66,52 @@ export class LocationTableComponent implements OnInit {
     await this.buildTable();
     // configure table
     await this.configTable();
+    // load group filter select
+    await this.loadCustomerSelect();
   }
 
   async buildTable() {
-    await this.entityService.getAll()
-      .toPromise()
-      .then(data => { this.data = data })
-      .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
+    switch(this.customerFilterSelected) {
+      case 'ALL': {
+        await this.entityService.getAll()
+          .toPromise()
+          .then(data => { this.data = data })
+          .finally( () => { this.dataSource = new MatTableDataSource(this.data) });
+        break;
+      }
+      default: {
+        await this.entityService.getAll().pipe(map(items =>
+          items.filter(item => ((item.customer.id == this.customerFilterSelected)))))
+          .toPromise()
+          .then(data => { this.data = data })
+          .finally( () => { this.dataSource = new MatTableDataSource(this.data) });
+        break;
+      }
+    }
   }
+
+  // async buildTable1() {
+  //   await this.entityService.getAll()
+  //     .toPromise()
+  //     .then(data => { this.data = data })
+  //     .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
+  // }
 
   async configTable() {
     this.sort.active = 'id';
     this.sort.direction = 'desc';
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  async loadCustomerSelect() {
+    await this.customerService.getAll().toPromise()
+      .then(data => { this.data = data })
+      .finally(() => { this.customerFilterArray = this.data });
+  }
+
+  selectChange() {
+    this.setupComponent().finally(() => {});
   }
 
   applyFilter(event: Event) {
@@ -83,6 +123,8 @@ export class LocationTableComponent implements OnInit {
   clearFilter() {
     this.dataSource.filter = '';
     this.filter = '';
+    this.customerFilterSelected = 'ALL';
+    this.selectChange();
   }
 
   async openAddDialog() {
