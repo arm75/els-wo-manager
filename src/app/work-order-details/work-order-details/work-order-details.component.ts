@@ -98,30 +98,7 @@ export class WorkOrderDetailsComponent implements OnInit {
     }
   }
 
-  addUserToWorkOrder() {
-    this.userData.push(this.assignedUsersSelected);
-    this.loadAssignedUsersSelect();
-    this.assignedUsersSelected = "";
-  }
 
-  removeUserFromWorkOrder(userToRemove: User) {
-    if (this.userData.length > 1) {
-      this.userData = this.userData.filter(function (obj: { id: number; }) {
-        return obj.id !== userToRemove.id;
-      });
-    }
-    this.loadAssignedUsersSelect();
-  }
-
-  compareObjects(o1: any, o2: any): boolean {
-    return o1.entityName === o2.entityName && o1.id === o2.id;
-  }
-
-  getIdFromRoute(): void {
-    this.route.paramMap.subscribe( params => {
-      this.passedWorkOrderId = params.get('passedId');
-    });
-  }
 
   loadWorkOrderIntoView(): void {
     this.entityService.get(this.passedWorkOrderId)
@@ -158,6 +135,48 @@ export class WorkOrderDetailsComponent implements OnInit {
       });
   }
 
+
+
+
+  getIdFromRoute(): void {
+    this.route.paramMap.subscribe( params => {
+      this.passedWorkOrderId = params.get('passedId');
+    });
+  }
+
+
+
+  addUserToWorkOrder() {
+    this.userData.push(this.assignedUsersSelected);
+    this.loadAssignedUsersSelect();
+    this.assignedUsersSelected = "";
+  }
+
+  removeUserFromWorkOrder(userToRemove: User) {
+    if (this.userData.length > 1) {
+      this.userData = this.userData.filter(function (obj: { id: number; }) {
+        return obj.id !== userToRemove.id;
+      });
+    }
+    this.loadAssignedUsersSelect();
+  }
+
+
+
+
+
+  compareObjects(o1: any, o2: any): boolean {
+    return o1.entityName === o2.entityName && o1.id === o2.id;
+  }
+
+
+
+
+
+
+
+
+
   updateFieldBoxes(): void {
     this.woIdFieldBox = this.entityData.id;
     this.woStatusFieldBox = this.entityData.status;
@@ -166,6 +185,11 @@ export class WorkOrderDetailsComponent implements OnInit {
     this.woCustomerFieldBox = this.entityData.customer.entityName;
     this.woLocationFieldBox = this.entityData.location.entityName;
   }
+
+
+
+
+
 
   calcMasterTotal() {
     this.masterTotal = this.masterInventoryTotal + this.masterLaborTotal + this.masterSubcontractorTotal + this.masterToolEquipmentTotal;
@@ -191,11 +215,21 @@ export class WorkOrderDetailsComponent implements OnInit {
     this.calcMasterTotal();
   }
 
+
+
+
+
+
+
   customerSelectChange() { this.loadLocationSelect(this.customerSelected.id); }
 
   locationSelectChange() { }
 
   assignedUsersSelectChange() { }
+
+
+
+
 
   loadCustomerSelect() {
     this.customerService.getAll().subscribe(
@@ -236,11 +270,16 @@ export class WorkOrderDetailsComponent implements OnInit {
     );
   }
 
+
+
+
   editModeToggle() {
     this.editFormEditMode = !this.editFormEditMode;
     if(this.editFormEditMode) { this.editForm.enable(); }
     else { this.editForm.disable() }
   }
+
+
 
   processStatusChange(eventData: number) {
     this.loadWorkOrderIntoView();

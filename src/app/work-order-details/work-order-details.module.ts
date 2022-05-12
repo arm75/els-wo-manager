@@ -39,6 +39,7 @@ import { GlobalProgressSpinnerComponent } from "../shared/progress-spinner/globa
 import { ToolEquipmentItemReturnComponent } from './dialogs/tool-equipment-item-return/tool-equipment-item-return.component';
 import { SubcontractorItemCompleteComponent } from './dialogs/subcontractor-item-complete/subcontractor-item-complete.component';
 import { NotesCompletionTabComponent } from './components/notes-completion-tab/notes-completion-tab.component';
+import { EditDetailsTabComponent } from './components/edit-details-tab/edit-details-tab.component';
 
 // table components array
 const WorkOrderDetailsModuleTableComponents = [
@@ -74,6 +75,7 @@ const WorkOrderDetailsModuleDialogComponents = [
     ToolEquipmentItemReturnComponent,
     SubcontractorItemCompleteComponent,
     NotesCompletionTabComponent,
+    EditDetailsTabComponent,
   ],
   imports: [
     CommonModule,

@@ -58,6 +58,8 @@
     <div class="row els-custom-table-container">
       <mat-tab-group mat-stretch-tabs class="work-order-details-tab-group">
         <mat-tab label="Work Order Details">
+
+
           <form [formGroup]="editForm" class="example-form" (submit)="saveWorkOrder()">
           <div class="table-toolbar">
             <span><h2>Work Order Details</h2></span>
@@ -169,6 +171,9 @@
           </div>
           </div>
           </form>
+
+
+
         </mat-tab>
         <mat-tab label="Inventory Items"><app-inventory-item-table (totalChangedEvent)="getNewInventoryTotal($event)" [passedWorkOrderId]="entityData.id"></app-inventory-item-table></mat-tab>
         <mat-tab label="Labor Items"><app-labor-item-table (totalChangedEvent)="getNewLaborTotal($event)" [passedWorkOrderId]="entityData.id"></app-labor-item-table></mat-tab>
