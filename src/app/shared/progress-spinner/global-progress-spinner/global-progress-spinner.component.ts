@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ThemePalette} from "@angular/material/core";
 import {ProgressSpinnerMode} from "@angular/material/progress-spinner";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {GlobalProgressSpinnerService} from "../global-progress-spinner.service";
 
 @Component({
   selector: 'app-global-progress-spinner',
@@ -15,7 +16,9 @@ export class GlobalProgressSpinnerComponent implements OnInit {
   value = 500;
 
   constructor(
+    private globalProgressSpinnerService: GlobalProgressSpinnerService,
     private dialog: MatDialog
+
   ) {
 
   }

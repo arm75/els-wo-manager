@@ -8,6 +8,7 @@ import { InventoryService } from "../../../core/services/inventory.service";
 import {finalize} from "rxjs/operators";
 import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 import {InventoryBucketService} from "../../../core/services/inventory-bucket.service";
+import {AuthenticationService} from "../../../core/security/authentication.service";
 
 @Component({
   selector: 'app-inventory-item-edit',
@@ -15,6 +16,12 @@ import {InventoryBucketService} from "../../../core/services/inventory-bucket.se
   styleUrls: ['./inventory-item-edit.component.css']
 })
 export class InventoryItemEditComponent implements OnInit {
+
+  loggedInUser: any;
+  loggedInUsername: any;
+  loggedInRole: any;
+  nameToDisplay: any;
+  isAdmin: boolean = false;
 
   dataLoaded: boolean = false;
   formTitle: string = "Edit Inventory Item";
@@ -37,12 +44,21 @@ export class InventoryItemEditComponent implements OnInit {
 
   constructor( private matDialogRef: MatDialogRef<InventoryItemEditComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
+               private authenticationService: AuthenticationService,
                private entityService: InventoryItemService,
                private inventoryService: InventoryService,
                private inventoryBucketService: InventoryBucketService,
                private formBuilder: FormBuilder,
                private globalSnackBarService: GlobalSnackBarService
-  ) { }
+  ) {
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
+    if(this.loggedInRole=="ROLE_ADMIN"||this.loggedInRole=="ROLE_SUPER_ADMIN") {
+      this.isAdmin = true;
+    }
+  }
 
   ngOnInit(): void {
     this.dataLoaded = false;

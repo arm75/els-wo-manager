@@ -7,6 +7,7 @@ import { LaborService } from "../../../core/services/labor.service";
 import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
 import {finalize} from "rxjs/operators";
 import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
+import {AuthenticationService} from "../../../core/security/authentication.service";
 
 @Component({
   selector: 'app-labor-item-add',
@@ -14,6 +15,13 @@ import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.s
   styleUrls: ['./labor-item-add.component.css']
 })
 export class LaborItemAddComponent implements OnInit {
+
+  loggedInUser: any;
+  loggedInUsername: any;
+  loggedInRole: any;
+  nameToDisplay: any;
+  isAdmin: boolean = false;
+
   formTitle: string = "Add Labor Item";
   woId: null;
   addForm: FormGroup = new FormGroup({});
@@ -28,11 +36,20 @@ export class LaborItemAddComponent implements OnInit {
 
   constructor( private matDialogRef: MatDialogRef<LaborItemAddComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any,
+               private authenticationService: AuthenticationService,
                private entityService: LaborItemService,
                private laborService: LaborService,
                private formBuilder: FormBuilder,
                private globalSnackBarService: GlobalSnackBarService
-  ) { }
+  ) {
+    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
+    this.loggedInUsername = this.loggedInUser.username;
+    this.loggedInRole = this.loggedInUser.role;
+    this.nameToDisplay = this.loggedInUser!.firstName;
+    if(this.loggedInRole=="ROLE_ADMIN"||this.loggedInRole=="ROLE_SUPER_ADMIN") {
+      this.isAdmin = true;
+    }
+  }
 
   ngOnInit() {
     this.woId = this.data.woId;

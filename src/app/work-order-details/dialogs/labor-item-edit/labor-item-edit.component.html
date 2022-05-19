@@ -21,7 +21,7 @@
       </mat-form-field>
     </p>
     <p>
-      <mat-form-field class="width-99" appearance="outline">
+      <mat-form-field [hidden]="!isAdmin" class="width-99" appearance="outline">
         <mat-label>Rate per Hour</mat-label>
         <input matInput readonly autocomplete="off" prefix="$" mask="0*.00" formControlName="ratePerHour">
         <mat-error *ngIf="editForm.controls['ratePerHour'].hasError('required')">

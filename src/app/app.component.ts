@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {GlobalProgressSpinnerService} from "./shared/progress-spinner/global-progress-spinner.service";
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   // title = 'els-wo-manager';
+
+  constructor(
+    public globalProgressSpinnerService: GlobalProgressSpinnerService,
+  ) { }
+
 }

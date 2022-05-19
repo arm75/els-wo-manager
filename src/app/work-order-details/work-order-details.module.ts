@@ -66,32 +66,39 @@ const WorkOrderDetailsModuleDialogComponents = [
 ];
 
 @NgModule({
-  declarations: [
-    WorkOrderDetailsComponent,
-    WorkOrderDetailsModuleTableComponents,
-    WorkOrderDetailsModuleDialogComponents,
-    PrintTemplateComponent,
-    GlobalProgressSpinnerComponent,
-    ToolEquipmentItemReturnComponent,
-    SubcontractorItemCompleteComponent,
-    NotesCompletionTabComponent,
-    EditDetailsTabComponent,
-  ],
-  imports: [
-    CommonModule,
-    MaterialKitModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule,
-    NgxMaskModule,
-  ],
-  providers:[
-    AuthInterceptor,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    AuthenticationService,
-    UserService,
-    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500, verticalPosition: 'bottom', horizontalPosition: 'center', panelClass: 'els-custom-snackbar' } }
-  ],
+    declarations: [
+        WorkOrderDetailsComponent,
+        WorkOrderDetailsModuleTableComponents,
+        WorkOrderDetailsModuleDialogComponents,
+        PrintTemplateComponent,
+        ToolEquipmentItemReturnComponent,
+        SubcontractorItemCompleteComponent,
+        NotesCompletionTabComponent,
+        EditDetailsTabComponent,
+    ],
+    imports: [
+        CommonModule,
+        MaterialKitModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule,
+        NgxMaskModule,
+    ],
+    providers: [
+        AuthInterceptor,
+        {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+        AuthenticationService,
+        UserService,
+        {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+            useValue: {
+                duration: 2500,
+                verticalPosition: 'bottom',
+                horizontalPosition: 'center',
+                panelClass: 'els-custom-snackbar'
+            }
+        }
+    ],
+    exports: [ ]
 })
 export class WorkOrderDetailsModule { }
 // verticalPosition:  Allowed values are  'top' | 'bottom'

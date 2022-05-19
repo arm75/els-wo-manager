@@ -1,1 +1,4 @@
 <router-outlet></router-outlet>
+<div *ngIf="globalProgressSpinnerService.isLoading|async">
+<app-global-progress-spinner ></app-global-progress-spinner>
+</div>
