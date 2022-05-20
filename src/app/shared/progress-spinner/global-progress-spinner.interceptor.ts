@@ -13,7 +13,7 @@ export class GlobalProgressSpinnerInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    this.globalProgressSpinnerService.isLoading.next(true);
+    //this.globalProgressSpinnerService.isLoading.next(true);
     return next.handle(request).pipe(finalize(()=>{this.globalProgressSpinnerService.isLoading.next(false)}));
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
@@ -9,6 +9,8 @@ import { CustomerAddComponent } from "../../dialogs/customer-add/customer-add.co
 import { CustomerEditComponent } from "../../dialogs/customer-edit/customer-edit.component";
 import { CustomerDeleteComponent } from "../../dialogs/customer-delete/customer-delete.component";
 import {AuthenticationService} from "../../../core/security/authentication.service";
+import {interval, Observable} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-customer-table',
@@ -27,8 +29,12 @@ export class CustomerTableComponent implements OnInit {
   data: any;
   filter: any;
 
-  @ViewChild(MatTable)
-  entityTable!: MatTable<Customer>;
+  // @ViewChild(MatTable, {static: false}) table : MatTable // initialize
+
+  //then this.table.renderRows();
+
+  @ViewChild(MatTable, {static: false})
+  entityTable!: MatTable<Customer[]>;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -36,10 +42,15 @@ export class CustomerTableComponent implements OnInit {
   @ViewChild(MatSort)
   sort: MatSort = new MatSort;
 
+  //timerEvent: number = 0;
+
+  tableObs$: any;
+
   constructor(
     private entityService: CustomerService,
     private authenticationService: AuthenticationService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private changeDetectorRefs: ChangeDetectorRef
   ) {
     this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
     this.loggedInUsername = this.loggedInUser.username;
@@ -54,17 +65,47 @@ export class CustomerTableComponent implements OnInit {
   }
 
   async setupComponent() {
+
+    const refreshTimer$ = interval(30000);
+    refreshTimer$.subscribe((data)=>{
+      console.log("refresh event #:", data);
+      this.refreshTable();
+    });
+
     // get the table..
     await this.buildTable();
     // configure table
     await this.configTable();
   }
 
-   async buildTable() {
-     await this.entityService.getAll()
-       .toPromise()
-       .then(data => { this.data = data })
-       .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
+  async buildTable() {
+
+    // const obs$ = this.entityService.getAll();
+    //this.dataSource = new MatTableDataSource(obs$);
+
+    // this.tableObs$ =
+    //   this.entityService.getAll().pipe(
+    //     map(things => {
+    //       this.dataSource = new MatTableDataSource<Customer[]>();
+    //       this.dataSource.data = things;
+    //       return this.dataSource;
+    //     }));
+    this.tableObs$ = this.entityService.getAll().subscribe(
+      data => { this.dataSource = new MatTableDataSource(data); }
+    );
+
+
+
+    // .toPromise()
+    // .then(data => { this.data = data })
+    // .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
+
+
+    // await this.entityService.getAll()
+    //   .toPromise()
+    //   .then(data => { this.data = data })
+    //   .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
+
   }
 
   async configTable() {
@@ -72,6 +113,18 @@ export class CustomerTableComponent implements OnInit {
     this.sort.direction = 'desc';
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  refreshTable() {
+    // const a = this.entityTable.dataSource;
+    // this.tableObs$ = this.entityService.getAll().subscribe(
+    //   data => { this.dataSource = new MatTableDataSource(data) }
+    // );
+
+    this.tableObs$ = this.entityService.getAll().subscribe(
+      data => { this.dataSource = data; }
+    );
+    this.changeDetectorRefs.detectChanges();
   }
 
   applyFilter(event: Event) {

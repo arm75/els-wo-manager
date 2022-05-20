@@ -12,6 +12,7 @@ import { GlobalSnackBarService } from "../../shared/snackbar/global-snack-bar.se
 import { UserService } from "../../core/services/user.service";
 import { User } from "../../core/models/user";
 import { MatInput } from "@angular/material/input";
+import {interval} from "rxjs";
 
 @Component({
   selector: 'app-work-order-details',
@@ -71,6 +72,9 @@ export class WorkOrderDetailsComponent implements OnInit {
 
   logNg: boolean = false;
 
+  // obs test
+  timerEvent: number = 0;
+
   constructor(
     private entityService: WorkOrderService,
     private customerService: CustomerService,
@@ -89,6 +93,9 @@ export class WorkOrderDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+
+
     this.dataLoaded = false;
     this.getIdFromRoute();
     this.editFormEditMode = false;
