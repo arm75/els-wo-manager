@@ -34,6 +34,9 @@ export class SubcontractorItemTableComponent implements OnInit {
   @Input()
   passedWorkOrderId: any;
 
+  @Input()
+  passedWorkOrderStatus: any;
+
   @Output()
   totalChangedEvent: EventEmitter<number> = new EventEmitter();
 

@@ -30,3 +30,7 @@ button.inventory-item-table-edit-button, button.inventory-item-table-delete-butt
 td.table-notes {
   max-width: 300px;
 }
+
+button:disabled {
+  background-color: #afafaf;
+}

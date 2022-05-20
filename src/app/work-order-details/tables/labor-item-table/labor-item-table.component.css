@@ -26,3 +26,7 @@ button.labor-item-table-edit-button, button.labor-item-table-delete-button  {
 .example-fill-remaining-space {
   flex: 1 1 auto;
 }
+
+button:disabled {
+  background-color: #afafaf;
+}

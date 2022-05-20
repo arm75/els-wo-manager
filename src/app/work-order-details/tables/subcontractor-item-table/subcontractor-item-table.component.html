@@ -4,7 +4,7 @@
   </span>
   <span class="example-fill-remaining-space"></span>
   <span>
-    <button class="mat-flat-button mat-primary subcontractor-item-table-add-button" (click)="openAddDialog()">Add Subcontractor Item</button>
+    <button class="mat-flat-button mat-primary subcontractor-item-table-add-button" [disabled]="!(this.passedWorkOrderStatus=='OPEN')" (click)="openAddDialog()">Add Subcontractor Item</button>
   </span>
 </div>
 <div class="mat-elevation-z0">

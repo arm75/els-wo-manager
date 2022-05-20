@@ -164,7 +164,7 @@
           <div class="row">
             <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
               <div><button type="button" class="mat-flat-button mat-primary" (click)="printPage()">Print Work Order</button></div>
-              <div><button *ngIf="!editFormEditMode" class="mat-flat-button mat-primary" (click)="editModeToggle()">Edit Work Order Details</button></div>
+              <div><button *ngIf="!editFormEditMode" [disabled]="!(this.entityData.status=='OPEN')" class="mat-flat-button mat-primary" (click)="editModeToggle()">Edit Work Order Details</button></div>
               <div><button *ngIf="editFormEditMode" class="mat-flat-button edit-button-color" type="submit">Save Work Order Details</button></div>
               <div><button *ngIf="editFormEditMode" class="mat-raised-button" (click)="editModeToggle()">Cancel</button></div>
             </div>
@@ -175,10 +175,10 @@
 
 
         </mat-tab>
-        <mat-tab label="Inventory Items"><app-inventory-item-table (totalChangedEvent)="getNewInventoryTotal($event)" [passedWorkOrderId]="entityData.id"></app-inventory-item-table></mat-tab>
-        <mat-tab label="Labor Items"><app-labor-item-table (totalChangedEvent)="getNewLaborTotal($event)" [passedWorkOrderId]="entityData.id"></app-labor-item-table></mat-tab>
-        <mat-tab label="Subcontractor Items"><app-subcontractor-item-table (totalChangedEvent)="getNewSubcontractorTotal($event)" [passedWorkOrderId]="entityData.id"></app-subcontractor-item-table></mat-tab>
-        <mat-tab label="Tool/Equipment Items"><app-tool-equipment-item-table (totalChangedEvent)="getNewToolEquipmentTotal($event)" [passedWorkOrderId]="entityData.id"></app-tool-equipment-item-table></mat-tab>
+        <mat-tab label="Inventory Items"><app-inventory-item-table (totalChangedEvent)="getNewInventoryTotal($event)" [passedWorkOrderId]="entityData.id" [passedWorkOrderStatus]="entityData.status"></app-inventory-item-table></mat-tab>
+        <mat-tab label="Labor Items"><app-labor-item-table (totalChangedEvent)="getNewLaborTotal($event)" [passedWorkOrderId]="entityData.id" [passedWorkOrderStatus]="entityData.status"></app-labor-item-table></mat-tab>
+        <mat-tab label="Subcontractor Items"><app-subcontractor-item-table (totalChangedEvent)="getNewSubcontractorTotal($event)" [passedWorkOrderId]="entityData.id" [passedWorkOrderStatus]="entityData.status"></app-subcontractor-item-table></mat-tab>
+        <mat-tab label="Tool/Equipment Items"><app-tool-equipment-item-table (totalChangedEvent)="getNewToolEquipmentTotal($event)" [passedWorkOrderId]="entityData.id" [passedWorkOrderStatus]="entityData.status"></app-tool-equipment-item-table></mat-tab>
         <mat-tab label="Complete Work Order"><app-notes-completion-tab (statusChangedEvent)="processStatusChange($event)" [passedWorkOrderId]="entityData.id"></app-notes-completion-tab></mat-tab>
       </mat-tab-group>
     <!-- end everything whitespace -->

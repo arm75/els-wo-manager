@@ -281,3 +281,7 @@ app-print-template {
   color: #fff;
   background-color: #996633;
 }
+
+button:disabled {
+  background-color: #afafaf;
+}

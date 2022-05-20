@@ -26,3 +26,7 @@ button.tool-equipment-item-table-edit-button, button.tool-equipment-item-table-d
 .example-fill-remaining-space {
   flex: 1 1 auto;
 }
+
+button:disabled {
+  background-color: #afafaf;
+}
