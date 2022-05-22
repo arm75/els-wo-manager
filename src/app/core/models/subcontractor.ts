@@ -1,5 +1,8 @@
+import {SubcontractorGroup} from "./subcontractor-group";
+
 export interface Subcontractor {
   id: number;
+  subcontractorGroup: SubcontractorGroup;
   entityName: string;
   address: string;
   unit: string;

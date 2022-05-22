@@ -1,14 +1,5 @@
 <div class="table-toolbar">
   <span>
-    <mat-form-field class="example-full-width width-99 els-custom-customer-select" appearance="outline">
-        <mat-label>Filter by CUSTOMER</mat-label>
-        <mat-select [(value)]="customerFilterSelected" (selectionChange)="selectChange()">
-          <mat-option value="ALL">ALL Customers</mat-option>
-          <mat-option *ngFor="let cust of customerFilterArray" [value]="cust.id">{{cust.entityName}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-  </span>
-  <span>
     <mat-form-field class="table-search-box" appearance="outline">
       <input matInput type="text" class="table-filer-box" autocomplete="off" [(ngModel)]="filter" (keyup)="applyFilter($event)" placeholder="Search">
     </mat-form-field>
@@ -16,11 +7,11 @@
   </span>
   <span class="example-fill-remaining-space"></span>
   <span>
-    <button class="mat-flat-button mat-primary location-table-add-button" (click)="openAddDialog()">Add Location</button>
+    <button class="mat-flat-button mat-primary subcontractor-group-table-add-button" (click)="openAddDialog()">Add Subcontractor Group</button>
   </span>
 </div>
-<div class="mat-elevation-z0">
-  <table #entityTable mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
     <!-- id -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Id">Id</th>
@@ -31,17 +22,17 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Name">Name</th>
       <td mat-cell *matCellDef="let element">{{element.entityName}}</td>
     </ng-container>
-    <!-- customerId -->
-    <ng-container matColumnDef="customer">
-      <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by Customer">Customer</th>
-      <td mat-cell *matCellDef="let element">{{element.customer.entityName}}</td>
+    <!-- description -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Description">Description</th>
+      <td mat-cell *matCellDef="let element">{{element.description}}</td>
     </ng-container>
     <!-- actions -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let element">
-        <button mat-button class="location-table-edit-button mat-icon-button" (click)="openEditDialog(element.id)"><mat-icon color="primary">edit</mat-icon></button>
-        <button mat-button class="location-table-delete-button mat-icon-button" (click)="openDeleteDialog(element.id)"><mat-icon color="primary">delete</mat-icon></button>
+        <button mat-button class="subcontractor-group-table-edit-button mat-icon-button" (click)="openEditDialog(element.id)"><mat-icon color="primary">edit</mat-icon></button>
+        <button mat-button class="subcontractor-group-table-delete-button mat-icon-button" (click)="openDeleteDialog(element.id)"><mat-icon color="primary">delete</mat-icon></button>
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -49,3 +40,4 @@
   </table>
 <!--  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Pages"></mat-paginator>-->
 </div>
+

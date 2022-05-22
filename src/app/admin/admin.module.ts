@@ -43,6 +43,9 @@ import { InventoryLocationDeleteComponent } from './dialogs/inventory-location-d
 import { SubcontractorAddComponent } from './dialogs/subcontractor-add/subcontractor-add.component';
 import { SubcontractorEditComponent } from './dialogs/subcontractor-edit/subcontractor-edit.component';
 import { SubcontractorDeleteComponent } from './dialogs/subcontractor-delete/subcontractor-delete.component';
+import { SubcontractorGroupAddComponent } from './dialogs/subcontractor-group-add/subcontractor-group-add.component';
+import { SubcontractorGroupEditComponent } from './dialogs/subcontractor-group-edit/subcontractor-group-edit.component';
+import { SubcontractorGroupDeleteComponent } from './dialogs/subcontractor-group-delete/subcontractor-group-delete.component';
 import { LaborAddComponent } from './dialogs/labor-add/labor-add.component';
 import { LaborEditComponent } from './dialogs/labor-edit/labor-edit.component';
 import { LaborDeleteComponent } from './dialogs/labor-delete/labor-delete.component';
@@ -67,6 +70,7 @@ import { WorkOrderProcessingTableComponent } from './tables/work-order-processin
 import { InventoryBucketFormComponent } from './admin/inventory-bucket-form/inventory-bucket-form.component';
 import { WorkOrderReopenComponent } from './dialogs/work-order-reopen/work-order-reopen.component';
 import { WorkOrderHistoryTableComponent } from './tables/work-order-history-table/work-order-history-table.component';
+import {SubcontractorGroupTableComponent} from "./tables/subcontractor-group-table/subcontractor-group-table.component";
 // table components array
 const AdminModuleTableComponents = [
   CustomerTableComponent,
@@ -76,6 +80,7 @@ const AdminModuleTableComponents = [
   LaborTableComponent,
   LocationTableComponent,
   SubcontractorTableComponent,
+  SubcontractorGroupTableComponent,
   ToolEquipmentTableComponent,
   UserTableComponent,
   UserGroupTableComponent,
@@ -106,6 +111,9 @@ const AdminModuleDialogComponents = [
   SubcontractorAddComponent,
   SubcontractorEditComponent,
   SubcontractorDeleteComponent,
+  SubcontractorGroupAddComponent,
+  SubcontractorGroupEditComponent,
+  SubcontractorGroupDeleteComponent,
   LaborAddComponent,
   LaborEditComponent,
   LaborDeleteComponent,
@@ -124,20 +132,21 @@ const maskConfig: Partial<IConfig> = {
 
 @NgModule({
   // components, pipes, and directives provided by this module
-  declarations: [
-    AdminComponent,
-    AdminModuleTableComponents,
-    AdminModuleDialogComponents,
-    WorkOrderCompleteComponent,
-    WorkOrderCloseComponent,
-    WorkOrderCancelComponent,
-    WorkOrderRetryComponent,
-    MatTableTestComponent,
-    WorkOrderProcessingTableComponent,
-    InventoryBucketFormComponent,
-    WorkOrderReopenComponent,
-    WorkOrderHistoryTableComponent
-  ],
+    declarations: [
+        AdminComponent,
+        AdminModuleTableComponents,
+        AdminModuleDialogComponents,
+        WorkOrderCompleteComponent,
+        WorkOrderCloseComponent,
+        WorkOrderCancelComponent,
+        WorkOrderRetryComponent,
+        MatTableTestComponent,
+        WorkOrderProcessingTableComponent,
+        InventoryBucketFormComponent,
+        WorkOrderReopenComponent,
+        WorkOrderHistoryTableComponent,
+        SubcontractorGroupTableComponent
+    ],
   // modules that this module needs to use
   imports: [
     CommonModule,

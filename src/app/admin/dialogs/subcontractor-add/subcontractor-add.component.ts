@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { SubcontractorService } from "../../../core/services/subcontractor.service";
 import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
 import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
+import {MatSelect} from "@angular/material/select";
+import {SubcontractorGroupService} from "../../../core/services/subcontractor-group.service";
 
 @Component({
   selector: 'app-subcontractor-add',
@@ -16,8 +18,14 @@ export class SubcontractorAddComponent implements OnInit {
   addForm: FormGroup = new FormGroup({});
   usStates = ElsWoManagerConstants.usStatesSelectArray;
 
+  @ViewChild('subcontractorGroupSelect')
+  subcontractorGroupSelect!: MatSelect;
+  subcontractorGroupLoaded: any;
+  subcontractorGroupSelected: any;
+
   constructor( private matDialogRef: MatDialogRef<SubcontractorAddComponent>,
                private entityService: SubcontractorService,
+               private subcontractorGroupService: SubcontractorGroupService,
                private formBuilder: FormBuilder,
                private globalSnackBarService: GlobalSnackBarService
   ) { }
@@ -25,6 +33,7 @@ export class SubcontractorAddComponent implements OnInit {
   ngOnInit() {
     this.addForm = this.formBuilder.group({
       'entityName': new FormControl('', [Validators.required]),
+      'subcontractorGroup': new FormControl('', [Validators.required]),
       'address': new FormControl('', [Validators.required]),
       'unit': new FormControl(''),
       'city': new FormControl('', [Validators.required]),
@@ -34,6 +43,19 @@ export class SubcontractorAddComponent implements OnInit {
       'altPhoneNumb': new FormControl(''),
       'emailAddress': new FormControl('', [Validators.email])
     });
+    this.loadSubcontractorGroupSelect();
+  }
+
+  selectChange() {
+  }
+
+  loadSubcontractorGroupSelect() {
+    this.subcontractorGroupService.getAll().subscribe(
+      data => {
+        this.subcontractorGroupLoaded = data;
+      },error => {
+      }
+    );
   }
 
   addEntity() {

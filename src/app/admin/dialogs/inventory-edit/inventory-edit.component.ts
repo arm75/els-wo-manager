@@ -79,10 +79,7 @@ export class InventoryEditComponent implements OnInit {
           this.bucketData.forEach( (bucket: InventoryBucket, index: number) => {
             this.addBucketControl(bucket, index);
           });
-
-          //console.log(this.editForm);
-        }
-      );
+        });
     }
   }
 

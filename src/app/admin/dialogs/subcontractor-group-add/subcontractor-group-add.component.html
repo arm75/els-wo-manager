@@ -1,12 +1,12 @@
 <form [formGroup]="addForm" class="" (submit)="addEntity()">
   <h2 mat-dialog-title>{{formTitle}}</h2>
   <mat-dialog-content>
-    <h4 mat-dialog-title>Inventory Group Details</h4>
+    <h4 mat-dialog-title>Subcontractor Group Details</h4>
     <mat-form-field class="width-99" appearance="outline">
-      <mat-label>Inventory Group Name</mat-label>
+      <mat-label>Subcontractor Group Name</mat-label>
       <input matInput formControlName="entityName">
       <mat-error *ngIf="addForm.controls['entityName'].hasError('required')">
-        Inventory Group Name is required
+        Subcontractor Group Name is required
       </mat-error>
     </mat-form-field>
     <mat-form-field class="width-99" appearance="outline">
@@ -16,6 +16,7 @@
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>
-    <button class="mat-raised-button mat-primary" [disabled]="addForm.invalid" type="submit">Save Inventory Group</button>
+    <button class="mat-raised-button mat-primary" [disabled]="addForm.invalid" type="submit">Save Subcontractor Group</button>
   </mat-dialog-actions>
 </form>
+

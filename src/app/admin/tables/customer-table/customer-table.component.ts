@@ -36,11 +36,13 @@ export class CustomerTableComponent implements OnInit {
   @ViewChild(MatTable, {static: false})
   entityTable!: MatTable<Customer[]>;
 
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
+  // @ViewChild(MatPaginator)
+  // paginator!: MatPaginator;
 
   @ViewChild(MatSort)
   sort: MatSort = new MatSort;
+
+  //dataSource = new MatTableDataSource<Customer[]>();
 
   //timerEvent: number = 0;
 
@@ -71,7 +73,6 @@ export class CustomerTableComponent implements OnInit {
       console.log("refresh event #:", data);
       this.refreshTable();
     });
-
     // get the table..
     await this.buildTable();
     // configure table
@@ -82,17 +83,10 @@ export class CustomerTableComponent implements OnInit {
 
     // const obs$ = this.entityService.getAll();
     //this.dataSource = new MatTableDataSource(obs$);
-
-    // this.tableObs$ =
-    //   this.entityService.getAll().pipe(
-    //     map(things => {
-    //       this.dataSource = new MatTableDataSource<Customer[]>();
-    //       this.dataSource.data = things;
-    //       return this.dataSource;
-    //     }));
-    this.tableObs$ = this.entityService.getAll().subscribe(
-      data => { this.dataSource = new MatTableDataSource(data); }
-    );
+  //this.entityService.getAll().subscribe(data => { this.dataSource = new MatTableDataSource(data); });
+    // this.entityService.getAll().subscribe(
+    //   data => { this.dataSource = new MatTableDataSource<Customer>(data); }
+    // );
 
 
 
@@ -101,10 +95,10 @@ export class CustomerTableComponent implements OnInit {
     // .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
 
 
-    // await this.entityService.getAll()
-    //   .toPromise()
-    //   .then(data => { this.data = data })
-    //   .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
+    await this.entityService.getAll()
+      .toPromise()
+      .then(data => { this.data = data })
+      .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
 
   }
 
@@ -112,19 +106,30 @@ export class CustomerTableComponent implements OnInit {
     this.sort.active = 'id';
     this.sort.direction = 'desc';
     this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    //this.dataSource.paginator = this.paginator;
   }
 
-  refreshTable() {
+  async refreshTable() {
     // const a = this.entityTable.dataSource;
     // this.tableObs$ = this.entityService.getAll().subscribe(
     //   data => { this.dataSource = new MatTableDataSource(data) }
     // );
+    this.sort = this.dataSource.sort;
+    //this.paginator = this.dataSource.paginator;
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.refreshConfigTable();
 
-    this.tableObs$ = this.entityService.getAll().subscribe(
-      data => { this.dataSource = data; }
-    );
-    this.changeDetectorRefs.detectChanges();
+    // this.entityService.getAll().subscribe(
+    //   data => { this.dataSource.data = data; }
+    // );
+    //this.changeDetectorRefs.detectChanges();
+  }
+
+  async refreshConfigTable() {
+    this.dataSource.sort = this.sort;
+    //this.dataSource.paginator = this.paginator;
   }
 
   applyFilter(event: Event) {
@@ -146,7 +151,7 @@ export class CustomerTableComponent implements OnInit {
     addDialogConfig.position = { top:  '0' };
     const addDialogRef = this.dialog.open(CustomerAddComponent, addDialogConfig);
     await addDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+      .finally( () => { this.refreshTable(); });
   }
 
   async openEditDialog( _id: number) {
@@ -158,7 +163,7 @@ export class CustomerTableComponent implements OnInit {
     editDialogConfig.data = { entityId: _id };
     const editDialogRef = this.dialog.open(CustomerEditComponent, editDialogConfig);
     await editDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+      .finally( () => { this.refreshTable(); });
   }
 
   async openDeleteDialog( _id: number) {
@@ -170,7 +175,7 @@ export class CustomerTableComponent implements OnInit {
     deleteDialogConfig.data = { entityId: _id };
     const deleteDialogRef = this.dialog.open(CustomerDeleteComponent, deleteDialogConfig);
     await deleteDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+      .finally( () => { this.refreshTable(); });
   }
 
 }

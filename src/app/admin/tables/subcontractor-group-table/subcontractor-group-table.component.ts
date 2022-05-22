@@ -1,34 +1,33 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
-import { LaborService } from "../../../core/services/labor.service";
-import { Labor } from "../../../core/models/labor";
+import { SubcontractorGroupService } from "../../../core/services/subcontractor-group.service";
+import { SubcontractorGroup } from "../../../core/models/subcontractor-group";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { LaborAddComponent } from "../../dialogs/labor-add/labor-add.component";
-import { LaborEditComponent } from "../../dialogs/labor-edit/labor-edit.component";
-import { LaborDeleteComponent } from "../../dialogs/labor-delete/labor-delete.component";
-import {AuthenticationService} from "../../../core/security/authentication.service";
+import { SubcontractorGroupAddComponent } from "../../dialogs/subcontractor-group-add/subcontractor-group-add.component";
+import { SubcontractorGroupEditComponent } from "../../dialogs/subcontractor-group-edit/subcontractor-group-edit.component";
+import { SubcontractorGroupDeleteComponent } from "../../dialogs/subcontractor-group-delete/subcontractor-group-delete.component";
+import {SubcontractorAddComponent} from "../../dialogs/subcontractor-add/subcontractor-add.component";
+import {SubcontractorEditComponent} from "../../dialogs/subcontractor-edit/subcontractor-edit.component";
+import {SubcontractorDeleteComponent} from "../../dialogs/subcontractor-delete/subcontractor-delete.component";
 
 @Component({
-  selector: 'app-labor-table',
-  templateUrl: './labor-table.component.html',
-  styleUrls: ['./labor-table.component.css']
+  selector: 'app-subcontractor-group-table',
+  templateUrl: './subcontractor-group-table.component.html',
+  styleUrls: ['./subcontractor-group-table.component.css']
 })
-export class LaborTableComponent implements OnInit {
+export class SubcontractorGroupTableComponent implements OnInit {
 
-  loggedInUser: any;
-  loggedInUsername: any;
-  loggedInRole: any;
-  nameToDisplay: any;
+  displayedColumns: string[] = ['id', 'entityName', 'description', 'actions'];
 
-  displayedColumns: any;
   dataSource: any;
   data: any;
   filter: any;
 
   @ViewChild(MatTable)
-  entityTable!: MatTable<Labor>;
+  entityTable!: MatTable<SubcontractorGroup>;
 
   // @ViewChild(MatPaginator)
   // paginator!: MatPaginator;
@@ -37,16 +36,11 @@ export class LaborTableComponent implements OnInit {
   sort: MatSort = new MatSort;
 
   constructor(
-    private entityService: LaborService,
-    private authenticationService: AuthenticationService,
+    private entityService: SubcontractorGroupService,
+    private _liveAnnouncer: LiveAnnouncer,
     private dialog: MatDialog
   ) {
-    this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
-    this.loggedInUsername = this.loggedInUser.username;
-    this.loggedInRole = this.loggedInUser.role;
-    this.nameToDisplay = this.loggedInUser!.firstName;
-
-    this.displayedColumns = ['id', 'entityName', 'description', 'ratePerHour', 'actions'];
+    this.buildTable();
   }
 
   ngOnInit() {
@@ -91,7 +85,7 @@ export class LaborTableComponent implements OnInit {
     addDialogConfig.autoFocus = true;
     addDialogConfig.width = "40%";
     addDialogConfig.position = { top:  '0' };
-    const addDialogRef = this.dialog.open(LaborAddComponent, addDialogConfig);
+    const addDialogRef = this.dialog.open(SubcontractorGroupAddComponent, addDialogConfig);
     await addDialogRef.afterClosed().toPromise()
       .finally( () => { this.setupComponent(); });
   }
@@ -103,7 +97,7 @@ export class LaborTableComponent implements OnInit {
     editDialogConfig.width = "40%";
     editDialogConfig.position = { top:  '0' };
     editDialogConfig.data = { entityId: _id };
-    const editDialogRef = this.dialog.open(LaborEditComponent, editDialogConfig);
+    const editDialogRef = this.dialog.open(SubcontractorGroupEditComponent, editDialogConfig);
     await editDialogRef.afterClosed().toPromise()
       .finally( () => { this.setupComponent(); });
   }
@@ -115,7 +109,7 @@ export class LaborTableComponent implements OnInit {
     deleteDialogConfig.width = "25%";
     deleteDialogConfig.position = { top:  '0' };
     deleteDialogConfig.data = { entityId: _id };
-    const deleteDialogRef = this.dialog.open(LaborDeleteComponent, deleteDialogConfig);
+    const deleteDialogRef = this.dialog.open(SubcontractorGroupDeleteComponent, deleteDialogConfig);
     await deleteDialogRef.afterClosed().toPromise()
       .finally( () => { this.setupComponent(); });
   }

@@ -30,8 +30,8 @@ export class SubcontractorTableComponent implements OnInit {
   @ViewChild(MatTable)
   entityTable!: MatTable<Subcontractor>;
 
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
+  // @ViewChild(MatPaginator)
+  // paginator!: MatPaginator;
 
   @ViewChild(MatSort)
   sort: MatSort = new MatSort;
@@ -46,7 +46,7 @@ export class SubcontractorTableComponent implements OnInit {
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
-    this.displayedColumns = ['id', 'entityName', 'phoneNumb', 'altPhoneNumb', 'emailAddress', 'actions'];
+    this.displayedColumns = ['id', 'entityName', 'subcontractorGroup', 'phoneNumb', 'altPhoneNumb', 'emailAddress', 'actions'];
   }
 
   ngOnInit() {
@@ -71,7 +71,7 @@ export class SubcontractorTableComponent implements OnInit {
     this.sort.active = 'id';
     this.sort.direction = 'desc';
     this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    //this.dataSource.paginator = this.paginator;
   }
 
   applyFilter(event: Event) {
