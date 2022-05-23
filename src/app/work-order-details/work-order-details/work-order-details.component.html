@@ -60,12 +60,13 @@
         <mat-tab label="Work Order Details">
 
 
-          <form [formGroup]="editForm" class="example-form" (submit)="saveWorkOrder()">
+
           <div class="table-toolbar">
             <span><h2>Work Order Details</h2></span>
             <span class="example-fill-remaining-space"></span>
       <!--  <span><button class="mat-flat-button mat-primary inventory-item-table-add-button" (click)="openAddDialog()">Add Inventory Item</button></span>-->
           </div>
+          <form [formGroup]="editForm" class="example-form" (submit)="saveWorkOrder()">
           <div class="containing-box">
 
           <div class="row">

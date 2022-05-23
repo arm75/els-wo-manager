@@ -93,9 +93,6 @@ export class WorkOrderDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-
-
     this.dataLoaded = false;
     this.getIdFromRoute();
     this.editFormEditMode = false;
@@ -142,17 +139,6 @@ export class WorkOrderDetailsComponent implements OnInit {
       });
   }
 
-
-
-
-  getIdFromRoute(): void {
-    this.route.paramMap.subscribe( params => {
-      this.passedWorkOrderId = params.get('passedId');
-    });
-  }
-
-
-
   addUserToWorkOrder() {
     this.userData.push(this.assignedUsersSelected);
     this.loadAssignedUsersSelect();
@@ -168,75 +154,17 @@ export class WorkOrderDetailsComponent implements OnInit {
     this.loadAssignedUsersSelect();
   }
 
-
-
-
-
   compareObjects(o1: any, o2: any): boolean {
     return o1.entityName === o2.entityName && o1.id === o2.id;
   }
 
-
-
-
-
-
-
-
-
-  updateFieldBoxes(): void {
-    this.woIdFieldBox = this.entityData.id;
-    this.woStatusFieldBox = this.entityData.status;
-    this.woCreatedDateFieldBox = this.entityData.createdDate;
-    this.woUpdatedDateFieldBox = this.entityData.updatedDate;
-    this.woCustomerFieldBox = this.entityData.customer.entityName;
-    this.woLocationFieldBox = this.entityData.location.entityName;
+  customerSelectChange() {
+    this.loadLocationSelect(this.customerSelected.id);
   }
-
-
-
-
-
-
-  calcMasterTotal() {
-    this.masterTotal = this.masterInventoryTotal + this.masterLaborTotal + this.masterSubcontractorTotal + this.masterToolEquipmentTotal;
-  }
-
-  getNewInventoryTotal(newTotal: number) {
-    this.masterInventoryTotal = newTotal;
-    this.calcMasterTotal();
-  }
-
-  getNewLaborTotal(newTotal: number) {
-    this.masterLaborTotal = newTotal;
-    this.calcMasterTotal();
-  }
-
-  getNewSubcontractorTotal(newTotal: number) {
-    this.masterSubcontractorTotal = newTotal;
-    this.calcMasterTotal();
-  }
-
-  getNewToolEquipmentTotal(newTotal: number) {
-    this.masterToolEquipmentTotal = newTotal;
-    this.calcMasterTotal();
-  }
-
-
-
-
-
-
-
-  customerSelectChange() { this.loadLocationSelect(this.customerSelected.id); }
 
   locationSelectChange() { }
 
   assignedUsersSelectChange() { }
-
-
-
-
 
   loadCustomerSelect() {
     this.customerService.getAll().subscribe(
@@ -277,16 +205,52 @@ export class WorkOrderDetailsComponent implements OnInit {
     );
   }
 
+//----------------------------------------------------------------
 
+  getIdFromRoute(): void {
+    this.route.paramMap.subscribe( params => {
+      this.passedWorkOrderId = params.get('passedId');
+    });
+  }
 
+  updateFieldBoxes(): void {
+    this.woIdFieldBox = this.entityData.id;
+    this.woStatusFieldBox = this.entityData.status;
+    this.woCreatedDateFieldBox = this.entityData.createdDate;
+    this.woUpdatedDateFieldBox = this.entityData.updatedDate;
+    this.woCustomerFieldBox = this.entityData.customer.entityName;
+    this.woLocationFieldBox = this.entityData.location.entityName;
+  }
+
+  calcMasterTotal() {
+    this.masterTotal = this.masterInventoryTotal + this.masterLaborTotal + this.masterSubcontractorTotal + this.masterToolEquipmentTotal;
+  }
+
+  getNewInventoryTotal(newTotal: number) {
+    this.masterInventoryTotal = newTotal;
+    this.calcMasterTotal();
+  }
+
+  getNewLaborTotal(newTotal: number) {
+    this.masterLaborTotal = newTotal;
+    this.calcMasterTotal();
+  }
+
+  getNewSubcontractorTotal(newTotal: number) {
+    this.masterSubcontractorTotal = newTotal;
+    this.calcMasterTotal();
+  }
+
+  getNewToolEquipmentTotal(newTotal: number) {
+    this.masterToolEquipmentTotal = newTotal;
+    this.calcMasterTotal();
+  }
 
   editModeToggle() {
     this.editFormEditMode = !this.editFormEditMode;
     if(this.editFormEditMode) { this.editForm.enable(); }
     else { this.editForm.disable() }
   }
-
-
 
   processStatusChange(eventData: number) {
     this.loadWorkOrderIntoView();

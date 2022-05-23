@@ -91,6 +91,8 @@ export class EditDetailsTabComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+
   }
 
   loadWorkOrderIntoView(): void {
@@ -128,10 +130,6 @@ export class EditDetailsTabComponent implements OnInit {
       });
   }
 
-
-
-
-
   addUserToWorkOrder() {
     this.userData.push(this.assignedUsersSelected);
     this.loadAssignedUsersSelect();
@@ -147,18 +145,17 @@ export class EditDetailsTabComponent implements OnInit {
     this.loadAssignedUsersSelect();
   }
 
+  compareObjects(o1: any, o2: any): boolean {
+    return o1.entityName === o2.entityName && o1.id === o2.id;
+  }
 
-
-
-  customerSelectChange() { this.loadLocationSelect(this.customerSelected.id); }
+  customerSelectChange() {
+    this.loadLocationSelect(this.customerSelected.id);
+  }
 
   locationSelectChange() { }
 
   assignedUsersSelectChange() { }
-
-
-
-
 
   loadCustomerSelect() {
     this.customerService.getAll().subscribe(
