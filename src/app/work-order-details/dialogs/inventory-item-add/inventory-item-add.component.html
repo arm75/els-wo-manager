@@ -2,6 +2,17 @@
     <h2 mat-dialog-title>{{formTitle}}</h2>
     <mat-dialog-content>
       <h4 mat-dialog-title>Inventory Item Details</h4>
+
+      <mat-form-field class="width-99" appearance="outline">
+        <mat-label>Select Inventory Group</mat-label>
+        <mat-select #inventoryGroupSelect [(value)]="inventoryGroupIdSelected" (selectionChange)="groupSelectChange()" formControlName="inventoryGroupId">
+          <mat-option *ngFor="let invGroup of inventoryGroupLoaded" [value]="invGroup.id">{{invGroup.entityName}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="addForm.controls['inventoryGroupId'].hasError('required')">
+          Inventory Group is required
+        </mat-error>
+      </mat-form-field>
+
       <mat-form-field class="width-99" appearance="outline">
         <mat-label>Select Inventory</mat-label>
         <mat-select #inventorySelect [(value)]="inventoryIdSelected" (selectionChange)="selectChange()" formControlName="inventoryId">
@@ -11,8 +22,9 @@
           Inventory is required
         </mat-error>
       </mat-form-field>
+
       <mat-form-field class="width-99" appearance="outline">
-        <mat-label>Inventory Location (taken from)</mat-label>
+        <mat-label>Select Inventory Location (taken from)</mat-label>
         <mat-select #inventoryBucketSelect [(value)]="inventoryBucketIdSelected" formControlName="bucketId">
           <mat-option *ngFor="let bucket of inventoryBucketLoaded" [value]="bucket.id">{{bucket.location.entityName}}</mat-option>
         </mat-select>
@@ -20,6 +32,7 @@
           Inventory Location is required
         </mat-error>
       </mat-form-field>
+
       <mat-form-field class="width-99" appearance="outline">
         <mat-label>Notes</mat-label>
         <textarea matInput autocomplete="off" class="description-box" value="" formControlName="notes"></textarea>

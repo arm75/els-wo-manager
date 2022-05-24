@@ -62,8 +62,8 @@ export class SubcontractorGroupTableComponent implements OnInit {
   }
 
   async configTable() {
-    this.sort.active = 'id';
-    this.sort.direction = 'desc';
+    this.sort.active = 'entityName';
+    this.sort.direction = 'asc';
     this.dataSource.sort = this.sort;
     //this.dataSource.paginator = this.paginator;
   }

@@ -10,21 +10,21 @@
           Inventory Location Name is required
         </mat-error>
       </mat-form-field>
-      <mat-form-field class="width-31" appearance="outline">
+      <mat-form-field class="width-47" appearance="outline">
         <mat-label>Phone Number</mat-label>
         <input matInput autocomplete="off" mask="(000)000-0000" formControlName="phoneNumb">
       </mat-form-field>
-      <mat-form-field class="width-31" appearance="outline">
+      <mat-form-field class="width-47" appearance="outline">
         <mat-label>Alt Phone Number</mat-label>
         <input matInput autocomplete="off" mask="(000)000-0000" formControlName="altPhoneNumb">
       </mat-form-field>
-      <mat-form-field class="width-33" appearance="outline">
-        <mat-label>Email Address</mat-label>
-        <input matInput autocomplete="off" formControlName="emailAddress">
-        <mat-error *ngIf="editForm.controls['emailAddress'].hasError('email')">
-          Enter a VALID email address
-        </mat-error>
-      </mat-form-field>
+<!--      <mat-form-field class="width-33" appearance="outline">-->
+<!--        <mat-label>Email Address</mat-label>-->
+<!--        <input matInput autocomplete="off" formControlName="emailAddress">-->
+<!--        <mat-error *ngIf="editForm.controls['emailAddress'].hasError('email')">-->
+<!--          Enter a VALID email address-->
+<!--        </mat-error>-->
+<!--      </mat-form-field>-->
       <h4 mat-dialog-title>Address</h4>
       <mat-form-field class="width-75" appearance="outline">
         <mat-label>Address</mat-label>

@@ -8,7 +8,7 @@
   </span>
 </div>
 <div class="mat-elevation-z0">
-  <table #entityTable mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+  <table #entityTable mat-table [dataSource]="dataSource" matSort matSortDisableClear class="mat-elevation-z0">
     <!-- createdDate -->
     <ng-container matColumnDef="createdDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Created Date">Created Date</th>
@@ -50,5 +50,5 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Pages"></mat-paginator>
+<!--  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons aria-label="Pages"></mat-paginator>-->
 </div>

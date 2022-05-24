@@ -1,0 +1,260 @@
+.top {
+  width: 100%;
+}
+
+.top-header {
+  background-color: #2196f3;
+  margin: 0px 0px 0px 0px;
+  padding: 10px 35px 10px 35px;
+  display: flex;
+}
+.top-header h1 {
+  color: white;
+  font-size: 1.5rem;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+.app-title-box {
+  flex-direction: row-reverse;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+
+.app-title-box a, .app-title-box a:visited  {
+  color: white;
+}
+
+.app-title-box a:hover, .app-title-box a:active  {
+  color: yellow;
+}
+
+.app-title-box span {
+  color: white;
+  margin: 0px 10px 0px 10px;
+}
+
+.app-icon-menu-box {
+  text-align: right;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+
+.app-icon-menu-box span {
+  color: white;
+  margin: 0px 10px 0px 10px;
+}
+
+ul {
+  margin-left: 50px;
+  padding-left: 0;
+}
+li {
+  display: inline;
+  margin: 0 30px 0 30px;
+}
+a, a:visited, a:active {
+  color: #ccb3ff;
+  text-decoration: none;
+}
+a:hover {
+  color: #ffb84d;
+}
+
+.containing-box {
+  width: 98%;
+  padding: 0px 35px 0px 35px;
+}
+
+.containing-box textarea {
+  height: 100px;
+}
+
+table {
+  width: 100%;
+  margin: 0px 0px 0px 0px;
+}
+
+.table-toolbar {
+  padding: 10px 20px 0px 20px;
+  margin: 0px 0px 0px 0px;
+}
+
+.table-search-box {
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+}
+
+.els-form-fields-third-column {
+  margin-left: 20px !important;
+  margin-right: 10px !important;
+}
+
+.els-form-fields-second-column {
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+}
+
+.els-textarea-entry-notes {
+  margin-left: 20px !important;
+  margin-right: 10px !important;
+}
+
+.els-textarea-description {
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+}
+
+button.inventory-item-table-add-button {
+}
+
+button.inventory-item-table-edit-button, button.inventory-item-table-delete-button  {
+  margin: 0px 20px 0px 0px;
+}
+
+.table-toolbar {
+  display: flex;
+}
+
+.example-fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+mat-tab {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  margin: 0px 0px 0px 0px;
+}
+
+.items-container {
+  padding-bottom: 100px;
+  border-left: 1px solid;
+  border-right: 1px solid;
+}
+
+.wo-info-field-title {
+  background-color: #b3b3b3;
+  color: white;
+  text-align: center;
+  border-top: 2px solid white;
+  border-right: 1px solid white;
+  border-bottom: 2px solid white;
+  border-left: 1px solid white;
+  margin: 0px 0px 0px 0px;
+  padding: 3px 20px 3px 20px;
+}
+
+.wo-info-field-title h4 {
+  font-size: 90%;
+  font-style: italic;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+
+}
+
+.wo-info-field-content {
+  background-color: #d9d9d9;
+  border-top: 1px solid white;
+  border-right: 1px solid white;
+  border-bottom: 1px solid white;
+  border-left: 1px solid white;
+  margin: 0px 0px 0px 0px;
+  padding: 5px 30px 5px 30px;
+
+}
+
+.wo-info-field-content h3 {
+  color: #595959;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+
+.bottom-stuff {
+  margin-top: auto;
+  flex-direction: column;
+}
+
+.bottom-stuff .row {
+  display: flex;
+}
+
+.bottom-button-row {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 0px 0px 0px 0px;
+  padding: 20px 35px 20px 35px;
+}
+
+.copyright-row {
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+  background-color: #595959;
+  text-align: center;
+}
+.copyright-row p {
+  font-style: italic;
+  font-size: 90%;
+  margin: 0px 0px 0px 0px;
+  padding: 5px 0px 5px 0px;
+  color: #bfbfbf;
+}
+
+h3.master-total-currency {
+  font-weight: 600;
+  font-size: 125%;
+
+}
+
+.logged-in-user {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+.logged-in-user p {
+  color: white;
+  font-weight: 500;
+  font-size: 125%;
+  margin: 5px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+
+.work-order-details-tab-group {
+  padding-bottom: 120px;
+}
+
+button {
+  margin-left: 15px;
+}
+
+button:disabled {
+  background-color: #afafaf;
+}
+
+.mat-form-field-disabled {
+  color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.mat-select-disabled {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.edit-button-color {
+  color: white;
+  background-color: #339933;
+}
+
+app-print-template {
+  display: none;
+}
+
+@media print {
+  app-print-template {
+    display: block;
+  }
+  #els-work-order-details {
+    display: none;
+  }
+}

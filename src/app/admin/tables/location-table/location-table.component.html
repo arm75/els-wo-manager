@@ -20,7 +20,7 @@
   </span>
 </div>
 <div class="mat-elevation-z0">
-  <table #entityTable mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+  <table #entityTable mat-table [dataSource]="dataSource" matSort matSortDisableClear class="mat-elevation-z0">
     <!-- id -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Id">Id</th>

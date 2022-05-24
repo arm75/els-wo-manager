@@ -33,7 +33,8 @@ export class EditDetailsTabComponent implements OnInit {
   dataLoaded: boolean = false;
   entityData!: WorkOrder;
   editForm: FormGroup = new FormGroup({});
-  editFormEditMode: boolean = false;
+
+  //editFormEditMode: boolean = false;
 
   @ViewChild('customerSelect')
   customerSelect!: MatSelect;
@@ -91,8 +92,13 @@ export class EditDetailsTabComponent implements OnInit {
 
 
   ngOnInit(): void {
-
-
+    this.dataLoaded = false;
+    //this.getIdFromRoute();
+    //this.editFormEditMode = false;
+    this.loadCustomerSelect();
+    if (this.passedWorkOrderId) {
+      this.loadWorkOrderIntoView();
+    }
   }
 
   loadWorkOrderIntoView(): void {
@@ -103,26 +109,48 @@ export class EditDetailsTabComponent implements OnInit {
         //this.loggedInRole = this.loggedInUser?.role;
         //this.nameToDisplay = this.loggedInUser?.username;
         //this.updateFieldBoxes();
+        // this.editForm = this.formBuilder.group({
+        //   'id': new FormControl(this.entityData.id),
+        //   'status': new FormControl(this.entityData.status),
+        //   'customer': new FormControl({ value: this.entityData.customer, disabled: true}, [Validators.required]),
+        //   'location': new FormControl({ value: this.entityData.location, disabled: true}, [Validators.required]),
+        //   'assignedUsers': new FormControl({ value: this.entityData.assignedUsers, disabled: true}, [Validators.required]),
+        //   'quickDescription': new FormControl({ value: this.entityData.quickDescription, disabled: true}, [Validators.required]),
+        //   'description': new FormControl({ value: this.entityData.description, disabled: true}),
+        //   'contactName': new FormControl({ value: this.entityData.contactName, disabled: true}, [Validators.required]),
+        //   'contactPhoneNumb': new FormControl({ value: this.entityData.contactPhoneNumb, disabled: true}, [Validators.required]),
+        //   'contactAltPhoneNumb': new FormControl({ value: this.entityData.contactAltPhoneNumb, disabled: true}),
+        //   'notes': new FormControl({ value: this.entityData.notes, disabled: true}),
+        //   'privateNotes': new FormControl({ value: this.entityData.privateNotes, disabled: true}),
+        //   'entryInstruct': new FormControl({ value: this.entityData.entryInstruct, disabled: true}, [Validators.required]),
+        //   'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
+        //   'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
+        //   'subcontractorItemsTotal': new FormControl(this.entityData.subcontractorItemsTotal),
+        //   'toolEquipmentItemsTotal': new FormControl(this.entityData.toolEquipmentItemsTotal),
+        //   'workOrderTotal': new FormControl(this.entityData.workOrderTotal)
+        // });
+
         this.editForm = this.formBuilder.group({
           'id': new FormControl(this.entityData.id),
           'status': new FormControl(this.entityData.status),
-          'customer': new FormControl({ value: this.entityData.customer, disabled: true}, [Validators.required]),
-          'location': new FormControl({ value: this.entityData.location, disabled: true}, [Validators.required]),
-          'assignedUsers': new FormControl({ value: this.entityData.assignedUsers, disabled: true}, [Validators.required]),
-          'quickDescription': new FormControl({ value: this.entityData.quickDescription, disabled: true}, [Validators.required]),
-          'description': new FormControl({ value: this.entityData.description, disabled: true}),
-          'contactName': new FormControl({ value: this.entityData.contactName, disabled: true}, [Validators.required]),
-          'contactPhoneNumb': new FormControl({ value: this.entityData.contactPhoneNumb, disabled: true}, [Validators.required]),
-          'contactAltPhoneNumb': new FormControl({ value: this.entityData.contactAltPhoneNumb, disabled: true}),
-          'notes': new FormControl({ value: this.entityData.notes, disabled: true}),
-          'privateNotes': new FormControl({ value: this.entityData.privateNotes, disabled: true}),
-          'entryInstruct': new FormControl({ value: this.entityData.entryInstruct, disabled: true}, [Validators.required]),
+          'customer': new FormControl(this.entityData.customer, [Validators.required]),
+          'location': new FormControl(this.entityData.location, [Validators.required]),
+          'assignedUsers': new FormControl(this.entityData.assignedUsers, [Validators.required]),
+          'quickDescription': new FormControl(this.entityData.quickDescription, [Validators.required]),
+          'description': new FormControl(this.entityData.description),
+          'contactName': new FormControl(this.entityData.contactName, [Validators.required]),
+          'contactPhoneNumb': new FormControl(this.entityData.contactPhoneNumb, [Validators.required]),
+          'contactAltPhoneNumb': new FormControl(this.entityData.contactAltPhoneNumb),
+          'notes': new FormControl(this.entityData.notes),
+          'privateNotes': new FormControl(this.entityData.privateNotes),
+          'entryInstruct': new FormControl(this.entityData.entryInstruct, [Validators.required]),
           'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
           'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
           'subcontractorItemsTotal': new FormControl(this.entityData.subcontractorItemsTotal),
           'toolEquipmentItemsTotal': new FormControl(this.entityData.toolEquipmentItemsTotal),
           'workOrderTotal': new FormControl(this.entityData.workOrderTotal)
         });
+
         this.dataLoaded = true;
         this.loadLocationSelect(this.entityData.customer.id);
         this.userData = this.entityData.assignedUsers;
@@ -195,5 +223,39 @@ export class EditDetailsTabComponent implements OnInit {
       }
     );
   }
+
+  //---------------------------------------------------------
+
+  // editModeToggle() {
+  //   this.editFormEditMode = !this.editFormEditMode;
+  //   if(this.editFormEditMode) { this.editForm.enable(); }
+  //   else { this.editForm.disable() }
+  // }
+
+  saveWorkOrder() {
+    this.editForm.controls['assignedUsers'].setValue(this.userData);
+    this.editForm.controls['inventoryItemsTotal'].setValue(this.masterInventoryTotal);
+    this.editForm.controls['laborItemsTotal'].setValue(this.masterLaborTotal);
+    this.editForm.controls['subcontractorItemsTotal'].setValue(this.masterSubcontractorTotal);
+    this.editForm.controls['toolEquipmentItemsTotal'].setValue(this.masterToolEquipmentTotal);
+    this.editForm.controls['workOrderTotal'].setValue(this.masterTotal);
+    this.entityService.update(this.editForm.value)
+      .subscribe(data => {
+        this.loadWorkOrderIntoView();
+        //this.updateFieldBoxes();
+        //this.editForm.disable();
+        //this.editFormEditMode = false;
+      }, error => {
+        this.globalSnackBarService.error(error.error.message);
+      }, () => {
+        this.globalSnackBarService.success("Work Order: " + this.editForm.value.id + " has been updated.");
+      });
+  }
+
+  printPage() {
+    window.print();
+  }
+
+
 
 }

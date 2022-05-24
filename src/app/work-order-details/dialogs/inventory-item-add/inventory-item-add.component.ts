@@ -4,10 +4,11 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { InventoryItemService } from "../../../core/services/inventory-item.service";
 import { MatSelect } from "@angular/material/select";
 import { InventoryService } from "../../../core/services/inventory.service";
-import {finalize} from "rxjs/operators";
+import {finalize, map} from "rxjs/operators";
 import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
 import {InventoryBucketService} from "../../../core/services/inventory-bucket.service";
 import {AuthenticationService} from "../../../core/security/authentication.service";
+import {InventoryGroupService} from "../../../core/services/inventory-group.service";
 
 @Component({
   selector: 'app-inventory-item-add',
@@ -26,6 +27,12 @@ export class InventoryItemAddComponent implements OnInit {
   woId: null;
   addForm: FormGroup = new FormGroup({});
 
+  @ViewChild('inventoryGroupSelect')
+  inventoryGroupSelect!: MatSelect;
+  inventoryGroupLoaded: any;
+  inventoryGroupIdSelected: any;
+  inventoryGroupSelectedLoaded: any;
+
   @ViewChild('inventorySelect')
   inventorySelect!: MatSelect;
   inventoryLoaded: any;
@@ -42,6 +49,7 @@ export class InventoryItemAddComponent implements OnInit {
                @Inject(MAT_DIALOG_DATA) public data: any,
                private authenticationService: AuthenticationService,
                private entityService: InventoryItemService,
+               private inventoryGroupService: InventoryGroupService,
                private inventoryService: InventoryService,
                private inventoryBucketService: InventoryBucketService,
                private formBuilder: FormBuilder,
@@ -60,6 +68,7 @@ export class InventoryItemAddComponent implements OnInit {
     this.woId = this.data.woId;
     this.addForm = this.formBuilder.group({
       'workOrder': new FormControl({ "id": this.woId}),
+      'inventoryGroupId': new FormControl('', [Validators.required]),
       'inventoryId': new FormControl('', [Validators.required]), // only kept for error validation
       'bucketId': new FormControl('', [Validators.required]),
       'entityName': new FormControl(''),
@@ -69,8 +78,24 @@ export class InventoryItemAddComponent implements OnInit {
       'qty': new FormControl('', [Validators.required]),
       'totalPrice': new FormControl('')
     });
+    this.loadInventoryGroupSelect();
     this.loadInventorySelect();
+  }
 
+  groupSelectChange() {
+    this.inventoryService.get(this.inventoryIdSelected)
+      .pipe(finalize(() => {
+        this.addForm.controls['inventoryId'].setValue(this.inventorySelectedLoaded.id);
+        this.addForm.controls['entityName'].setValue(this.inventorySelectedLoaded.entityName);
+        this.addForm.controls['notes'].setValue(this.inventorySelectedLoaded.description);
+        this.addForm.controls['unitCost'].setValue(this.inventorySelectedLoaded.unitCost);
+        this.addForm.controls['unitPrice'].setValue(this.inventorySelectedLoaded.unitPrice);
+        this.loadInventorySelect(this.inventoryGroupIdSelected);
+      })).subscribe(data => {
+        this.inventorySelectedLoaded = data;
+      }, error => {
+      }
+    );
   }
 
   selectChange() {
@@ -89,13 +114,23 @@ export class InventoryItemAddComponent implements OnInit {
     );
   }
 
-  loadInventorySelect() {
-    this.inventoryService.getAll().subscribe(
+  loadInventoryGroupSelect() {
+    this.inventoryGroupService.getAll().subscribe(
       data => {
-        this.inventoryLoaded = data;
+        this.inventoryGroupLoaded = data;
       },error => {
       }
     );
+  }
+
+  loadInventorySelect(passedInvGroupId?: any) {
+    if(passedInvGroupId) {
+      this.inventoryService.getAll().pipe(map(items => items.filter(item => (item.inventoryGroup.id == this.inventoryGroupIdSelected))))
+        .subscribe(data => { this.inventoryLoaded = data; },error => { } );
+    } else {
+      this.inventoryService.getAll()
+        .subscribe(data => { this.inventoryLoaded = data; }, error => { });
+    }
   }
 
   loadInventoryBucketSelect() {

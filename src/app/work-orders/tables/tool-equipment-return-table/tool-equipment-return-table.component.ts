@@ -45,8 +45,8 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
   @ViewChild(MatTable)
   entityTable!: MatTable<ToolEquipmentItem>;
 
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
+  // @ViewChild(MatPaginator)
+  // paginator!: MatPaginator;
 
   @ViewChild(MatSort)
   sort: MatSort = new MatSort;
@@ -113,7 +113,7 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     this.sort.active = 'createdDate';
     this.sort.direction = 'desc';
     this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    //this.dataSource.paginator = this.paginator;
   }
 
   applyFilter(event: Event) {
