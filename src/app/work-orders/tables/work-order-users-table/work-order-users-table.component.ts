@@ -17,6 +17,7 @@ import {WorkOrderCompleteComponent} from "../../../admin/dialogs/work-order-comp
 import {WorkOrderCancelComponent} from "../../../admin/dialogs/work-order-cancel/work-order-cancel.component";
 import {WorkOrderReopenComponent} from "../../../admin/dialogs/work-order-reopen/work-order-reopen.component";
 import {formatDate} from "@angular/common";
+import {interval} from "rxjs";
 
 @Component({
   selector: 'app-work-order-users-table',
@@ -29,6 +30,8 @@ export class WorkOrderUsersTableComponent implements OnInit {
   loggedInUsername: any;
   loggedInRole: any;
   nameToDisplay: any;
+  virginHidden: boolean = true;
+
 
   displayedColumns: any;
   dataSource: any;
@@ -58,7 +61,7 @@ export class WorkOrderUsersTableComponent implements OnInit {
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
-    this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customer', 'location',  'status', 'actions'];
+    this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customer', 'location',  'status', 'virgin', 'actions'];
   }
 
   ngOnInit() {
@@ -66,6 +69,11 @@ export class WorkOrderUsersTableComponent implements OnInit {
   }
 
   async setupComponent() {
+    const refreshTimer$ = interval(30000);
+    refreshTimer$.subscribe((data)=>{
+      console.log("refresh event #:", data);
+      this.refreshTable();
+    });
     // get the table..
     await this.buildTable();
     // configure table
@@ -73,16 +81,37 @@ export class WorkOrderUsersTableComponent implements OnInit {
   }
 
   async buildTable() {
-   await this.entityService.getAll()
-     .pipe(map(items =>
-       items.filter(item => ((
-         (item.status == WorkOrderStatus.OPEN) ||
-         (item.status == WorkOrderStatus.PENDING)) &&
-         (item.assignedUsers.map((thisUser) => thisUser.username)).includes(this.loggedInUsername) ))
-       ))
-     .toPromise()
-     .then(data => { this.data = data })
-     .finally( () => { this.dataSource = new MatTableDataSource(this.data) });
+    if (this.loggedInRole == 'ROLE_USER') {
+      await this.entityService.getAll()
+        .pipe(map(items =>
+          items.filter(item => ((
+              (item.status == WorkOrderStatus.OPEN) ||
+              (item.status == WorkOrderStatus.PENDING)) &&
+            (item.assignedUsers.map((thisUser) => thisUser.username)).includes(this.loggedInUsername)))
+        ))
+        .toPromise()
+        .then(data => {
+          this.data = data
+        })
+        .finally(() => {
+          this.dataSource = new MatTableDataSource(this.data)
+        });
+    } else {
+      await this.entityService.getAll()
+        .pipe(map(items =>
+          items.filter(item => ((
+              (item.status == WorkOrderStatus.OPEN) ||
+              (item.status == WorkOrderStatus.PENDING))))
+        ))
+        .toPromise()
+        .then(data => {
+          this.data = data
+        })
+        .finally(() => {
+          this.dataSource = new MatTableDataSource(this.data)
+        });
+
+    }
   }
 
   async configTable() {
@@ -92,18 +121,41 @@ export class WorkOrderUsersTableComponent implements OnInit {
     //this.dataSource.paginator = this.paginator;
   }
 
+  async refreshTable() {
+    // const a = this.entityTable.dataSource;
+    // this.tableObs$ = this.entityService.getAll().subscribe(
+    //   data => { this.dataSource = new MatTableDataSource(data) }
+    // );
+    this.sort = this.dataSource.sort;
+    //this.paginator = this.dataSource.paginator;
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.refreshConfigTable();
+
+    // this.entityService.getAll().subscribe(
+    //   data => { this.dataSource.data = data; }
+    // );
+    //this.changeDetectorRefs.detectChanges();
+  }
+
+  async refreshConfigTable() {
+    this.dataSource.sort = this.sort;
+    //this.dataSource.paginator = this.paginator;
+  }
+
   applyFilter(event: Event) {
     const filterTarget = (event.target as HTMLInputElement).value;
     if (filterTarget) { this.dataSource.filter = filterTarget.trim().toLowerCase() }
   }
 
-  getRowAgeColor(datePassed: any) {
-    let dateToCompare = Date.parse(datePassed);
-    let time = this.rightNow - dateToCompare;
-    if((time >= this.oneWeeks)&&(time < this.twoWeeks)) { return 'is-orange'; }
-    if(time >= this.twoWeeks) { return 'is-red'; }
-    return;
-  }
+  // getRowAgeColor(datePassed: any) {
+  //   let dateToCompare = Date.parse(datePassed);
+  //   let time = this.rightNow - dateToCompare;
+  //   if((time >= this.oneWeeks)&&(time < this.twoWeeks)) { return 'is-orange'; }
+  //   if(time >= this.twoWeeks) { return 'is-red'; }
+  //   return;
+  // }
 
   async openAddDialog() {
     const addDialogConfig = new MatDialogConfig();
@@ -111,7 +163,7 @@ export class WorkOrderUsersTableComponent implements OnInit {
     addDialogConfig.autoFocus = true;
     const addDialogRef = this.dialog.open(WorkOrderUsersAddComponent, addDialogConfig);
     await addDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+      .finally( () => { this.refreshTable(); });
   }
 
   async openEditDialog( _id: number) {
@@ -121,7 +173,7 @@ export class WorkOrderUsersTableComponent implements OnInit {
     editDialogConfig.data = { entityId: _id };
     const editDialogRef = this.dialog.open(WorkOrderUsersEditComponent, editDialogConfig);
     await editDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+      .finally( () => { this.refreshTable(); });
   }
 
   async openCompleteDialog( _id: number) {
@@ -133,7 +185,7 @@ export class WorkOrderUsersTableComponent implements OnInit {
     completeDialogConfig.data = { entityId: _id };
     const completeDialogRef = this.dialog.open(WorkOrderCompleteComponent, completeDialogConfig);
     await completeDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+      .finally( () => { this.refreshTable(); });
   }
 
   async openCancelDialog( _id: number) {
@@ -145,7 +197,7 @@ export class WorkOrderUsersTableComponent implements OnInit {
     cancelDialogConfig.data = { entityId: _id };
     const cancelDialogRef = this.dialog.open(WorkOrderCancelComponent, cancelDialogConfig);
     await cancelDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+      .finally( () => { this.refreshTable(); });
   }
 
   async openReopenDialog( _id: number) {
@@ -157,7 +209,7 @@ export class WorkOrderUsersTableComponent implements OnInit {
     reOpenDialogConfig.data = { entityId: _id };
     const reOpenDialogRef = this.dialog.open(WorkOrderReopenComponent, reOpenDialogConfig);
     await reOpenDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+      .finally( () => { this.refreshTable(); });
   }
 
   async openDeleteDialog( _id: number) {
@@ -167,7 +219,7 @@ export class WorkOrderUsersTableComponent implements OnInit {
     deleteDialogConfig.data = { entityId: _id };
     const deleteDialogRef = this.dialog.open(WorkOrderUsersDeleteComponent, deleteDialogConfig);
     await deleteDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+      .finally( () => { this.refreshTable(); });
   }
 
 }

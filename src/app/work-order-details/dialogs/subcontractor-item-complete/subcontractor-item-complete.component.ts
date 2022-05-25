@@ -61,8 +61,8 @@ export class SubcontractorItemCompleteComponent implements OnInit {
             'subcontractorId': new FormControl(this.entityData.subcontractorId, [Validators.required]),
             'entityName': new FormControl(this.entityData.entityName),
             'notes': new FormControl(this.entityData.notes),
-            'unitPrice': new FormControl(this.entityData.unitPrice, [Validators.required]),
-            'qty': new FormControl(this.entityData.qty, [Validators.required]),
+            //'unitPrice': new FormControl(this.entityData.unitPrice, [Validators.required]),
+            //'qty': new FormControl(this.entityData.qty, [Validators.required]),
             'total': new FormControl('')
           });
         })

@@ -60,9 +60,9 @@ export class SubcontractorItemTableComponent implements OnInit {
     this.nameToDisplay = this.loggedInUser!.firstName;
 
     this.componentTotal = 0;
-    this.displayedColumns = ['createdDate', 'entityName', 'notes', 'qty', 'status', 'actions'];
+    this.displayedColumns = ['createdDate', 'entityName', 'notes', 'status', 'actions'];
     if(this.loggedInRole=='ROLE_ADMIN'||this.loggedInRole=='ROLE_SUPER_ADMIN') {
-      this.displayedColumns = ['createdDate', 'entityName', 'notes', 'unitPrice', 'qty', 'totalPrice', 'status', 'actions'];
+      this.displayedColumns = ['createdDate', 'entityName', 'notes', 'total', 'status', 'actions'];
     }
   }
 
@@ -83,7 +83,7 @@ export class SubcontractorItemTableComponent implements OnInit {
       .toPromise()
       .then(data => { this.data = data })
       .finally( () => {
-        this.data.forEach((item: SubcontractorItem) => this.componentTotal += item.totalPrice);
+        this.data.forEach((item: SubcontractorItem) => this.componentTotal += item.total);
         this.dataSource = new MatTableDataSource(this.data);
         this.totalChangedEvent.emit(this.componentTotal);
       });

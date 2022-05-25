@@ -4,12 +4,10 @@ export interface SubcontractorItem {
   id: number;
   workOrder: WorkOrder;
   subcontractorId: number;
-  entityName: string,
+  entityName: string;
   status: string;
   notes: string;
-  unitPrice: number;
-  qty: number;
-  totalPrice: number;
+  total: number;
   createdDate: string;
   updatedDate: string;
 }

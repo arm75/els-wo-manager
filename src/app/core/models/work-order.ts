@@ -12,6 +12,7 @@ export interface WorkOrder {
   quickDescription: string;
   description: string;
   contactName: string;
+  contactEmail: string;
   contactPhoneNumb: string;
   contactAltPhoneNumb: string;
   notes: string;

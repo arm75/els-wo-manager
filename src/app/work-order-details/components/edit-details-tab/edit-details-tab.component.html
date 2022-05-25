@@ -54,19 +54,17 @@
           </mat-form-field>
         </div>
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
-          <mat-form-field class="width-99 els-form-fields-third-column" appearance="outline">
+          <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
             <mat-label>Contact Name</mat-label>
             <input type="text" matInput autocomplete="off" formControlName="contactName">
-            <mat-error *ngIf="editForm.controls['contactName'].hasError('required')">
-              Contact Name is required
-            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
+            <mat-label>Contact Email</mat-label>
+            <input type="text" matInput autocomplete="off" formControlName="contactEmail">
           </mat-form-field>
           <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
             <mat-label>Contact Phone Number</mat-label>
             <input type="text" matInput autocomplete="off" mask="(000)000-0000" formControlName="contactPhoneNumb">
-            <mat-error *ngIf="editForm.controls['contactPhoneNumb'].hasError('required')">
-              Contact Phone Number is required
-            </mat-error>
           </mat-form-field>
           <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
             <mat-label>Contact Alt Phone NUmber</mat-label>

@@ -3,39 +3,26 @@
     <h2 mat-dialog-title>{{formTitle}}: {{entityId}}</h2>
     <mat-dialog-content>
       <h4 mat-dialog-title>Subcontractor Item Details</h4>
-      <p>
-        <mat-form-field class="width-99" appearance="outline">
-          <mat-label>Select Subcontractor</mat-label>
-          <mat-select #subcontractorSelect [(value)]="subcontractorIdSelected" (selectionChange)="selectChange()" formControlName="subcontractorId">
-            <mat-option *ngFor="let subc of subcontractorLoaded" [value]="subc.id">{{subc.entityName}}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="editForm.controls['subcontractorId'].hasError('required')">
-            Subcontractor is required
-          </mat-error>
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="width-99" appearance="outline">
-          <mat-label>Notes</mat-label>
-          <textarea matInput autocomplete="off" class="description-box" formControlName="notes"></textarea>
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="width-47" appearance="outline">
-          <mat-label>Unit Price</mat-label>
-          <input matInput autocomplete="off" prefix="$" mask="0*.00" formControlName="unitPrice">
-          <mat-error *ngIf="editForm.controls['unitPrice'].hasError('required')">
-            Unit Price is required
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="width-47" appearance="outline">
-          <mat-label>Quantity</mat-label>
-          <input matInput autocomplete="off" formControlName="qty">
-          <mat-error *ngIf="editForm.controls['qty'].hasError('required')">
-            Quantity is required
-          </mat-error>
-        </mat-form-field>
-      </p>
+      <mat-form-field class="width-99" appearance="outline">
+        <mat-label>Select Subcontractor</mat-label>
+        <mat-select #subcontractorSelect [(value)]="subcontractorIdSelected" (selectionChange)="selectChange()" formControlName="subcontractorId">
+          <mat-option *ngFor="let subc of subcontractorLoaded" [value]="subc.id">{{subc.entityName}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="editForm.controls['subcontractorId'].hasError('required')">
+          Subcontractor is required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="width-99" appearance="outline">
+        <mat-label>Notes</mat-label>
+        <textarea matInput autocomplete="off" class="description-box" formControlName="notes"></textarea>
+      </mat-form-field>
+      <mat-form-field class="width-99" appearance="outline">
+        <mat-label>Total</mat-label>
+        <input matInput autocomplete="off" formControlName="total">
+        <mat-error *ngIf="editForm.controls['total'].hasError('required')">
+          Total is required
+        </mat-error>
+      </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
       <button mat-button class="mat-raised-button" mat-dialog-close>Cancel</button>

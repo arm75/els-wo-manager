@@ -121,6 +121,7 @@ export class WorkOrderDetailsComponent implements OnInit {
           'quickDescription': new FormControl({ value: this.entityData.quickDescription, disabled: true}, [Validators.required]),
           'description': new FormControl({ value: this.entityData.description, disabled: true}),
           'contactName': new FormControl({ value: this.entityData.contactName, disabled: true}, [Validators.required]),
+          'contactEmail': new FormControl({ value: this.entityData.contactName, disabled: true}),
           'contactPhoneNumb': new FormControl({ value: this.entityData.contactPhoneNumb, disabled: true}, [Validators.required]),
           'contactAltPhoneNumb': new FormControl({ value: this.entityData.contactAltPhoneNumb, disabled: true}),
           'notes': new FormControl({ value: this.entityData.notes, disabled: true}),

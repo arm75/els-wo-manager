@@ -9,6 +9,7 @@ import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.s
 import {InventoryBucketService} from "../../../core/services/inventory-bucket.service";
 import {AuthenticationService} from "../../../core/security/authentication.service";
 import {InventoryGroupService} from "../../../core/services/inventory-group.service";
+import {Inventory} from "../../../core/models/inventory";
 
 @Component({
   selector: 'app-inventory-item-add',
@@ -83,19 +84,21 @@ export class InventoryItemAddComponent implements OnInit {
   }
 
   groupSelectChange() {
-    this.inventoryService.get(this.inventoryIdSelected)
-      .pipe(finalize(() => {
-        this.addForm.controls['inventoryId'].setValue(this.inventorySelectedLoaded.id);
-        this.addForm.controls['entityName'].setValue(this.inventorySelectedLoaded.entityName);
-        this.addForm.controls['notes'].setValue(this.inventorySelectedLoaded.description);
-        this.addForm.controls['unitCost'].setValue(this.inventorySelectedLoaded.unitCost);
-        this.addForm.controls['unitPrice'].setValue(this.inventorySelectedLoaded.unitPrice);
-        this.loadInventorySelect(this.inventoryGroupIdSelected);
-      })).subscribe(data => {
-        this.inventorySelectedLoaded = data;
-      }, error => {
-      }
-    );
+    this.loadInventorySelect(this.inventoryGroupIdSelected);
+    this.inventoryBucketIdSelected = null;
+    // this.inventoryService.get(this.inventoryIdSelected)
+    //   .pipe(finalize(() => {
+    //     this.addForm.controls['inventoryId'].setValue(this.inventorySelectedLoaded.id);
+    //     this.addForm.controls['entityName'].setValue(this.inventorySelectedLoaded.entityName);
+    //     this.addForm.controls['notes'].setValue(this.inventorySelectedLoaded.description);
+    //     this.addForm.controls['unitCost'].setValue(this.inventorySelectedLoaded.unitCost);
+    //     this.addForm.controls['unitPrice'].setValue(this.inventorySelectedLoaded.unitPrice);
+    //     this.loadInventorySelect(this.inventoryGroupIdSelected);
+    //   })).subscribe(data => {
+    //     this.inventorySelectedLoaded = data;
+    //   }, error => {
+    //   }
+    // );
   }
 
   selectChange() {

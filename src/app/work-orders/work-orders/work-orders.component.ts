@@ -21,7 +21,7 @@ export class WorkOrdersComponent implements OnInit, AfterViewInit, AfterViewChec
     private authenticationService: AuthenticationService
   ) {
     this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
-    console.table(this.loggedInUser);
+    //console.table(this.loggedInUser);
     this.loggedInUsername = this.loggedInUser.username;
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;

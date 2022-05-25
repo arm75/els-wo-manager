@@ -65,9 +65,9 @@ export class SubcontractorCompletionTableComponent implements OnInit {
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
-    this.displayedColumns = ['createdDate', 'entityName', 'workOrder', 'notes', 'qty', 'status', 'actions'];
+    this.displayedColumns = ['createdDate', 'entityName', 'workOrder', 'notes', 'status', 'actions'];
     if((this.loggedInRole=='ROLE_ADMIN')||(this.loggedInRole=='ROLE_SUPER_ADMIN')) {
-      this.displayedColumns = ['createdDate', 'entityName', 'workOrder', 'notes', 'unitPrice', 'qty', 'totalPrice', 'status', 'actions'];
+      this.displayedColumns = ['createdDate', 'entityName', 'workOrder', 'notes', 'total', 'status', 'actions'];
     }
   }
 
