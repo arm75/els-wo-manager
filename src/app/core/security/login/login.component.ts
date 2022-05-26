@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   loggedInRole!: string;
   nameToDisplay!: string;
 
+  userToLogin: any;
   formTitle: string = "Login";
   loginFormGroup: FormGroup = new FormGroup({});
   public showLoading: boolean = false;
@@ -60,31 +61,56 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
-  public onLogin(user: User): void {
+  public async onLogin(user: User) {
     this.showLoading = true;
-    console.log(user);
-    this.subscriptions.push(
-      this.authenticationService.login(user).subscribe(
-        (response: HttpResponse<User>) => {
-          const token = String(response.headers.get(HeaderType.JWT_TOKEN));
-          this.authenticationService.saveTokenToLocalStorage(token);
-          if (response.body?.username != null) {
-            this.userService.getByUsername(response.body?.username).subscribe(
-              data => {
-                this.authenticationService.saveUserToLocalStorage(data);
-              });
-          }
-          this.router.navigateByUrl('/workOrders').then();
-          this.showLoading = false;
-        }
-        , (error: HttpErrorResponse) => {
-          console.log(error);
-          this.loginErrorMessage = error.error.message;
-          this.showLoading = false;
-        }
-      )
-    );
+    //console.log(user);
+    await this.authenticationService.login(user).toPromise()
+      .then( async (response: HttpResponse<User>) => {
+        const token = String(response.headers.get(HeaderType.JWT_TOKEN));
+        this.authenticationService.saveTokenToLocalStorage(token);
+        //if (response.body?.username != null) {
+        await this.userService.getByUsername(response.body?.username).toPromise()
+            .then( data => { this.userToLogin = data; })
+            .finally(()=>{ this.authenticationService.saveUserToLocalStorage(this.userToLogin); });
+        //}
+      })
+      .catch((error:HttpErrorResponse) => {
+        //console.log(error);
+        this.loginErrorMessage = error.error.message;
+        this.showLoading = false;
+      })
+      .finally(() => {
+        this.showLoading = false;
+        this.router.navigateByUrl('/workOrders').then();
+      });
   }
+
+  // public onLogin(user: User): void {
+  //   this.showLoading = true;
+  //   //console.log(user);
+  //   this.subscriptions.push(
+  //     this.authenticationService.login(user).subscribe(
+  //       (response: HttpResponse<User>) => {
+  //         const token = String(response.headers.get(HeaderType.JWT_TOKEN));
+  //         this.authenticationService.saveTokenToLocalStorage(token);
+  //         if (response.body?.username != null) {
+  //           this.userService.getByUsername(response.body?.username).subscribe(
+  //             data => {
+  //               this.authenticationService.saveUserToLocalStorage(data);
+  //           });
+  //         }
+  //       },
+  //       (error: HttpErrorResponse) => {
+  //         console.log(error);
+  //         this.loginErrorMessage = error.error.message;
+  //         this.showLoading = false;
+  //       },
+  //       () => {
+  //         this.router.navigateByUrl('/workOrders').then();
+  //         this.showLoading = false;
+  //       })
+  //   );
+  // }
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());

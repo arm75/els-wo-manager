@@ -86,7 +86,8 @@ export class SubcontractorItemEditComponent implements OnInit {
   loadSubcontractorSelect() {
     this.subcontractorService.getAll().subscribe(
       data => {
-        this.subcontractorLoaded = data;
+        this.subcontractorLoaded = data.sort((a, b) => {
+          return a.entityName.localeCompare(b.entityName); });
       },error => {
       }
     );

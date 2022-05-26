@@ -89,7 +89,8 @@ export class ToolEquipmentItemEditComponent implements OnInit {
   loadToolEquipmentSelect() {
     this.toolEquipmentService.getAll().subscribe(
       data => {
-        this.toolEquipmentLoaded = data;
+        this.toolEquipmentLoaded = data.sort((a, b) => {
+          return a.entityName.localeCompare(b.entityName); });
       },error => {
       }
     );

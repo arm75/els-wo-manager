@@ -6,14 +6,12 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
   private baseUrl: string = environment.apiBaseUrl + "/user";
-  //public baseUrl: string = "http://127.0.0.1:8090/user";
   private token: any;
   private loggedInUsername: any;
   private stringUser!: any;
@@ -22,8 +20,7 @@ export class AuthenticationService {
   constructor(
     private http: HttpClient,
     private router: Router
-  ) {
-  }
+  ) { }
 
   // login
   public login(user: User): Observable<HttpResponse<User>> {

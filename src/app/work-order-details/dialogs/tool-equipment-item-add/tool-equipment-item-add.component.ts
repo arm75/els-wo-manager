@@ -64,7 +64,8 @@ export class ToolEquipmentItemAddComponent implements OnInit {
     this.toolEquipmentService.getAll().pipe(map(items =>
       items.filter(item => (item.status == 'IN'))))
       .subscribe(data => {
-      this.toolEquipmentLoaded = data;
+      this.toolEquipmentLoaded = data.sort((a, b) => {
+        return a.entityName.localeCompare(b.entityName); });
       },error => {
       }
     );

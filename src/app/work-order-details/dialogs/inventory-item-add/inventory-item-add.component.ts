@@ -10,6 +10,7 @@ import {InventoryBucketService} from "../../../core/services/inventory-bucket.se
 import {AuthenticationService} from "../../../core/security/authentication.service";
 import {InventoryGroupService} from "../../../core/services/inventory-group.service";
 import {Inventory} from "../../../core/models/inventory";
+import {InventoryBucket} from "../../../core/models/inventory-bucket";
 
 @Component({
   selector: 'app-inventory-item-add',
@@ -120,7 +121,8 @@ export class InventoryItemAddComponent implements OnInit {
   loadInventoryGroupSelect() {
     this.inventoryGroupService.getAll().subscribe(
       data => {
-        this.inventoryGroupLoaded = data;
+        this.inventoryGroupLoaded = data.sort((a, b) => {
+          return a.entityName.localeCompare(b.entityName); });
       },error => {
       }
     );
@@ -129,7 +131,12 @@ export class InventoryItemAddComponent implements OnInit {
   loadInventorySelect(passedInvGroupId?: any) {
     if(passedInvGroupId) {
       this.inventoryService.getAll().pipe(map(items => items.filter(item => (item.inventoryGroup.id == this.inventoryGroupIdSelected))))
-        .subscribe(data => { this.inventoryLoaded = data; },error => { } );
+        .subscribe(data => {
+          this.inventoryLoaded = data
+            .sort((a, b) => {
+              return a.entityName.localeCompare(b.entityName); });
+          },
+            error => { } );
     } else {
       this.inventoryService.getAll()
         .subscribe(data => { this.inventoryLoaded = data; }, error => { });
@@ -139,10 +146,25 @@ export class InventoryItemAddComponent implements OnInit {
   loadInventoryBucketSelect() {
     this.inventoryBucketService.getAllNonEmptyByInventoryId(this.inventoryIdSelected).subscribe(
       data => {
-        this.inventoryBucketLoaded = data;
+        this.inventoryBucketLoaded = data
+          .sort((a,b) => { return InventoryItemAddComponent.compareBucketLocationNames(a, b); });
       },error => {
       }
     );
+  }
+
+  private static compareBucketLocationNames(a: InventoryBucket, b: InventoryBucket): number {
+    let aName = a.location?.entityName;
+    let bName = b.location?.entityName;
+    if(aName==null){ aName=''; }
+    if(bName==null){ bName=''; }
+    if(aName.toLowerCase() < bName.toLowerCase()) {
+      return -1;
+    }
+    if(aName.toLowerCase() > bName.toLowerCase()) {
+      return 1;
+    }
+    return 0;
   }
 
   addEntity() {

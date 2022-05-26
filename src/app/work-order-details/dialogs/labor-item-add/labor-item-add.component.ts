@@ -84,7 +84,8 @@ export class LaborItemAddComponent implements OnInit {
   loadLaborSelect() {
     this.laborService.getAll().subscribe(
       data => {
-        this.laborLoaded = data;
+        this.laborLoaded = data.sort((a, b) => {
+          return a.entityName.localeCompare(b.entityName); });
       },error => {
       }
     );
