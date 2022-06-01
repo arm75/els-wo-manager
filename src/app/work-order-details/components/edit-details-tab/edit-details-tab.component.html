@@ -83,7 +83,7 @@
         <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
           <div><button type="button" class="mat-flat-button mat-primary" (click)="printPage()">Print Work Order</button></div>
 <!--          <div><button *ngIf="!editFormEditMode" class="mat-flat-button mat-primary" (click)="editModeToggle()">Edit Work Order Details</button></div>-->
-          <div><button class="mat-flat-button edit-button-color" type="submit">Save Work Order Details</button></div>
+          <div><button *ngIf="(entityData.status=='OPEN')" class="mat-flat-button edit-button-color" type="submit">Save Work Order Details</button></div>
 <!--          <div><button *ngIf="editFormEditMode" class="mat-raised-button" (click)="editModeToggle()">Cancel</button></div>-->
         </div>
       </div>

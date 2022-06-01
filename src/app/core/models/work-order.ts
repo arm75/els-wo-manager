@@ -6,7 +6,11 @@ import { WorkOrderStatus } from "../types/work-order-status";
 export interface WorkOrder {
   id: number;
   customer: Customer;
+  customerId: number;
+  customerEntityName: string;
   location: Location;
+  locationId: number;
+  locationEntityName: string;
   assignedUsers: User[];
   status: WorkOrderStatus;
   quickDescription: string;

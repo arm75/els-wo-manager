@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {map} from "rxjs/operators";
 import {User} from "../../../core/models/user";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
@@ -71,6 +71,9 @@ export class EditDetailsTabComponent implements OnInit {
   spinning: boolean = false;
 
   logNg: boolean = false;
+
+  @Output()
+  saveEvent: EventEmitter<number> = new EventEmitter();
 
 
   constructor(
@@ -246,6 +249,7 @@ export class EditDetailsTabComponent implements OnInit {
         //this.updateFieldBoxes();
         //this.editForm.disable();
         //this.editFormEditMode = false;
+        this.saveEvent.emit(0);
       }, error => {
         this.globalSnackBarService.error(error.error.message);
       }, () => {

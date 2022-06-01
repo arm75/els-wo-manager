@@ -104,7 +104,7 @@ export class WorkOrderDetailsComponent implements OnInit {
 
 
 
-  loadWorkOrderIntoView(): void {
+  loadWorkOrderIntoView(event?: number): void {
     this.entityService.get(this.passedWorkOrderId)
       .toPromise()
       .then(data => { this.entityData = data; })
@@ -214,7 +214,7 @@ export class WorkOrderDetailsComponent implements OnInit {
     });
   }
 
-  updateFieldBoxes(): void {
+  updateFieldBoxes(event?: number): void {
     this.woIdFieldBox = this.entityData.id;
     this.woStatusFieldBox = this.entityData.status;
     this.woCreatedDateFieldBox = this.entityData.createdDate;
