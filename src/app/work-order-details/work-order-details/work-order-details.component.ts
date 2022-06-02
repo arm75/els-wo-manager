@@ -21,6 +21,8 @@ import {interval} from "rxjs";
 })
 export class WorkOrderDetailsComponent implements OnInit {
 
+  params: any;
+
   loggedInUser!: any;
   loggedInUsername!: string;
   loggedInRole!: string;
@@ -92,129 +94,140 @@ export class WorkOrderDetailsComponent implements OnInit {
     this.nameToDisplay = this.loggedInUser!.firstName;
   }
 
-  ngOnInit(): void {
-    this.dataLoaded = false;
-    this.getIdFromRoute();
-    this.editFormEditMode = false;
-    this.loadCustomerSelect();
+  ngOnInit() {
+    this.setupComponent().finally(() => {});
+    // this.editFormEditMode = false;
+    // this.loadCustomerSelect();
+  }
+
+  async setupComponent() {
+    console.log('before getIdFromRoute');
+    await this.getIdFromRoute();
+    console.log('after getIdFromRoute');
+    // this.dataLoaded = true;
     if (this.passedWorkOrderId) {
-      this.loadWorkOrderIntoView();
+      console.log('inside if:', this.passedWorkOrderId);
+      await this.loadWorkOrderIntoView();
+      console.log('inside if: ', this.entityData);
+      await this.updateFieldBoxes();
+      this.dataLoaded = true;
     }
+
   }
 
 
-
-  loadWorkOrderIntoView(event?: number): void {
-    this.entityService.get(this.passedWorkOrderId)
+  async loadWorkOrderIntoView(event?: number) {
+    await this.entityService.get(this.passedWorkOrderId)
       .toPromise()
       .then(data => { this.entityData = data; })
       .finally(() => {
         //this.loggedInRole = this.loggedInUser?.role;
         //this.nameToDisplay = this.loggedInUser?.username;
-        this.updateFieldBoxes();
-        this.editForm = this.formBuilder.group({
-          'id': new FormControl(this.entityData.id),
-          'status': new FormControl(this.entityData.status),
-          'customer': new FormControl({ value: this.entityData.customer, disabled: true}, [Validators.required]),
-          'location': new FormControl({ value: this.entityData.location, disabled: true}, [Validators.required]),
-          'assignedUsers': new FormControl({ value: this.entityData.assignedUsers, disabled: true}, [Validators.required]),
-          'quickDescription': new FormControl({ value: this.entityData.quickDescription, disabled: true}, [Validators.required]),
-          'description': new FormControl({ value: this.entityData.description, disabled: true}),
-          'contactName': new FormControl({ value: this.entityData.contactName, disabled: true}, [Validators.required]),
-          'contactEmail': new FormControl({ value: this.entityData.contactName, disabled: true}),
-          'contactPhoneNumb': new FormControl({ value: this.entityData.contactPhoneNumb, disabled: true}, [Validators.required]),
-          'contactAltPhoneNumb': new FormControl({ value: this.entityData.contactAltPhoneNumb, disabled: true}),
-          'notes': new FormControl({ value: this.entityData.notes, disabled: true}),
-          'privateNotes': new FormControl({ value: this.entityData.privateNotes, disabled: true}),
-          'entryInstruct': new FormControl({ value: this.entityData.entryInstruct, disabled: true}, [Validators.required]),
-          'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
-          'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
-          'subcontractorItemsTotal': new FormControl(this.entityData.subcontractorItemsTotal),
-          'toolEquipmentItemsTotal': new FormControl(this.entityData.toolEquipmentItemsTotal),
-          'workOrderTotal': new FormControl(this.entityData.workOrderTotal)
-        });
-        this.dataLoaded = true;
-        this.loadLocationSelect(this.entityData.customer.id);
-        this.userData = this.entityData.assignedUsers;
-        this.loadAssignedUsersSelect();
+        //this.updateFieldBoxes();
+        // this.editForm = this.formBuilder.group({
+        //   'id': new FormControl(this.entityData.id),
+        //   'status': new FormControl(this.entityData.status),
+        //   'customer': new FormControl({ value: this.entityData.customer, disabled: true}, [Validators.required]),
+        //   'location': new FormControl({ value: this.entityData.location, disabled: true}, [Validators.required]),
+        //   'assignedUsers': new FormControl({ value: this.entityData.assignedUsers, disabled: true}, [Validators.required]),
+        //   'quickDescription': new FormControl({ value: this.entityData.quickDescription, disabled: true}, [Validators.required]),
+        //   'description': new FormControl({ value: this.entityData.description, disabled: true}),
+        //   'contactName': new FormControl({ value: this.entityData.contactName, disabled: true}, [Validators.required]),
+        //   'contactEmail': new FormControl({ value: this.entityData.contactName, disabled: true}),
+        //   'contactPhoneNumb': new FormControl({ value: this.entityData.contactPhoneNumb, disabled: true}, [Validators.required]),
+        //   'contactAltPhoneNumb': new FormControl({ value: this.entityData.contactAltPhoneNumb, disabled: true}),
+        //   'notes': new FormControl({ value: this.entityData.notes, disabled: true}),
+        //   'privateNotes': new FormControl({ value: this.entityData.privateNotes, disabled: true}),
+        //   'entryInstruct': new FormControl({ value: this.entityData.entryInstruct, disabled: true}, [Validators.required]),
+        //   'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
+        //   'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
+        //   'subcontractorItemsTotal': new FormControl(this.entityData.subcontractorItemsTotal),
+        //   'toolEquipmentItemsTotal': new FormControl(this.entityData.toolEquipmentItemsTotal),
+        //   'workOrderTotal': new FormControl(this.entityData.workOrderTotal)
+        // });
+
+        //this.loadLocationSelect(this.entityData.customer.id);
+        console.log(this.entityData);
+        //this.userData = this.entityData.assignedUsers;
+        //this.loadAssignedUsersSelect();
       });
   }
 
-  addUserToWorkOrder() {
-    this.userData.push(this.assignedUsersSelected);
-    this.loadAssignedUsersSelect();
-    this.assignedUsersSelected = "";
-  }
+  // addUserToWorkOrder() {
+  //   this.userData.push(this.assignedUsersSelected);
+  //   //this.loadAssignedUsersSelect();
+  //   this.assignedUsersSelected = "";
+  // }
 
-  removeUserFromWorkOrder(userToRemove: User) {
-    if (this.userData.length > 1) {
-      this.userData = this.userData.filter(function (obj: { id: number; }) {
-        return obj.id !== userToRemove.id;
-      });
-    }
-    this.loadAssignedUsersSelect();
-  }
+  // removeUserFromWorkOrder(userToRemove: User) {
+  //   if (this.userData.length > 1) {
+  //     this.userData = this.userData.filter(function (obj: { id: number; }) {
+  //       return obj.id !== userToRemove.id;
+  //     });
+  //   }
+  //   //this.loadAssignedUsersSelect();
+  // }
 
   compareObjects(o1: any, o2: any): boolean {
     return o1.entityName === o2.entityName && o1.id === o2.id;
   }
 
-  customerSelectChange() {
-    this.loadLocationSelect(this.customerSelected.id);
-  }
+  // customerSelectChange() {
+  //   this.loadLocationSelect(this.customerSelected.id);
+  // }
 
-  locationSelectChange() { }
+  // locationSelectChange() { }
 
-  assignedUsersSelectChange() { }
+  // assignedUsersSelectChange() { }
 
-  loadCustomerSelect() {
-    this.customerService.getAll().subscribe(
-      data => {
-        this.customerLoaded = data;
-      },error => {
-      }
-    );
-  }
+  // loadCustomerSelect() {
+  //   this.customerService.getAll().subscribe(
+  //     data => {
+  //       this.customerLoaded = data;
+  //     },error => {
+  //     }
+  //   );
+  // }
 
-  loadLocationSelect(passedCustomerId?: any) {
-    if(passedCustomerId) {
-      this.locationService.getAll()
-        .pipe(map(items =>
-          items.filter(item => (item.customer.id == passedCustomerId))))
-        .subscribe(data => {
-            this.locationLoaded = data;
-          }, error => {
-          }
-        );
-    } else {
-      this.locationService.getAll()
-        .subscribe(data => {
-            this.locationLoaded = data;
-          }, error => {
-          }
-        );
-    }
-  }
+  // loadLocationSelect(passedCustomerId?: any) {
+  //   if(passedCustomerId) {
+  //     this.locationService.getAll()
+  //       .pipe(map(items =>
+  //         items.filter(item => (item.customer.id == passedCustomerId))))
+  //       .subscribe(data => {
+  //           this.locationLoaded = data;
+  //         }, error => {
+  //         }
+  //       );
+  //   } else {
+  //     this.locationService.getAll()
+  //       .subscribe(data => {
+  //           this.locationLoaded = data;
+  //         }, error => {
+  //         }
+  //       );
+  //   }
+  // }
 
-  loadAssignedUsersSelect() {
-    this.userService.getAll().subscribe(
-      data => {
-        this.assignedUsersLoaded = data;
-        this.assignedUsersLoaded = this.assignedUsersLoaded.filter((ar: { id: number; }) => !this.userData.find((rm: { id: number; }) => (rm.id === ar.id) ));
-      },error => {
-      }
-    );
-  }
+  // loadAssignedUsersSelect() {
+  //   this.userService.getAll().subscribe(
+  //     data => {
+  //       this.assignedUsersLoaded = data;
+  //       this.assignedUsersLoaded = this.assignedUsersLoaded.filter((ar: { id: number; }) => !this.userData.find((rm: { id: number; }) => (rm.id === ar.id) ));
+  //     },error => {
+  //     }
+  //   );
+  // }
 
 //----------------------------------------------------------------
 
-  getIdFromRoute(): void {
-    this.route.paramMap.subscribe( params => {
+  async getIdFromRoute() {
+    this.route.paramMap.subscribe(params => {
       this.passedWorkOrderId = params.get('passedId');
     });
   }
 
-  updateFieldBoxes(event?: number): void {
+  async updateFieldBoxes(event?: number) {
     this.woIdFieldBox = this.entityData.id;
     this.woStatusFieldBox = this.entityData.status;
     this.woCreatedDateFieldBox = this.entityData.createdDate;
@@ -247,49 +260,46 @@ export class WorkOrderDetailsComponent implements OnInit {
     this.calcMasterTotal();
   }
 
-  editModeToggle() {
-    this.editFormEditMode = !this.editFormEditMode;
-    if(this.editFormEditMode) { this.editForm.enable(); }
-    else { this.editForm.disable() }
+  async processSaveEvent(_event?: number) {
+    await this.loadWorkOrderIntoView();
+    await this.updateFieldBoxes();
   }
+
+  // editModeToggle() {
+  //   this.editFormEditMode = !this.editFormEditMode;
+  //   if(this.editFormEditMode) { this.editForm.enable(); }
+  //   else { this.editForm.disable() }
+  // }
 
   processStatusChange(eventData: number) {
     this.loadWorkOrderIntoView();
   }
 
-  saveWorkOrder() {
-    this.startSpinner();
-    this.editForm.controls['assignedUsers'].setValue(this.userData);
-    this.editForm.controls['inventoryItemsTotal'].setValue(this.masterInventoryTotal);
-    this.editForm.controls['laborItemsTotal'].setValue(this.masterLaborTotal);
-    this.editForm.controls['subcontractorItemsTotal'].setValue(this.masterSubcontractorTotal);
-    this.editForm.controls['toolEquipmentItemsTotal'].setValue(this.masterToolEquipmentTotal);
-    this.editForm.controls['workOrderTotal'].setValue(this.masterTotal);
-    this.entityService.update(this.editForm.value)
-      .subscribe(data => {
-        this.loadWorkOrderIntoView();
-        this.updateFieldBoxes();
-        this.editForm.disable();
-        this.editFormEditMode = false;
-      }, error => {
-        this.globalSnackBarService.error(error.error.message);
-      }, () => {
-        this.stopSpinner();
-        this.globalSnackBarService.success("Work Order: " + this.editForm.value.id + " has been updated.");
-      });
-  }
+  // saveWorkOrder() {
+  //   this.startSpinner();
+  //   this.editForm.controls['assignedUsers'].setValue(this.userData);
+  //   this.editForm.controls['inventoryItemsTotal'].setValue(this.masterInventoryTotal);
+  //   this.editForm.controls['laborItemsTotal'].setValue(this.masterLaborTotal);
+  //   this.editForm.controls['subcontractorItemsTotal'].setValue(this.masterSubcontractorTotal);
+  //   this.editForm.controls['toolEquipmentItemsTotal'].setValue(this.masterToolEquipmentTotal);
+  //   this.editForm.controls['workOrderTotal'].setValue(this.masterTotal);
+  //   this.entityService.update(this.editForm.value)
+  //     .subscribe(data => {
+  //       this.loadWorkOrderIntoView();
+  //       this.updateFieldBoxes();
+  //       this.editForm.disable();
+  //       this.editFormEditMode = false;
+  //     }, error => {
+  //       this.globalSnackBarService.error(error.error.message);
+  //     }, () => {
+  //       this.stopSpinner();
+  //       this.globalSnackBarService.success("Work Order: " + this.editForm.value.id + " has been updated.");
+  //     });
+  // }
 
-  printPage() {
-    window.print();
-  }
-
-  startSpinner() {
-    this.spinning = true;
-  }
-
-  stopSpinner() {
-    this.spinning = false;
-  }
+  // printPage() {
+  //   window.print();
+  // }
 
   logout() {
     this.authenticationService.logout();

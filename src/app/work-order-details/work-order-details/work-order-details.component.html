@@ -57,7 +57,7 @@
     <!-- tabs container -->
     <div class="row els-custom-table-container">
       <mat-tab-group mat-stretch-tabs class="work-order-details-tab-group">
-        <mat-tab label="Work Order Details"><app-edit-details-tab (saveEvent)="loadWorkOrderIntoView($event)" [passedWorkOrderId]="entityData.id"></app-edit-details-tab></mat-tab>
+        <mat-tab label="Work Order Details"><app-edit-details-tab (saveEvent)="processSaveEvent($event)" [passedWorkOrder]="entityData" [passedWorkOrderId]="entityData.id"></app-edit-details-tab></mat-tab>
         <mat-tab label="Inventory Items"><app-inventory-item-table (totalChangedEvent)="getNewInventoryTotal($event)" [passedWorkOrderId]="entityData.id" [passedWorkOrderStatus]="entityData.status"></app-inventory-item-table></mat-tab>
         <mat-tab label="Labor Items"><app-labor-item-table (totalChangedEvent)="getNewLaborTotal($event)" [passedWorkOrderId]="entityData.id" [passedWorkOrderStatus]="entityData.status"></app-labor-item-table></mat-tab>
         <mat-tab label="Subcontractor Items"><app-subcontractor-item-table (totalChangedEvent)="getNewSubcontractorTotal($event)" [passedWorkOrderId]="entityData.id" [passedWorkOrderStatus]="entityData.status"></app-subcontractor-item-table></mat-tab>
