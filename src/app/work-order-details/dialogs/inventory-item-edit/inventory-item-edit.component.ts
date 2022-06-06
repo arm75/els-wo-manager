@@ -170,7 +170,7 @@ export class InventoryItemEditComponent implements OnInit {
   }
 
   loadInventoryBucketSelect() {
-    this.inventoryBucketService.getAllNonEmptyByInventoryId(this.inventoryIdSelected).subscribe(
+    this.inventoryBucketService.getAllByInventoryId(this.inventoryIdSelected).subscribe(
       data => {
         this.inventoryBucketLoaded = data
           .sort((a,b) => { return InventoryItemEditComponent.compareBucketLocationNames(a, b); });

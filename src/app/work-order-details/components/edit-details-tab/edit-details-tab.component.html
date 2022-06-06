@@ -9,17 +9,17 @@
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
           <mat-form-field class="example-full-width width-99" appearance="outline">
             <mat-label>Customer</mat-label>
-            <mat-select #customerSelect [(value)]="customerSelected" (selectionChange)="customerSelectChange()" formControlName="customerId">
-              <mat-option *ngFor="let customer of customerLoaded" [value]="customer.id">{{customer.entityName}}</mat-option>
+            <mat-select #customerSelect [(value)]="customerSelected" (selectionChange)="customerSelectChange()" [compareWith]="compareObjects" formControlName="customer">
+              <mat-option *ngFor="let customer of customerLoaded" [value]="customer">{{customer.entityName}}</mat-option>
             </mat-select>
-            <mat-error *ngIf="editForm.controls['customerId'].hasError('required')">
+            <mat-error *ngIf="editForm.controls['customer'].hasError('required')">
               Customer is required
             </mat-error>
           </mat-form-field>
           <mat-form-field class="example-full-width width-99" appearance="outline">
             <mat-label>Location</mat-label>
-            <mat-select #locationSelect [(value)]="locationSelected" (selectionChange)="locationSelectChange()" formControlName="locationId">
-              <mat-option *ngFor="let location of locationLoaded" [value]="location.id">{{location.entityName}}</mat-option>
+            <mat-select #locationSelect [(value)]="locationSelected" (selectionChange)="locationSelectChange()" [compareWith]="compareObjects" formControlName="location">
+              <mat-option *ngFor="let location of locationLoaded" [value]="location">{{location.entityName}}</mat-option>
             </mat-select>
             <mat-error *ngIf="editForm.controls['location'].hasError('required')">
               Location is required
@@ -83,7 +83,7 @@
         <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
           <div><button type="button" class="mat-flat-button mat-primary" (click)="printPage()">Print Work Order</button></div>
 <!--          <div><button *ngIf="!editFormEditMode" class="mat-flat-button mat-primary" (click)="editModeToggle()">Edit Work Order Details</button></div>-->
-          <div><button *ngIf="(entityData.status=='OPEN')" class="mat-flat-button edit-button-color" type="submit">Save Work Order Details</button></div>
+          <div><button *ngIf="(entityData.status=='OPEN')" class="mat-flat-button edit-button-color" [disabled]="editForm.invalid" type="submit">Save Work Order Details</button></div>
 <!--          <div><button *ngIf="editFormEditMode" class="mat-raised-button" (click)="editModeToggle()">Cancel</button></div>-->
         </div>
       </div>

@@ -130,11 +130,11 @@ export class EditDetailsTabComponent implements OnInit, OnChanges {
           'id': new FormControl(this.entityData.id),
           'status': new FormControl(this.entityData.status),
           'customer': new FormControl(this.entityData.customer, [Validators.required]),
-          'customerId': new FormControl(this.entityData.customerId, [Validators.required]),
-          'customerEntityName': new FormControl(this.entityData.customerEntityName),
+          // 'customerId': new FormControl(this.entityData.customerId, [Validators.required]),
+          // 'customerEntityName': new FormControl(this.entityData.customerEntityName),
           'location': new FormControl(this.entityData.location, [Validators.required]),
-          'locationId': new FormControl(this.entityData.locationId, [Validators.required]),
-          'locationEntityName': new FormControl(this.entityData.locationEntityName),
+          // 'locationId': new FormControl(this.entityData.locationId, [Validators.required]),
+          // 'locationEntityName': new FormControl(this.entityData.locationEntityName),
           'assignedUsers': new FormControl(this.entityData.assignedUsers, [Validators.required]),
           'quickDescription': new FormControl(this.entityData.quickDescription, [Validators.required]),
           'description': new FormControl(this.entityData.description),
@@ -230,13 +230,20 @@ export class EditDetailsTabComponent implements OnInit, OnChanges {
     );
   }
 
-  customerSelectChange() {
+  async customerSelectChange() {
     //this.editForm.controls['customerEntityName'].setValue(this.entityData.customer.entityName);
-    this.locationSelected = null;
-    this.loadLocationSelect(this.customerSelected.id);
+    await this.loadLocationSelect(this.customerSelected.id);
+    this.editForm.controls['location'].reset();
+    this.editForm.controls['location'].markAsTouched();
+
+    // this.editForm.controls['location'].clearValidators();
+    //this.editForm.controls['location'].updateValueAndValidity();
+    //
+    //this.locationSelect.value = null;
+    //this.locationSelected = null;
   }
 
-  locationSelectChange() {
+  async locationSelectChange() {
     //this.editForm.controls['locationEntityName'].setValue(this.entityData.location.entityName);
   }
 
