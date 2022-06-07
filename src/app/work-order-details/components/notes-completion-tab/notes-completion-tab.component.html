@@ -10,6 +10,9 @@
         <mat-form-field class="width-99" appearance="outline">
           <mat-label>Work Order Notes</mat-label>
           <textarea matInput [rows]="15" autocomplete="off" class="" value="" formControlName="notes"></textarea>
+          <mat-error *ngIf="editForm.controls['notes'].hasError('required')">
+            Work Order Notes are required
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
@@ -22,7 +25,7 @@
     <div class="row">
       <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
 <!--        <div><button *ngIf="!editFormEditMode" [disabled]="!(this.entityData.status=='OPEN')" class="mat-flat-button mat-primary" (click)="editModeToggle()">Edit Work Order Notes</button></div>-->
-        <div><button *ngIf="(entityData.status=='OPEN')" class="mat-flat-button edit-button-color" type="submit">Save Work Order Notes</button></div>
+        <div><button *ngIf="(entityData.status=='OPEN')" class="mat-flat-button edit-button-color" [disabled]="editForm.invalid" type="submit">Save Work Order Notes</button></div>
 <!--        <div><button *ngIf="editFormEditMode" class="mat-raised-button" (click)="editModeToggle()">Cancel</button></div>-->
       </div>
     </div>

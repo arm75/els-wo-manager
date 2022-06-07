@@ -48,6 +48,7 @@ export class WorkOrderCompleteComponent implements OnInit {
   ngOnInit(): void {
     this.dataLoaded = false;
     this.entityId = this.data.entityId;
+    console.log('entityID:', this.entityId);
     if (this.entityId != null) {
       this.entityService.get(this.entityId)
         .toPromise()
@@ -55,7 +56,7 @@ export class WorkOrderCompleteComponent implements OnInit {
           this.entityData = data;
           this.editForm = this.formBuilder.group({
             'id': new FormControl(this.entityData.id),
-            //'status': new FormControl(this.entityData.status),
+            'status': new FormControl(this.entityData.status),
             'customer': new FormControl(this.entityData.customer),
             'location': new FormControl(this.entityData.location),
             'assignedUsers': new FormControl(this.entityData.assignedUsers),
@@ -82,6 +83,7 @@ export class WorkOrderCompleteComponent implements OnInit {
         });
     }
     //this.dataLoaded = true;
+    console.log(this.entityData);
   }
 
   completeEntity() {

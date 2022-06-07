@@ -98,17 +98,17 @@ export class NotesCompletionTabComponent implements OnInit {
         this.editForm = this.formBuilder.group({
           'id': new FormControl(this.entityData.id),
           'status': new FormControl(this.entityData.status),
-          'customer': new FormControl(this.entityData.customer, [Validators.required]),
-          'location': new FormControl(this.entityData.location, [Validators.required]),
-          'assignedUsers': new FormControl(this.entityData.assignedUsers, [Validators.required]),
-          'quickDescription': new FormControl(this.entityData.quickDescription, [Validators.required]),
+          'customer': new FormControl(this.entityData.customer),
+          'location': new FormControl(this.entityData.location),
+          'assignedUsers': new FormControl(this.entityData.assignedUsers),
+          'quickDescription': new FormControl(this.entityData.quickDescription),
           'description': new FormControl(this.entityData.description),
-          'contactName': new FormControl(this.entityData.contactName, [Validators.required]),
-          'contactPhoneNumb': new FormControl(this.entityData.contactPhoneNumb, [Validators.required]),
+          'contactName': new FormControl(this.entityData.contactName),
+          'contactPhoneNumb': new FormControl(this.entityData.contactPhoneNumb),
           'contactAltPhoneNumb': new FormControl(this.entityData.contactAltPhoneNumb),
-          'notes': new FormControl(this.entityData.notes),
+          'notes': new FormControl(this.entityData.notes, [Validators.required]),
           'privateNotes': new FormControl(this.entityData.privateNotes),
-          'entryInstruct': new FormControl(this.entityData.entryInstruct, [Validators.required]),
+          'entryInstruct': new FormControl(this.entityData.entryInstruct),
           'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
           'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
           'subcontractorItemsTotal': new FormControl(this.entityData.subcontractorItemsTotal),
@@ -162,6 +162,7 @@ export class NotesCompletionTabComponent implements OnInit {
     const completeDialogRef = this.dialog.open(WorkOrderCompleteComponent, completeDialogConfig);
     completeDialogRef.afterClosed().subscribe(completeData => {
       //this.buildTable();
+      console.log('completeData:', completeData);
       this.statusChangedEvent.emit(1);
       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
       this.router.onSameUrlNavigation = 'reload';

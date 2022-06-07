@@ -34,6 +34,22 @@ export class EditDetailsTabComponent implements OnInit, OnChanges {
   @Input()
   passedWorkOrder: any;
 
+  @Input()
+  masterTotal: any;
+
+  @Input()
+  invTotal: any;
+
+  @Input()
+  laborTotal: any;
+
+  @Input()
+  subTotal: any;
+
+  @Input()
+  toolEquipTotal: any;
+
+
   dataLoaded: boolean = false;
   entityData!: WorkOrder;
   editForm: FormGroup = new FormGroup({});
@@ -58,7 +74,7 @@ export class EditDetailsTabComponent implements OnInit, OnChanges {
   @ViewChild('quickDescriptionInput')
   quickDescriptionInput!: MatInput;
 
-  masterTotal: number = 0;
+  // masterTotal: number = 0;
 
   masterInventoryTotal: number = 0;
   masterLaborTotal: number = 0;
@@ -130,11 +146,11 @@ export class EditDetailsTabComponent implements OnInit, OnChanges {
           'id': new FormControl(this.entityData.id),
           'status': new FormControl(this.entityData.status),
           'customer': new FormControl(this.entityData.customer, [Validators.required]),
-          // 'customerId': new FormControl(this.entityData.customerId, [Validators.required]),
-          // 'customerEntityName': new FormControl(this.entityData.customerEntityName),
+          'customerId': new FormControl(this.entityData.customerId),
+          'customerEntityName': new FormControl(this.entityData.customerEntityName),
           'location': new FormControl(this.entityData.location, [Validators.required]),
-          // 'locationId': new FormControl(this.entityData.locationId, [Validators.required]),
-          // 'locationEntityName': new FormControl(this.entityData.locationEntityName),
+          'locationId': new FormControl(this.entityData.locationId),
+          'locationEntityName': new FormControl(this.entityData.locationEntityName),
           'assignedUsers': new FormControl(this.entityData.assignedUsers, [Validators.required]),
           'quickDescription': new FormControl(this.entityData.quickDescription, [Validators.required]),
           'description': new FormControl(this.entityData.description),
@@ -250,15 +266,15 @@ export class EditDetailsTabComponent implements OnInit, OnChanges {
   assignedUsersSelectChange() { }
 
   saveWorkOrder() {
-    // this.editForm.controls['customerId'].setValue(this.entityData.customer.id);
-    // this.editForm.controls['customerEntityName'].setValue(this.entityData.customer.entityName);
-    // this.editForm.controls['locationId'].setValue(this.entityData.location.id);
-    // this.editForm.controls['locationEntityName'].setValue(this.entityData.location.entityName);
+    this.editForm.controls['customerId'].setValue(this.entityData.customer.id);
+    this.editForm.controls['customerEntityName'].setValue(this.entityData.customer.entityName);
+    this.editForm.controls['locationId'].setValue(this.entityData.location.id);
+    this.editForm.controls['locationEntityName'].setValue(this.entityData.location.entityName);
     this.editForm.controls['assignedUsers'].setValue(this.userData);
-    this.editForm.controls['inventoryItemsTotal'].setValue(this.masterInventoryTotal);
-    this.editForm.controls['laborItemsTotal'].setValue(this.masterLaborTotal);
-    this.editForm.controls['subcontractorItemsTotal'].setValue(this.masterSubcontractorTotal);
-    this.editForm.controls['toolEquipmentItemsTotal'].setValue(this.masterToolEquipmentTotal);
+    this.editForm.controls['inventoryItemsTotal'].setValue(this.invTotal);
+    this.editForm.controls['laborItemsTotal'].setValue(this.laborTotal);
+    this.editForm.controls['subcontractorItemsTotal'].setValue(this.subTotal);
+    this.editForm.controls['toolEquipmentItemsTotal'].setValue(this.toolEquipTotal);
     this.editForm.controls['workOrderTotal'].setValue(this.masterTotal);
     this.entityService.update(this.editForm.value)
       .toPromise()

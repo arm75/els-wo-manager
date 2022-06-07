@@ -101,14 +101,14 @@ export class WorkOrderDetailsComponent implements OnInit {
   }
 
   async setupComponent() {
-    console.log('before getIdFromRoute');
+    // console.log('before getIdFromRoute');
     await this.getIdFromRoute();
-    console.log('after getIdFromRoute');
+    // console.log('after getIdFromRoute');
     // this.dataLoaded = true;
     if (this.passedWorkOrderId) {
-      console.log('inside if:', this.passedWorkOrderId);
+      // console.log('inside if:', this.passedWorkOrderId);
       await this.loadWorkOrderIntoView();
-      console.log('inside if: ', this.entityData);
+      // console.log('inside if: ', this.entityData);
       await this.updateFieldBoxes();
       this.dataLoaded = true;
     }
@@ -147,7 +147,7 @@ export class WorkOrderDetailsComponent implements OnInit {
         // });
 
         //this.loadLocationSelect(this.entityData.customer.id);
-        console.log(this.entityData);
+        // console.log(this.entityData);
         //this.userData = this.entityData.assignedUsers;
         //this.loadAssignedUsersSelect();
       });
@@ -236,28 +236,32 @@ export class WorkOrderDetailsComponent implements OnInit {
     this.woLocationFieldBox = this.entityData.location.entityName;
   }
 
-  calcMasterTotal() {
+  async calcMasterTotal() {
     this.masterTotal = this.masterInventoryTotal + this.masterLaborTotal + this.masterSubcontractorTotal + this.masterToolEquipmentTotal;
   }
 
-  getNewInventoryTotal(newTotal: number) {
+  async getNewInventoryTotal(newTotal: number) {
     this.masterInventoryTotal = newTotal;
-    this.calcMasterTotal();
+    await this.calcMasterTotal();
+    await this.processSaveEvent();
   }
 
-  getNewLaborTotal(newTotal: number) {
+  async getNewLaborTotal(newTotal: number) {
     this.masterLaborTotal = newTotal;
-    this.calcMasterTotal();
+    await this.calcMasterTotal();
+    await this.processSaveEvent();
   }
 
-  getNewSubcontractorTotal(newTotal: number) {
+  async getNewSubcontractorTotal(newTotal: number) {
     this.masterSubcontractorTotal = newTotal;
-    this.calcMasterTotal();
+    await this.calcMasterTotal();
+    await this.processSaveEvent();
   }
 
-  getNewToolEquipmentTotal(newTotal: number) {
+  async getNewToolEquipmentTotal(newTotal: number) {
     this.masterToolEquipmentTotal = newTotal;
-    this.calcMasterTotal();
+    await this.calcMasterTotal();
+    await this.processSaveEvent();
   }
 
   async processSaveEvent(_event?: number) {
