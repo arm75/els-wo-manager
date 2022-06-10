@@ -94,10 +94,10 @@ export class LaborItemAddComponent implements OnInit {
   addEntity() {
     this.entityService.create(this.addForm.value)
       .subscribe(data => {
-        this.matDialogRef.close();
+        this.matDialogRef.close(true);
         this.globalSnackBarService.success("Labor Item added successfully.");
       }, error => {
-        this.matDialogRef.close();
+        this.matDialogRef.close(false);
         this.globalSnackBarService.error(error.error.message);
       }
     );

@@ -196,10 +196,10 @@ export class InventoryItemEditComponent implements OnInit {
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        this.matDialogRef.close();
+        this.matDialogRef.close(true);
         this.globalSnackBarService.success("Inventory Item: " + this.editForm.value.id + " has been updated.")
       }, error => {
-        this.matDialogRef.close();
+        this.matDialogRef.close(false);
         this.globalSnackBarService.error(error.error.message);
       }
     );

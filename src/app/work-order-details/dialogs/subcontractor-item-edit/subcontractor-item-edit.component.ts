@@ -96,10 +96,10 @@ export class SubcontractorItemEditComponent implements OnInit {
   editEntity() {
     this.entityService.update(this.editForm.value)
       .subscribe(data => {
-        this.matDialogRef.close();
+        this.matDialogRef.close(true);
         this.globalSnackBarService.success("Subcontractor Item: " + this.editForm.value.id + " has been updated.");
       }, error => {
-        this.matDialogRef.close();
+        this.matDialogRef.close(false);
         this.globalSnackBarService.error("An error has occurred: " + error);
       }
     );

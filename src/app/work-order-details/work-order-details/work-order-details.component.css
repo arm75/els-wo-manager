@@ -65,9 +65,9 @@ a:hover {
   padding: 0px 35px 0px 35px;
 }
 
-.containing-box textarea {
-  height: 100px;
-}
+/*.containing-box textarea {*/
+/*  height: 100px;*/
+/*}*/
 
 table {
   width: 100%;
@@ -258,3 +258,38 @@ app-print-template {
     display: none;
   }
 }
+
+.containing-box {
+  width: 98%;
+  padding: 0px 35px 0px 35px;
+}
+
+/* WORK ORDER OPERATION BUTTONS */
+.wo-button-reopen {
+  color: #fff;
+  background-color: #339933;
+}
+.wo-button-cancel {
+  color: #fff;
+  background-color: #a6a6a6;
+}
+.wo-button-complete {
+  color: #fff;
+  background-color: #0099ff;
+}
+.wo-button-close {
+  color: #fff;
+  background-color: #3333ff;
+}
+.wo-button-retry {
+  color: #fff;
+  background-color: #996633;
+}
+
+button:disabled {
+  background-color: #afafaf;
+}
+
+/*.private-notes-box {*/
+/*  height: 200px;*/
+/*}*/

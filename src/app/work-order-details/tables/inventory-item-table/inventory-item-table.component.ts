@@ -24,7 +24,7 @@ export class InventoryItemTableComponent implements OnInit {
   loggedInRole: any;
   nameToDisplay: any;
 
-  componentTotal: any;
+  // componentTotal: any;
   displayedColumns: any;
   dataSource: any;
   data: any;
@@ -58,7 +58,7 @@ export class InventoryItemTableComponent implements OnInit {
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
-    this.componentTotal = 0;
+    //this.componentTotal = 0;
     this.displayedColumns = ['createdDate', 'entityName', 'notes', 'qty', 'actions'];
     if((this.loggedInRole=='ROLE_ADMIN')||(this.loggedInRole=='ROLE_SUPER_ADMIN')) {
       this.displayedColumns = ['createdDate', 'entityName', 'notes', 'unitPrice', 'qty', 'totalPrice', 'actions'];
@@ -82,9 +82,10 @@ export class InventoryItemTableComponent implements OnInit {
       .toPromise()
       .then(data => { this.data = data })
       .finally( () => {
-        this.data.forEach((item: InventoryItem) => this.componentTotal += item.totalPrice);
+        let componentTotal = 0;
+        this.data.forEach((item: InventoryItem) => { componentTotal += item.totalPrice; });
         this.dataSource = new MatTableDataSource(this.data);
-        this.totalChangedEvent.emit(this.componentTotal);
+        this.totalChangedEvent.emit(componentTotal);
       });
 
   }
@@ -101,11 +102,10 @@ export class InventoryItemTableComponent implements OnInit {
     addDialogConfig.disableClose = true;
     addDialogConfig.autoFocus = true;
     addDialogConfig.width = "40%";
-    addDialogConfig.position = { top:  '0' };
-    addDialogConfig.data = { woId: this.passedWorkOrderId };
+    addDialogConfig.position = {top: '0'};
+    addDialogConfig.data = {woId: this.passedWorkOrderId};
     const addDialogRef = this.dialog.open(InventoryItemAddComponent, addDialogConfig);
-    await addDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    addDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
   async openEditDialog( _id: number) {
@@ -116,8 +116,7 @@ export class InventoryItemTableComponent implements OnInit {
     editDialogConfig.position = { top:  '0' };
     editDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const editDialogRef = this.dialog.open(InventoryItemEditComponent, editDialogConfig);
-    await editDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    editDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
   async openDeleteDialog( _id: number) {
@@ -128,8 +127,7 @@ export class InventoryItemTableComponent implements OnInit {
     deleteDialogConfig.position = { top:  '0' };
     deleteDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const deleteDialogRef = this.dialog.open(InventoryItemDeleteComponent, deleteDialogConfig);
-    await deleteDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    deleteDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
 }

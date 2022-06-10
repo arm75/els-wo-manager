@@ -38,8 +38,6 @@ import { PrintTemplateComponent } from './work-order-details/print/print-templat
 import { GlobalProgressSpinnerComponent } from "../shared/progress-spinner/global-progress-spinner/global-progress-spinner.component";
 import { ToolEquipmentItemReturnComponent } from './dialogs/tool-equipment-item-return/tool-equipment-item-return.component';
 import { SubcontractorItemCompleteComponent } from './dialogs/subcontractor-item-complete/subcontractor-item-complete.component';
-import { NotesCompletionTabComponent } from './components/notes-completion-tab/notes-completion-tab.component';
-import { EditDetailsTabComponent } from './components/edit-details-tab/edit-details-tab.component';
 
 // table components array
 const WorkOrderDetailsModuleTableComponents = [
@@ -73,8 +71,6 @@ const WorkOrderDetailsModuleDialogComponents = [
         PrintTemplateComponent,
         ToolEquipmentItemReturnComponent,
         SubcontractorItemCompleteComponent,
-        NotesCompletionTabComponent,
-        EditDetailsTabComponent,
     ],
     imports: [
         CommonModule,

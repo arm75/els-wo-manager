@@ -9,6 +9,8 @@ import { LaborAddComponent } from "../../dialogs/labor-add/labor-add.component";
 import { LaborEditComponent } from "../../dialogs/labor-edit/labor-edit.component";
 import { LaborDeleteComponent } from "../../dialogs/labor-delete/labor-delete.component";
 import {AuthenticationService} from "../../../core/security/authentication.service";
+import {interval, Subscription} from "rxjs";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-labor-table',
@@ -26,6 +28,8 @@ export class LaborTableComponent implements OnInit {
   dataSource: any;
   data: any;
   filter: any;
+
+  refreshTimer!: Subscription;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<Labor>;
@@ -60,6 +64,21 @@ export class LaborTableComponent implements OnInit {
     await this.configTable();
   }
 
+  async subscribeToRefreshEmitter(log?: boolean, tabName?: string) {
+    await this.refreshTable();
+    this.refreshTimer = interval(environment.refreshInterval).subscribe(async (data: number)=>{
+      if (log) { console.log(tabName, "refresh event:", data); }
+      await this.refreshTable();
+    });
+  }
+
+  async unsubscribeFromRefreshEmitter(log?: boolean, tabName?: string) {
+    if (log) { console.log("Unsubscribe from", tabName, "refresh."); }
+    if(this.refreshTimer) {
+      this.refreshTimer.unsubscribe();
+    }
+  }
+
   async buildTable() {
     await this.entityService.getAll()
       .toPromise()
@@ -70,6 +89,20 @@ export class LaborTableComponent implements OnInit {
   async configTable() {
     this.sort.active = 'entityName';
     this.sort.direction = 'asc';
+    this.dataSource.sort = this.sort;
+    //this.dataSource.paginator = this.paginator;
+  }
+
+  async refreshTable() {
+    this.sort = this.dataSource.sort;
+    //this.paginator = this.dataSource.paginator;
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.refreshConfigTable();
+  }
+
+  async refreshConfigTable() {
     this.dataSource.sort = this.sort;
     //this.dataSource.paginator = this.paginator;
   }

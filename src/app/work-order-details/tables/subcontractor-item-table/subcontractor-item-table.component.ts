@@ -26,7 +26,7 @@ export class SubcontractorItemTableComponent implements OnInit {
   loggedInRole: any;
   nameToDisplay: any;
 
-  componentTotal: any;
+  // componentTotal: any;
   displayedColumns: any;
   dataSource: any;
   data: any;
@@ -59,7 +59,7 @@ export class SubcontractorItemTableComponent implements OnInit {
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
-    this.componentTotal = 0;
+    //this.componentTotal = 0;
     this.displayedColumns = ['createdDate', 'entityName', 'notes', 'status', 'actions'];
     if(this.loggedInRole=='ROLE_ADMIN'||this.loggedInRole=='ROLE_SUPER_ADMIN') {
       this.displayedColumns = ['createdDate', 'entityName', 'notes', 'total', 'status', 'actions'];
@@ -83,9 +83,10 @@ export class SubcontractorItemTableComponent implements OnInit {
       .toPromise()
       .then(data => { this.data = data })
       .finally( () => {
-        this.data.forEach((item: SubcontractorItem) => this.componentTotal += item.total);
+        let componentTotal = 0;
+        this.data.forEach((item: SubcontractorItem) => { componentTotal += item.total; });
         this.dataSource = new MatTableDataSource(this.data);
-        this.totalChangedEvent.emit(this.componentTotal);
+        this.totalChangedEvent.emit(componentTotal);
       });
   }
 
@@ -104,8 +105,7 @@ export class SubcontractorItemTableComponent implements OnInit {
     addDialogConfig.position = { top:  '0' };
     addDialogConfig.data = { woId: this.passedWorkOrderId };
     const addDialogRef = this.dialog.open(SubcontractorItemAddComponent, addDialogConfig);
-    await addDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    addDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
   async openEditDialog( _id: number) {
@@ -116,8 +116,7 @@ export class SubcontractorItemTableComponent implements OnInit {
     editDialogConfig.position = { top:  '0' };
     editDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const editDialogRef = this.dialog.open(SubcontractorItemEditComponent, editDialogConfig);
-    await editDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    editDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
   async openCompleteDialog( _id: number) {
@@ -128,8 +127,7 @@ export class SubcontractorItemTableComponent implements OnInit {
     completeDialogConfig.position = { top:  '0' };
     completeDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const completeDialogRef = this.dialog.open(SubcontractorItemCompleteComponent, completeDialogConfig);
-    await completeDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    completeDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
   async openDeleteDialog( _id: number) {
@@ -140,8 +138,7 @@ export class SubcontractorItemTableComponent implements OnInit {
     deleteDialogConfig.position = { top:  '0' };
     deleteDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const deleteDialogRef = this.dialog.open(SubcontractorItemDeleteComponent, deleteDialogConfig);
-    await deleteDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    deleteDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
 }

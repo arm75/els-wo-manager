@@ -4,7 +4,7 @@
   </span>
   <span class="example-fill-remaining-space"></span>
   <span>
-    <button class="mat-flat-button mat-primary labor-item-table-add-button" [disabled]="!(this.passedWorkOrderStatus=='OPEN')" (click)="openAddDialog()">Add Labor Item</button>
+    <button type="button" class="mat-flat-button mat-primary labor-item-table-add-button" [disabled]="!(this.passedWorkOrderStatus=='OPEN')" (click)="openAddDialog()">Add Labor Item</button>
   </span>
 </div>
 <div class="mat-elevation-z0">
@@ -43,8 +43,8 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let element">
-        <button mat-button class="labor-item-table-edit-button mat-icon-button" (click)="openEditDialog(element.id)"><mat-icon color="primary">edit</mat-icon></button>
-        <button mat-button class="labor-item-table-delete-button mat-icon-button" (click)="openDeleteDialog(element.id)"><mat-icon color="primary">delete</mat-icon></button>
+        <button mat-button type="button" class="labor-item-table-edit-button mat-icon-button" (click)="openEditDialog(element.id)"><mat-icon color="primary">edit</mat-icon></button>
+        <button mat-button type="button" class="labor-item-table-delete-button mat-icon-button" (click)="openDeleteDialog(element.id)"><mat-icon color="primary">delete</mat-icon></button>
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

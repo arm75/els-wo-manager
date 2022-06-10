@@ -9,9 +9,8 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { SubcontractorGroupAddComponent } from "../../dialogs/subcontractor-group-add/subcontractor-group-add.component";
 import { SubcontractorGroupEditComponent } from "../../dialogs/subcontractor-group-edit/subcontractor-group-edit.component";
 import { SubcontractorGroupDeleteComponent } from "../../dialogs/subcontractor-group-delete/subcontractor-group-delete.component";
-import {SubcontractorAddComponent} from "../../dialogs/subcontractor-add/subcontractor-add.component";
-import {SubcontractorEditComponent} from "../../dialogs/subcontractor-edit/subcontractor-edit.component";
-import {SubcontractorDeleteComponent} from "../../dialogs/subcontractor-delete/subcontractor-delete.component";
+import {interval, Subscription} from "rxjs";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-subcontractor-group-table',
@@ -25,6 +24,8 @@ export class SubcontractorGroupTableComponent implements OnInit {
   dataSource: any;
   data: any;
   filter: any;
+
+  refreshTimer!: Subscription;
 
   @ViewChild(MatTable)
   entityTable!: MatTable<SubcontractorGroup>;
@@ -54,6 +55,21 @@ export class SubcontractorGroupTableComponent implements OnInit {
     await this.configTable();
   }
 
+  async subscribeToRefreshEmitter(log?: boolean, tabName?: string) {
+    await this.refreshTable();
+    this.refreshTimer = interval(environment.refreshInterval).subscribe(async (data: number)=>{
+      if (log) { console.log(tabName, "refresh event:", data); }
+      await this.refreshTable();
+    });
+  }
+
+  async unsubscribeFromRefreshEmitter(log?: boolean, tabName?: string) {
+    if (log) { console.log("Unsubscribe from", tabName, "refresh."); }
+    if(this.refreshTimer) {
+      this.refreshTimer.unsubscribe();
+    }
+  }
+
   async buildTable() {
     await this.entityService.getAll()
       .toPromise()
@@ -64,6 +80,20 @@ export class SubcontractorGroupTableComponent implements OnInit {
   async configTable() {
     this.sort.active = 'entityName';
     this.sort.direction = 'asc';
+    this.dataSource.sort = this.sort;
+    //this.dataSource.paginator = this.paginator;
+  }
+
+  async refreshTable() {
+    this.sort = this.dataSource.sort;
+    //this.paginator = this.dataSource.paginator;
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.refreshConfigTable();
+  }
+
+  async refreshConfigTable() {
     this.dataSource.sort = this.sort;
     //this.dataSource.paginator = this.paginator;
   }

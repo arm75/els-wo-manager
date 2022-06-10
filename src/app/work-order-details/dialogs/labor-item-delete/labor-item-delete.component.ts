@@ -42,10 +42,10 @@ export class LaborItemDeleteComponent implements OnInit {
   deleteEntity(): void {
     this.entityService.delete(this.entityId)
       .subscribe(data => {
-        this.matDialogRef.close();
+        this.matDialogRef.close(true);
         this.globalSnackBarService.success("Labor Item: " + this.entityId  + " has been deleted.")
       }, error => {
-        this.matDialogRef.close();
+        this.matDialogRef.close(false);
         this.globalSnackBarService.error(error.error.message);
       }
     );

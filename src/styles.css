@@ -77,9 +77,9 @@ body { width: 100%; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif
   width: 100%;
 }
 
-.description-box {
-  height: 60px;
-}
+/*.description-box {*/
+/*  height: 60px;*/
+/*}*/
 
 .snackbar-container-error {
   margin-bottom: 140px !important;

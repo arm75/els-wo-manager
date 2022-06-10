@@ -25,7 +25,7 @@ export class LaborItemTableComponent implements OnInit {
   loggedInRole: any;
   nameToDisplay: any;
 
-  componentTotal: any;
+  // componentTotal: any;
   displayedColumns: any;
   dataSource: any;
   data: any;
@@ -58,7 +58,7 @@ export class LaborItemTableComponent implements OnInit {
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
-    this.componentTotal = 0;
+    // this.componentTotal = 0;
     this.displayedColumns = ['createdDate', 'entityName', 'notes', 'totalTime', 'actions'];
     if((this.loggedInRole=='ROLE_ADMIN')||(this.loggedInRole=='ROLE_SUPER_ADMIN')) {
       this.displayedColumns = ['createdDate', 'entityName', 'notes', 'ratePerHour', 'totalTime', 'totalPrice', 'actions'];
@@ -82,9 +82,10 @@ export class LaborItemTableComponent implements OnInit {
       .toPromise()
       .then(data => { this.data = data })
       .finally( () => {
-        this.data.forEach((item: LaborItem) => this.componentTotal += item.totalPrice);
+        let componentTotal = 0;
+        this.data.forEach((item: LaborItem) => { componentTotal += item.totalPrice; });
         this.dataSource = new MatTableDataSource(this.data);
-        this.totalChangedEvent.emit(this.componentTotal);
+        this.totalChangedEvent.emit(componentTotal);
       });
   }
 
@@ -108,8 +109,7 @@ export class LaborItemTableComponent implements OnInit {
     addDialogConfig.position = { top:  '0' };
     addDialogConfig.data = { woId: this.passedWorkOrderId };
     const addDialogRef = this.dialog.open(LaborItemAddComponent, addDialogConfig);
-    await addDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    addDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
   async openEditDialog( _id: number) {
@@ -120,8 +120,7 @@ export class LaborItemTableComponent implements OnInit {
     editDialogConfig.position = { top:  '0' };
     editDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const editDialogRef = this.dialog.open(LaborItemEditComponent, editDialogConfig);
-    await editDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    editDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
   async openDeleteDialog( _id: number) {
@@ -132,8 +131,7 @@ export class LaborItemTableComponent implements OnInit {
     deleteDialogConfig.position = { top:  '0' };
     deleteDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const deleteDialogRef = this.dialog.open(LaborItemDeleteComponent, deleteDialogConfig);
-    await deleteDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    deleteDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
 }

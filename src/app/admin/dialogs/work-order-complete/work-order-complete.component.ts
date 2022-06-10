@@ -73,7 +73,7 @@ export class WorkOrderCompleteComponent implements OnInit {
             'subcontractorItemsTotal': new FormControl(this.entityData.subcontractorItemsTotal),
             'toolEquipmentItemsTotal': new FormControl(this.entityData.toolEquipmentItemsTotal),
             'workOrderTotal': new FormControl(this.entityData.workOrderTotal)
-          })
+          });
           //this.dataLoaded = true;
         })
         .catch(error => {
@@ -83,19 +83,17 @@ export class WorkOrderCompleteComponent implements OnInit {
         });
     }
     //this.dataLoaded = true;
-    console.log(this.entityData);
+    console.log('entityData: ', this.entityData);
   }
 
   completeEntity() {
     this.entityService.complete(this.editForm.value)
       .subscribe(data => {
-        console.log("Work Order " + this.editForm.value.id + " is COMPLETE.");
-        this.matSnackBar.open("Work Order: " + this.editForm.value.id + " is COMPLETE.")
-        this.matDialogRef.close();
+        this.matSnackBar.open("Work Order: " + this.editForm.value.id + " is COMPLETE.");
+        this.matDialogRef.close(true);
       }, error => {
-        console.log("An error has occurred. Work Order not COMPLETE: " + error);
         this.matSnackBar.open("An error has occurred. Work Order not COMPLETE: " + error);
-        this.matDialogRef.close();
+        this.matDialogRef.close(false);
       });
   }
 

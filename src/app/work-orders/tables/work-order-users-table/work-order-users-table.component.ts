@@ -17,7 +17,8 @@ import {WorkOrderCompleteComponent} from "../../../admin/dialogs/work-order-comp
 import {WorkOrderCancelComponent} from "../../../admin/dialogs/work-order-cancel/work-order-cancel.component";
 import {WorkOrderReopenComponent} from "../../../admin/dialogs/work-order-reopen/work-order-reopen.component";
 import {formatDate} from "@angular/common";
-import {interval} from "rxjs";
+import {interval, Subscription} from "rxjs";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-work-order-users-table',
@@ -32,6 +33,7 @@ export class WorkOrderUsersTableComponent implements OnInit {
   nameToDisplay: any;
   virginHidden: boolean = true;
 
+  refreshTimer!: Subscription;
 
   displayedColumns: any;
   dataSource: any;
@@ -78,6 +80,21 @@ export class WorkOrderUsersTableComponent implements OnInit {
     await this.buildTable();
     // configure table
     await this.configTable();
+  }
+
+  async subscribeToRefreshEmitter(log?: boolean, tabName?: string) {
+    await this.refreshTable();
+    this.refreshTimer = interval(environment.refreshInterval).subscribe(async (data: number)=>{
+      if (log) { console.log(tabName, "refresh event:", data); }
+      await this.refreshTable();
+    });
+  }
+
+  async unsubscribeFromRefreshEmitter(log?: boolean, tabName?: string) {
+    if (log) { console.log("Unsubscribe from", tabName, "refresh."); }
+    if(this.refreshTimer) {
+      this.refreshTimer.unsubscribe();
+    }
   }
 
   async buildTable() {

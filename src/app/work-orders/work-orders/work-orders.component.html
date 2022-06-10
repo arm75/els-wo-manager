@@ -15,7 +15,7 @@
   </div>
 
   <div class="row els-work-orders-tabs">
-    <mat-tab-group mat-stretch-tabs class="work-orders-tab-group">
+    <mat-tab-group mat-stretch-tabs class="work-orders-tab-group" (focusChange)="mainTabFocusChange()" (selectedTabChange)="mainTabSelectedChange($event)">
       <mat-tab label="Work Orders"><app-work-order-users-table></app-work-order-users-table></mat-tab>
       <mat-tab label="Tool/Equipment Return"><app-tool-equipment-return-table></app-tool-equipment-return-table></mat-tab>
       <mat-tab label="Subcontractor Completion"><app-subcontractor-completion-table></app-subcontractor-completion-table></mat-tab>

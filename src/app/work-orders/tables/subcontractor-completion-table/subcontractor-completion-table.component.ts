@@ -16,6 +16,8 @@ import {WorkOrder} from "../../../core/models/work-order";
 import {WorkOrderStatus} from "../../../core/types/work-order-status";
 import {WorkOrderService} from "../../../core/services/work-order.service";
 import {GlobalSnackBarService} from "../../../shared/snackbar/global-snack-bar.service";
+import {interval, Subscription} from "rxjs";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-subcontractor-completion-table',
@@ -28,6 +30,8 @@ export class SubcontractorCompletionTableComponent implements OnInit {
   loggedInUsername: any;
   loggedInRole: any;
   nameToDisplay: any;
+
+  refreshTimer!: Subscription;
 
   dataSource: any;
   data: any;
@@ -89,6 +93,21 @@ export class SubcontractorCompletionTableComponent implements OnInit {
     //this.dataSource.paginator = this.paginator;
   }
 
+  async subscribeToRefreshEmitter(log?: boolean, tabName?: string) {
+    await this.refreshTable();
+    this.refreshTimer = interval(environment.refreshInterval).subscribe(async (data: number)=>{
+      if (log) { console.log(tabName, "refresh event:", data); }
+      await this.refreshTable();
+    });
+  }
+
+  async unsubscribeFromRefreshEmitter(log?: boolean, tabName?: string) {
+    if (log) { console.log("Unsubscribe from", tabName, "refresh."); }
+    if(this.refreshTimer) {
+      this.refreshTimer.unsubscribe();
+    }
+  }
+
   async getWorkOrdersToShow() {
     // get the user's open and pending work orders, and map them to an array of those work orders' id's
     await this.workOrderService.getAll()
@@ -111,6 +130,27 @@ export class SubcontractorCompletionTableComponent implements OnInit {
       .toPromise()
       .then(data => { this.data = data })
       .finally(() => { this.dataSource = new MatTableDataSource(this.data) });
+  }
+
+  async configTable() {
+    this.sort.active = 'entityName';
+    this.sort.direction = 'asc';
+    this.dataSource.sort = this.sort;
+    //this.dataSource.paginator = this.paginator;
+  }
+
+  async refreshTable() {
+    this.sort = this.dataSource.sort;
+    //this.paginator = this.dataSource.paginator;
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.refreshConfigTable();
+  }
+
+  async refreshConfigTable() {
+    this.dataSource.sort = this.sort;
+    //this.dataSource.paginator = this.paginator;
   }
 
   applyFilter(event: Event) {

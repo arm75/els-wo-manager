@@ -9,8 +9,9 @@ import { CustomerAddComponent } from "../../dialogs/customer-add/customer-add.co
 import { CustomerEditComponent } from "../../dialogs/customer-edit/customer-edit.component";
 import { CustomerDeleteComponent } from "../../dialogs/customer-delete/customer-delete.component";
 import {AuthenticationService} from "../../../core/security/authentication.service";
-import {interval, Observable} from "rxjs";
+import {async, interval, Observable, Subscription} from "rxjs";
 import {map} from "rxjs/operators";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-customer-table',
@@ -28,6 +29,8 @@ export class CustomerTableComponent implements OnInit {
   dataSource: any;
   data: any;
   filter: any;
+
+  refreshTimer!: Subscription;
 
   // @ViewChild(MatTable, {static: false}) table : MatTable // initialize
 
@@ -67,39 +70,32 @@ export class CustomerTableComponent implements OnInit {
   }
 
   async setupComponent() {
-
-    const refreshTimer$ = interval(30000);
-    refreshTimer$.subscribe((data)=>{
-      console.log("refresh event #:", data);
-      this.refreshTable();
-    });
     // get the table..
     await this.buildTable();
     // configure table
     await this.configTable();
   }
 
+  async subscribeToRefreshEmitter(log?: boolean, tabName?: string) {
+    await this.refreshTable();
+    this.refreshTimer = interval(environment.refreshInterval).subscribe(async (data: number)=>{
+      if (log) { console.log(tabName, "refresh event:", data); }
+      await this.refreshTable();
+    });
+  }
+
+  async unsubscribeFromRefreshEmitter(log?: boolean, tabName?: string) {
+    if (log) { console.log("Unsubscribe from", tabName, "refresh."); }
+    if(this.refreshTimer) {
+      this.refreshTimer.unsubscribe();
+    }
+  }
+
   async buildTable() {
-
-    // const obs$ = this.entityService.getAll();
-    //this.dataSource = new MatTableDataSource(obs$);
-  //this.entityService.getAll().subscribe(data => { this.dataSource = new MatTableDataSource(data); });
-    // this.entityService.getAll().subscribe(
-    //   data => { this.dataSource = new MatTableDataSource<Customer>(data); }
-    // );
-
-
-
-    // .toPromise()
-    // .then(data => { this.data = data })
-    // .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
-
-
     await this.entityService.getAll()
       .toPromise()
       .then(data => { this.data = data })
       .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
-
   }
 
   async configTable() {
@@ -110,21 +106,12 @@ export class CustomerTableComponent implements OnInit {
   }
 
   async refreshTable() {
-    // const a = this.entityTable.dataSource;
-    // this.tableObs$ = this.entityService.getAll().subscribe(
-    //   data => { this.dataSource = new MatTableDataSource(data) }
-    // );
     this.sort = this.dataSource.sort;
     //this.paginator = this.dataSource.paginator;
     // get the table..
     await this.buildTable();
     // configure table
     await this.refreshConfigTable();
-
-    // this.entityService.getAll().subscribe(
-    //   data => { this.dataSource.data = data; }
-    // );
-    //this.changeDetectorRefs.detectChanges();
   }
 
   async refreshConfigTable() {

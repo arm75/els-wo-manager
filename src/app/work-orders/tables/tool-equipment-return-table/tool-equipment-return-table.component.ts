@@ -14,6 +14,8 @@ import {AuthenticationService} from "../../../core/security/authentication.servi
 import {WorkOrderService} from "../../../core/services/work-order.service";
 import {WorkOrder} from "../../../core/models/work-order";
 import {WorkOrderStatus} from "../../../core/types/work-order-status";
+import {interval, Subscription} from "rxjs";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-tool-equipment-return-table',
@@ -35,6 +37,8 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
   rightNow = Date.now();
   oneWeeks: number = 604800000;
   twoWeeks: number = 1209600000;
+
+  refreshTimer!: Subscription;
 
   @Input()
   passedWorkOrderId: any;
@@ -85,6 +89,21 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
     this.totalChangedEvent.emit(this.componentTotal);
   }
 
+  async subscribeToRefreshEmitter(log?: boolean, tabName?: string) {
+    await this.refreshTable();
+    this.refreshTimer = interval(environment.refreshInterval).subscribe(async (data: number)=>{
+      if (log) { console.log(tabName, "refresh event:", data); }
+      await this.refreshTable();
+    });
+  }
+
+  async unsubscribeFromRefreshEmitter(log?: boolean, tabName?: string) {
+    if (log) { console.log("Unsubscribe from", tabName, "refresh."); }
+    if(this.refreshTimer) {
+      this.refreshTimer.unsubscribe();
+    }
+  }
+
   async getWorkOrdersToShow() {
     // get the user's open and pending work orders, and map them to an array of those work orders' id's
     await this.workOrderService.getAll()
@@ -112,6 +131,20 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
   async configTable() {
     this.sort.active = 'createdDate';
     this.sort.direction = 'desc';
+    this.dataSource.sort = this.sort;
+    //this.dataSource.paginator = this.paginator;
+  }
+
+  async refreshTable() {
+    this.sort = this.dataSource.sort;
+    //this.paginator = this.dataSource.paginator;
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.refreshConfigTable();
+  }
+
+  async refreshConfigTable() {
     this.dataSource.sort = this.sort;
     //this.dataSource.paginator = this.paginator;
   }

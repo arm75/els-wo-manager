@@ -25,7 +25,7 @@ export class ToolEquipmentItemTableComponent implements OnInit {
   loggedInRole: any;
   nameToDisplay: any;
 
-  componentTotal: any;
+  // componentTotal: any;
   displayedColumns: any;
   dataSource: any;
   data: any;
@@ -58,7 +58,7 @@ export class ToolEquipmentItemTableComponent implements OnInit {
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
-    this.componentTotal = 0;
+    //this.componentTotal = 0;
     this.displayedColumns = ['createdDate', 'entityName', 'notes', 'days', 'status', 'actions'];
     if(this.loggedInRole=='ROLE_ADMIN'||this.loggedInRole=='ROLE_SUPER_ADMIN') {
       this.displayedColumns = ['createdDate', 'entityName', 'notes', 'pricePerDay', 'days', 'totalPrice', 'status', 'actions'];
@@ -82,9 +82,10 @@ export class ToolEquipmentItemTableComponent implements OnInit {
       .toPromise()
       .then(data => { this.data = data })
       .finally( () => {
-        this.data.forEach((item: ToolEquipmentItem) => this.componentTotal += item.totalPrice);
+        let componentTotal = 0;
+        this.data.forEach((item: ToolEquipmentItem) => { componentTotal += item.totalPrice; });
         this.dataSource = new MatTableDataSource(this.data);
-        this.totalChangedEvent.emit(this.componentTotal);
+        this.totalChangedEvent.emit(componentTotal);
       });
   }
 
@@ -103,8 +104,7 @@ export class ToolEquipmentItemTableComponent implements OnInit {
     addDialogConfig.position = { top:  '0' };
     addDialogConfig.data = { woId: this.passedWorkOrderId };
     const addDialogRef = this.dialog.open(ToolEquipmentItemAddComponent, addDialogConfig);
-    await addDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    addDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
   async openEditDialog( _id: number) {
@@ -115,8 +115,7 @@ export class ToolEquipmentItemTableComponent implements OnInit {
     editDialogConfig.position = { top:  '0' };
     editDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const editDialogRef = this.dialog.open(ToolEquipmentItemEditComponent, editDialogConfig);
-    await editDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    editDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
   async openReturnDialog(_id: number) {
@@ -127,8 +126,7 @@ export class ToolEquipmentItemTableComponent implements OnInit {
     returnDialogConfig.position = { top:  '0' };
     returnDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const returnDialogRef = this.dialog.open(ToolEquipmentItemReturnComponent, returnDialogConfig);
-    await returnDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    returnDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
   async openDeleteDialog( _id: number) {
@@ -139,8 +137,7 @@ export class ToolEquipmentItemTableComponent implements OnInit {
     deleteDialogConfig.position = { top:  '0' };
     deleteDialogConfig.data = { woId: this.passedWorkOrderId, entityId: _id };
     const deleteDialogRef = this.dialog.open(ToolEquipmentItemDeleteComponent, deleteDialogConfig);
-    await deleteDialogRef.afterClosed().toPromise()
-      .finally( () => { this.setupComponent(); });
+    deleteDialogRef.afterClosed().subscribe(data => { if (data == true) { this.setupComponent(); }});
   }
 
 }

@@ -20,6 +20,8 @@ import {WorkOrderCancelComponent} from "../../dialogs/work-order-cancel/work-ord
 import {WorkOrderReopenComponent} from "../../dialogs/work-order-reopen/work-order-reopen.component";
 import {WorkOrderRetryComponent} from "../../dialogs/work-order-retry/work-order-retry.component";
 import {AuthenticationService} from "../../../core/security/authentication.service";
+import {interval, Subscription} from "rxjs";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-work-order-processing-table',
@@ -37,6 +39,8 @@ export class WorkOrderProcessingTableComponent implements OnInit {
   dataSource: any;
   data: any;
   filter: any;
+
+  refreshTimer!: Subscription;
 
   workOrderFilterSelected: any;
   // dropdownFilterSelected: any;
@@ -74,6 +78,28 @@ export class WorkOrderProcessingTableComponent implements OnInit {
     this.buildTable();
   }
 
+  async setupComponent() {
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.configTable();
+  }
+
+  async subscribeToRefreshEmitter(log?: boolean, tabName?: string) {
+    await this.refreshTable();
+    this.refreshTimer = interval(environment.refreshInterval).subscribe(async (data: number)=>{
+      if (log) { console.log(tabName, "refresh event:", data); }
+      await this.refreshTable();
+    });
+  }
+
+  async unsubscribeFromRefreshEmitter(log?: boolean, tabName?: string) {
+    if (log) { console.log("Unsubscribe from", tabName, "refresh."); }
+    if(this.refreshTimer) {
+      this.refreshTimer.unsubscribe();
+    }
+  }
+
   buildTable() {
     switch(this.workOrderFilterSelected) {
       case 'ALL': {
@@ -103,6 +129,27 @@ export class WorkOrderProcessingTableComponent implements OnInit {
         break;
       }
     }
+  }
+
+  async configTable() {
+    this.sort.active = 'entityName';
+    this.sort.direction = 'asc';
+    this.dataSource.sort = this.sort;
+    //this.dataSource.paginator = this.paginator;
+  }
+
+  async refreshTable() {
+    this.sort = this.dataSource.sort;
+    //this.paginator = this.dataSource.paginator;
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.refreshConfigTable();
+  }
+
+  async refreshConfigTable() {
+    this.dataSource.sort = this.sort;
+    //this.dataSource.paginator = this.paginator;
   }
 
   selectChange() {

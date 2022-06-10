@@ -12,6 +12,8 @@ import {map} from "rxjs/operators";
 import {AuthenticationService} from "../../../core/security/authentication.service";
 import {InventoryGroupService} from "../../../core/services/inventory-group.service";
 import {WorkOrderStatus} from "../../../core/types/work-order-status";
+import {interval, Subscription} from "rxjs";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-inventory-table',
@@ -29,6 +31,8 @@ export class InventoryTableComponent implements OnInit {
   dataSource: any;
   data: any;
   filter: any;
+
+  refreshTimer!: Subscription;
 
   inventoryGroupFilterSelected: any;
   inventoryGroupFilterArray: any;
@@ -73,6 +77,21 @@ export class InventoryTableComponent implements OnInit {
     await this.loadInventoryGroupSelect();
   }
 
+  async subscribeToRefreshEmitter(log?: boolean, tabName?: string) {
+    await this.refreshTable();
+    this.refreshTimer = interval(environment.refreshInterval).subscribe(async (data: number)=>{
+      if (log) { console.log(tabName, "refresh event:", data); }
+      await this.refreshTable();
+    });
+  }
+
+  async unsubscribeFromRefreshEmitter(log?: boolean, tabName?: string) {
+    if (log) { console.log("Unsubscribe from", tabName, "refresh."); }
+    if(this.refreshTimer) {
+      this.refreshTimer.unsubscribe();
+    }
+  }
+
   async buildTable() {
     switch(this.inventoryGroupFilterSelected) {
       case 'ALL': {
@@ -93,15 +112,23 @@ export class InventoryTableComponent implements OnInit {
     }
   }
 
-  async buildTable2() {
-    await this.entityService.getAll().toPromise()
-      .then(data => { this.data = data })
-      .finally( () => { this.dataSource = new MatTableDataSource(this.data); });
-  }
-
   async configTable() {
     this.sort.active = 'entityName';
     this.sort.direction = 'asc';
+    this.dataSource.sort = this.sort;
+    //this.dataSource.paginator = this.paginator;
+  }
+
+  async refreshTable() {
+    this.sort = this.dataSource.sort;
+    //this.paginator = this.dataSource.paginator;
+    // get the table..
+    await this.buildTable();
+    // configure table
+    await this.refreshConfigTable();
+  }
+
+  async refreshConfigTable() {
     this.dataSource.sort = this.sort;
     //this.dataSource.paginator = this.paginator;
   }

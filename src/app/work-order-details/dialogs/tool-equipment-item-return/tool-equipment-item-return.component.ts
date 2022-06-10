@@ -65,10 +65,10 @@ export class ToolEquipmentItemReturnComponent implements OnInit {
   returnEntity() {
     this.entityService.return(this.editForm.value)
       .subscribe(data => {
-          this.matDialogRef.close();
+          this.matDialogRef.close(true);
           this.globalSnackBarService.success("Tool/Equipment Item: " + this.entityId + " has been RETURNED.")
         }, error => {
-          this.matDialogRef.close();
+          this.matDialogRef.close(false);
           this.globalSnackBarService.error(error.error.message);
         }
       );
