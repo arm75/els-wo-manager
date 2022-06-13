@@ -73,7 +73,7 @@ export class ToolEquipmentReturnTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setupComponent().finally(() => console.log("Finished setting up component\n"));
+    this.setupComponent().finally(() => {});
   }
 
   async setupComponent() {

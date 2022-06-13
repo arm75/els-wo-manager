@@ -67,15 +67,10 @@ export class WorkOrderUsersTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setupComponent().finally(() => console.log("Finished setting up component\n"));
+    this.setupComponent().finally(() => {});
   }
 
   async setupComponent() {
-    const refreshTimer$ = interval(30000);
-    refreshTimer$.subscribe((data)=>{
-      console.log("refresh event #:", data);
-      this.refreshTable();
-    });
     // get the table..
     await this.buildTable();
     // configure table
@@ -116,9 +111,7 @@ export class WorkOrderUsersTableComponent implements OnInit {
     } else {
       await this.entityService.getAll()
         .pipe(map(items =>
-          items.filter(item => ((
-              (item.status == WorkOrderStatus.OPEN) ||
-              (item.status == WorkOrderStatus.PENDING))))
+          items.filter(item => ( (item.status == WorkOrderStatus.OPEN) || (item.status == WorkOrderStatus.PENDING) ))
         ))
         .toPromise()
         .then(data => {

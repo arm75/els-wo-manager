@@ -14,7 +14,7 @@
     <mat-tab-group mat-stretch-tabs class="admin-tab-group" (focusChange)="mainTabFocusChange()" (selectedTabChange)="mainTabSelectedChange($event)">
       <mat-tab label="Work Orders">
         <mat-tab-group mat-stretch-tabs class="admin-wo-tab-group" (focusChange)="workOrdersTabFocusChange()" (selectedTabChange)="workOrdersTabSelectedChange($event)">
-          <mat-tab label="In-Progess"><app-work-order-table (firstSubscribeReadyEvent)="firstSubscription()"></app-work-order-table></mat-tab>
+          <mat-tab label="In-Progess"><app-work-order-table></app-work-order-table></mat-tab>
           <mat-tab label="Processing"><app-work-order-processing-table></app-work-order-processing-table></mat-tab>
           <mat-tab label="History"><app-work-order-history-table></app-work-order-history-table></mat-tab>
         </mat-tab-group>

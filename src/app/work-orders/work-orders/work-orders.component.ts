@@ -1,4 +1,4 @@
-import {AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthenticationService} from "../../core/security/authentication.service";
 import {MatTabChangeEvent} from "@angular/material/tabs";
@@ -24,7 +24,7 @@ import {
   templateUrl: './work-orders.component.html',
   styleUrls: ['./work-orders.component.css']
 })
-export class WorkOrdersComponent implements OnInit {
+export class WorkOrdersComponent implements OnInit, OnDestroy {
 
   loggedInUser!: any;
   loggedInUsername!: string;
@@ -50,22 +50,35 @@ export class WorkOrdersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataLoaded = true;
+    this.setupComponent().finally( () => { this.dataLoaded = true; });
+  }
+
+  ngOnDestroy() {
+    this.workOrderUsersTableComponentRef.unsubscribeFromRefreshEmitter(true, "Your Work Orders");
+    this.toolEquipmentReturnTableComponentRef.unsubscribeFromRefreshEmitter(true, "Tool Equipment Return");
+    this.subcontractorCompletionTableComponentRef.unsubscribeFromRefreshEmitter(true, "Subcontractor Completion");
+    console.log('all subs unsubbed in Wo-Comp');
+  }
+
+  async setupComponent() {
+    setTimeout(async () =>{
+      await this.firstSubscription();
+    }, 3000);
+  }
+
+  async firstSubscription() {
+    await this.workOrderUsersTableComponentRef.subscribeToRefreshEmitter(true, "Your Work Orders");
   }
 
   async mainTabSelectedChange(changeEvent: MatTabChangeEvent) {
-    //console.log('Index: ' + changeEvent.index);
     switch (changeEvent.index) {
       case 0:
-        //console.log("Work Order Tab");
-        await this.workOrderUsersTableComponentRef.subscribeToRefreshEmitter(true, "Work Order Users")
+        await this.workOrderUsersTableComponentRef.subscribeToRefreshEmitter(true, "Your Work Orders")
         break;
       case 1:
-        //console.log("Customer Tab");
         await this.toolEquipmentReturnTableComponentRef.subscribeToRefreshEmitter(true, "Tool Equipment Return");
         break;
       case 2:
-        //console.log("Locations Tab");
         await this.subcontractorCompletionTableComponentRef.subscribeToRefreshEmitter(true, "Subcontractor Completion");
         break;
       default:
@@ -77,21 +90,17 @@ export class WorkOrdersComponent implements OnInit {
   async mainTabFocusChange() {
     switch (this.lastTabIndex) {
       case 0:
-        //console.log("Work Order Tab");
-        await this.workOrderUsersTableComponentRef.unsubscribeFromRefreshEmitter(true, "Work Order Users");
+        await this.workOrderUsersTableComponentRef.unsubscribeFromRefreshEmitter(true, "Your Work Orders");
         break;
       case 1:
-        //console.log("Customer Tab");
         await this.toolEquipmentReturnTableComponentRef.unsubscribeFromRefreshEmitter(true, "Tool Equipment Return");
         break;
       case 2:
-        //console.log("Locations Tab");
         await this.subcontractorCompletionTableComponentRef.unsubscribeFromRefreshEmitter(true, "Subcontractor Completion");
         break;
       default:
         break;
     }
-
   }
 
   logout() {
