@@ -75,7 +75,7 @@ export class LocationTableComponent implements OnInit {
   }
 
   async subscribeToRefreshEmitter(log?: boolean, tabName?: string) {
-    await this.refreshTable();
+    // await this.refreshTable();
     this.refreshTimer = interval(environment.refreshInterval).subscribe(async (data: number)=>{
       if (log) { console.log(tabName, "refresh event:", data); }
       await this.refreshTable();

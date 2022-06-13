@@ -1,4 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterContentChecked,
+  AfterContentInit,
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthenticationService} from "../../core/security/authentication.service";
 import {MatTabChangeEvent} from "@angular/material/tabs";
@@ -25,7 +33,7 @@ import {WorkOrderHistoryTableComponent} from "../tables/work-order-history-table
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, AfterViewInit, AfterContentInit, AfterViewChecked, AfterContentChecked {
 
   loggedInUser!: any;
   loggedInUsername!: string;
@@ -62,11 +70,45 @@ export class AdminComponent implements OnInit {
     this.nameToDisplay = this.loggedInUser!.firstName;
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     //this.loggedInUser = this.authenticationService.getUserFromLocalStorage();
     //console.log(this.loggedInUser);
-    this.nameToDisplay = this.loggedInUser.username;
+    //this.nameToDisplay = this.loggedInUser.username;
+    this.setupComponent().finally(() => {});
+  }
 
+  ngAfterViewInit() {
+    // console.log('afterViewInit');
+    // this.workOrderTableComponentRef.subscribeToRefreshEmitter(true, "Work Order").finally();
+  }
+
+  ngAfterContentInit() {
+    // console.log('afterContentInit');
+    // this.workOrderTableComponentRef.subscribeToRefreshEmitter(true, "Work Order").finally();
+  }
+
+  ngAfterContentChecked() {
+    // console.log('afterContentChecked');
+    // this.workOrderTableComponentRef.subscribeToRefreshEmitter(true, "Work Order").finally();
+  }
+
+  ngAfterViewChecked() {
+    // console.log('afterViewChecked');
+    // this.workOrderTableComponentRef.subscribeToRefreshEmitter(true, "Work Order").finally();
+  }
+
+  async setupComponent() {
+    // console.log('sub to initial emitter');
+    // if (this.workOrderTableComponentRef.setupComplete()) {
+    //   console.log('setup says it\'s complete!');
+    // } else {
+    //   console.log('setup says it\'s NOT complete!');
+    // }
+    await this.mainTabSelectedChange();
+  }
+
+  async firstSubscription() {
+    await this.mainTabSelectedChange();
   }
 
   // myTabFocusChange(changeEvent: MatTabChangeEvent) {
@@ -74,11 +116,28 @@ export class AdminComponent implements OnInit {
   //   console.log('Tab position: ' + changeEvent.index);
   // }
 
-  async mainTabSelectedChange(changeEvent: MatTabChangeEvent) {
-    //console.log('Index: ' + changeEvent.index);
-    switch (changeEvent.index) {
+  async mainTabSelectedChange(changeEvent?: MatTabChangeEvent) {
+    console.log('Inside matTabSelectedChange, changeEvent.index: ' + changeEvent?.index);
+    switch (changeEvent?.index) {
       case 0:
         //console.log("Work Order Tab");
+        switch (this.woLastTabIndex) {
+          case 0:
+            //console.log("Work Order Tab");
+            await this.workOrderTableComponentRef.subscribeToRefreshEmitter(true, "Work Order");
+            break;
+          case 1:
+            //console.log("Customer Tab");
+            await this.workOrderProcessingTableComponentRef.subscribeToRefreshEmitter(true, "Work Order Processing");
+            break;
+          case 2:
+            //console.log("Locations Tab");
+            await this.workOrderHistoryTableComponentRef.subscribeToRefreshEmitter(true, "Work Order History");
+            break;
+          default:
+            await this.workOrderTableComponentRef.subscribeToRefreshEmitter(true, "Work Order");
+            break;
+          }
         break;
       case 1:
         //console.log("Customer Tab");
@@ -121,15 +180,20 @@ export class AdminComponent implements OnInit {
         await this.userTableComponentRef.subscribeToRefreshEmitter(true, "User");
         break;
       default:
+        console.log('test');
+        await this.workOrderTableComponentRef.subscribeToRefreshEmitter(true, "Work Order");
         break;
     }
-    this.lastTabIndex = changeEvent.index;
+    if (changeEvent?.index) {
+      this.lastTabIndex = changeEvent.index;
+    }
   }
 
   async mainTabFocusChange() {
     switch (this.lastTabIndex) {
       case 0:
         //console.log("Work Order Tab");
+        await this.workOrdersTabFocusChange();
         break;
       case 1:
         //console.log("Customer Tab");

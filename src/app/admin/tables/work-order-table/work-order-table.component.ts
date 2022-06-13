@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatSort, Sort} from "@angular/material/sort";
@@ -45,6 +45,9 @@ export class WorkOrderTableComponent implements OnInit {
   workOrderFilterSelected: any;
   dropdownFilterArray: any;
 
+  @Output()
+  firstSubscribeReadyEvent: EventEmitter<number> = new EventEmitter();
+
   @ViewChild(MatTable)
   entityTable!: MatTable<WorkOrder>;
 
@@ -75,6 +78,7 @@ export class WorkOrderTableComponent implements OnInit {
 
   ngOnInit() {
     this.setupComponent().finally(() => {});
+    this.firstSubscribeReadyEvent.emit();
   }
 
   async setupComponent() {
@@ -82,6 +86,7 @@ export class WorkOrderTableComponent implements OnInit {
     await this.buildTable();
     // configure table
     await this.configTable();
+
   }
 
   async subscribeToRefreshEmitter(log?: boolean, tabName?: string) {
