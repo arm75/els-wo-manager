@@ -63,7 +63,7 @@ export class WorkOrdersComponent implements OnInit, OnDestroy {
   async setupComponent() {
     setTimeout(async () =>{
       await this.firstSubscription();
-    }, 3000);
+    }, 1000);
   }
 
   async firstSubscription() {

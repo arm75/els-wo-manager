@@ -71,7 +71,7 @@ export class WorkOrderTableComponent implements OnInit {
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
-    this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customer', 'location', 'status', 'workOrderTotal', 'actions'];
+    this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customerEntityName', 'locationEntityName', 'assignedUsersString', 'status', 'workOrderTotal', 'actions'];
     this.workOrderFilterSelected = 'ALL';
     this.dropdownFilterArray = ElsWoManagerConstants.inProgressWorkOrderStatusFilterArray;
   }

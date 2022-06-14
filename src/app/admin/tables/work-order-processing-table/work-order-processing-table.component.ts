@@ -71,7 +71,7 @@ export class WorkOrderProcessingTableComponent implements OnInit {
 
     this.workOrderFilterSelected = 'ALL';
     this.dropdownFilterArray = ElsWoManagerConstants.processingWorkOrderStatusFilterArray;
-    this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customer', 'location', 'status', 'workOrderTotal', 'actions'];
+    this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customerEntityName', 'locationEntityName', 'assignedUsersString', 'status', 'workOrderTotal', 'actions'];
   }
 
   ngOnInit(): void {

@@ -12,6 +12,7 @@ export interface WorkOrder {
   locationId: number;
   locationEntityName: string;
   assignedUsers: User[];
+  assignedUsersString: string;
   status: WorkOrderStatus;
   quickDescription: string;
   description: string;

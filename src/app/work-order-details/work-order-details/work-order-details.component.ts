@@ -42,6 +42,7 @@ export class WorkOrderDetailsComponent implements OnInit {
   dataLoaded: boolean = false;
   entityData!: WorkOrder;
   editForm: FormGroup = new FormGroup({});
+  editFormNotes: FormGroup = new FormGroup({});
   editFormEditMode: boolean = false;
 
   @ViewChild('customerSelect')
@@ -58,6 +59,8 @@ export class WorkOrderDetailsComponent implements OnInit {
   assignedUsersSelect!: MatSelect;
   assignedUsersLoaded: any;
   assignedUsersSelected: any;
+
+  assignedUsersString: string = '';
 
   @ViewChild('quickDescriptionInput')
   quickDescriptionInput!: MatInput;
@@ -132,25 +135,58 @@ export class WorkOrderDetailsComponent implements OnInit {
       .finally(() => {
         this.editForm = this.formBuilder.group({
           'id': new FormControl(this.entityData.id),
-          'status': new FormControl(this.entityData.status),
-          'customer': new FormControl(this.entityData.customer, [Validators.required]),
-          'location': new FormControl(this.entityData.location, [Validators.required]),
-          'assignedUsers': new FormControl(this.entityData.assignedUsers, [Validators.required]),
-          'quickDescription': new FormControl(this.entityData.quickDescription, [Validators.required]),
-          'description': new FormControl(this.entityData.description),
-          'contactName': new FormControl(this.entityData.contactName),
-          'contactEmail': new FormControl(this.entityData.contactEmail),
-          'contactPhoneNumb': new FormControl(this.entityData.contactPhoneNumb),
-          'contactAltPhoneNumb': new FormControl(this.entityData.contactAltPhoneNumb),
-          'notes': new FormControl(this.entityData.notes, [Validators.required]),
-          'privateNotes': new FormControl(this.entityData.privateNotes),
-          'entryInstruct': new FormControl(this.entityData.entryInstruct, [Validators.required]),
-          'inventoryItemsTotal': new FormControl(this.entityData.inventoryItemsTotal),
-          'laborItemsTotal': new FormControl(this.entityData.laborItemsTotal),
-          'subcontractorItemsTotal': new FormControl(this.entityData.subcontractorItemsTotal),
-          'toolEquipmentItemsTotal': new FormControl(this.entityData.toolEquipmentItemsTotal),
-          'workOrderTotal': new FormControl(this.entityData.workOrderTotal)
+          'status': new FormControl({ value: this.entityData.status, disabled: true}),
+          'customer': new FormControl({ value: this.entityData.customer, disabled: true}, [Validators.required]),
+          'customerId': new FormControl({ value: this.entityData.customerId, disabled: true}),
+          'customerEntityName': new FormControl({ value: this.entityData.customerEntityName, disabled: true}),
+          'location': new FormControl({ value: this.entityData.location, disabled: true}, [Validators.required]),
+          'locationId': new FormControl({ value: this.entityData.locationId, disabled: true}),
+          'locationEntityName': new FormControl({ value: this.entityData.locationEntityName, disabled: true}),
+          'assignedUsers': new FormControl({ value: this.entityData.assignedUsers, disabled: true}, [Validators.required]),
+          'assignedUsersString': new FormControl({ value: this.entityData.assignedUsersString, disabled: true}),
+          'quickDescription': new FormControl({ value: this.entityData.quickDescription, disabled: true}, [Validators.required]),
+          'description': new FormControl({ value: this.entityData.description, disabled: true}),
+          'contactName': new FormControl({ value: this.entityData.contactName, disabled: true}),
+          'contactEmail': new FormControl({ value: this.entityData.contactEmail, disabled: true}),
+          'contactPhoneNumb': new FormControl({ value: this.entityData.contactPhoneNumb, disabled: true}),
+          'contactAltPhoneNumb': new FormControl({ value: this.entityData.contactAltPhoneNumb, disabled: true}),
+          'notes': new FormControl({ value: this.entityData.notes, disabled: true}),
+          'privateNotes': new FormControl({ value: this.entityData.privateNotes, disabled: true}),
+          'entryInstruct': new FormControl({ value: this.entityData.entryInstruct, disabled: true}, [Validators.required]),
+          'inventoryItemsTotal': new FormControl({ value: this.entityData.inventoryItemsTotal, disabled: true}),
+          'laborItemsTotal': new FormControl({ value: this.entityData.laborItemsTotal, disabled: true}),
+          'subcontractorItemsTotal': new FormControl({ value: this.entityData.subcontractorItemsTotal, disabled: true}),
+          'toolEquipmentItemsTotal': new FormControl({ value: this.entityData.toolEquipmentItemsTotal, disabled: true}),
+          'workOrderTotal': new FormControl({ value: this.entityData.workOrderTotal, disabled: true})
         });
+
+        this.editFormNotes = this.formBuilder.group({
+          'id': new FormControl(this.entityData.id),
+          'status': new FormControl({ value: this.entityData.status, disabled: true}),
+          'customer': new FormControl({ value: this.entityData.customer, disabled: true}, [Validators.required]),
+          'location': new FormControl({ value: this.entityData.location, disabled: true}, [Validators.required]),
+          'assignedUsers': new FormControl({ value: this.entityData.assignedUsers, disabled: true}, [Validators.required]),
+          'quickDescription': new FormControl({ value: this.entityData.quickDescription, disabled: true}, [Validators.required]),
+          'description': new FormControl({ value: this.entityData.description, disabled: true}),
+          'contactName': new FormControl({ value: this.entityData.contactName, disabled: true}),
+          'contactEmail': new FormControl({ value: this.entityData.contactEmail, disabled: true}),
+          'contactPhoneNumb': new FormControl({ value: this.entityData.contactPhoneNumb, disabled: true}),
+          'contactAltPhoneNumb': new FormControl({ value: this.entityData.contactAltPhoneNumb, disabled: true}),
+          'notes': new FormControl({ value: this.entityData.notes, disabled: true}, [Validators.required]),
+          'privateNotes': new FormControl({ value: this.entityData.privateNotes, disabled: true}),
+          'entryInstruct': new FormControl({ value: this.entityData.entryInstruct, disabled: true}, [Validators.required]),
+          'inventoryItemsTotal': new FormControl({ value: this.entityData.inventoryItemsTotal, disabled: true}),
+          'laborItemsTotal': new FormControl({ value: this.entityData.laborItemsTotal, disabled: true}),
+          'subcontractorItemsTotal': new FormControl({ value: this.entityData.subcontractorItemsTotal, disabled: true}),
+          'toolEquipmentItemsTotal': new FormControl({ value: this.entityData.toolEquipmentItemsTotal, disabled: true}),
+          'workOrderTotal': new FormControl({ value: this.entityData.workOrderTotal, disabled: true})
+        });
+
+        if(this.entityData.status=='OPEN') {
+          this.editForm.enable();
+          this.editFormNotes.enable();
+        }
+
       });
   }
 
@@ -272,6 +308,33 @@ export class WorkOrderDetailsComponent implements OnInit {
 
   assignedUsersSelectChange() { }
 
+  getAssignedUsersString(): string {
+    const length = this.userData.length;
+    //console.log('userData length: ', length);
+    switch(length) {
+      case 1:
+        this.userData.forEach((user: User) => { this.assignedUsersString = user.username; });
+        break;
+      default:
+        let count = 0;
+        this.userData.forEach((user: User) => {
+          if (count < length) {
+            //console.log('count:', count);
+            //console.log('assignedUsersString before:', this.assignedUsersString);
+            if(count==0) {
+              this.assignedUsersString = user.username;
+            } else {
+              this.assignedUsersString = this.assignedUsersString + ', ' + user.username;
+            }
+            //console.log('assignedUsersString after:', this.assignedUsersString);
+          }
+          count++;
+        });
+        break;
+    }
+    return this.assignedUsersString;
+  }
+
   openCompleteDialog( _id: number) {
     const completeDialogConfig = new MatDialogConfig();
     completeDialogConfig.disableClose = true;
@@ -358,17 +421,39 @@ export class WorkOrderDetailsComponent implements OnInit {
   }
 
   async saveWorkOrder() {
-    // this.editForm.controls['customerId'].setValue(this.entityData.customer.id);
-    // this.editForm.controls['customerEntityName'].setValue(this.entityData.customer.entityName);
-    // this.editForm.controls['locationId'].setValue(this.entityData.location.id);
-    // this.editForm.controls['locationEntityName'].setValue(this.entityData.location.entityName);
+    this.editForm.controls['customerId'].setValue(this.entityData.customer.id);
+    this.editForm.controls['customerEntityName'].setValue(this.entityData.customer.entityName);
+    this.editForm.controls['locationId'].setValue(this.entityData.location.id);
+    this.editForm.controls['locationEntityName'].setValue(this.entityData.location.entityName);
     this.editForm.controls['assignedUsers'].setValue(this.userData);
+    this.editForm.controls['assignedUsersString'].setValue(this.getAssignedUsersString());
     this.editForm.controls['inventoryItemsTotal'].setValue(this.masterInventoryTotal);
     this.editForm.controls['laborItemsTotal'].setValue(this.masterLaborTotal);
     this.editForm.controls['subcontractorItemsTotal'].setValue(this.masterSubcontractorTotal);
     this.editForm.controls['toolEquipmentItemsTotal'].setValue(this.masterToolEquipmentTotal);
     this.editForm.controls['workOrderTotal'].setValue(this.masterTotal);
     await this.entityService.update(this.editForm.value)
+      .toPromise()
+      .catch( error =>{ this.globalSnackBarService.error(error.error.message); })
+      .finally(() => { this.globalSnackBarService.success("Work Order: " + this.editForm.value.id + " has been updated."); });
+    // console.log('entityData: ', this.entityData);
+    // console.log('editForm: ', this.editForm);
+    await this.loadWorkOrderIntoView();
+    await this.updateFieldBoxes();
+  }
+
+  async saveWorkOrderNotes() {
+    // // this.editForm.controls['customerId'].setValue(this.entityData.customer.id);
+    // // this.editForm.controls['customerEntityName'].setValue(this.entityData.customer.entityName);
+    // // this.editForm.controls['locationId'].setValue(this.entityData.location.id);
+    // // this.editForm.controls['locationEntityName'].setValue(this.entityData.location.entityName);
+    // this.editForm.controls['assignedUsers'].setValue(this.userData);
+    // this.editForm.controls['inventoryItemsTotal'].setValue(this.masterInventoryTotal);
+    // this.editForm.controls['laborItemsTotal'].setValue(this.masterLaborTotal);
+    // this.editForm.controls['subcontractorItemsTotal'].setValue(this.masterSubcontractorTotal);
+    // this.editForm.controls['toolEquipmentItemsTotal'].setValue(this.masterToolEquipmentTotal);
+    // this.editForm.controls['workOrderTotal'].setValue(this.masterTotal);
+    await this.entityService.updateNotes(this.editFormNotes.value)
       .toPromise()
       .catch( error =>{ this.globalSnackBarService.error(error.error.message); })
       .finally(() => { this.globalSnackBarService.success("Work Order: " + this.editForm.value.id + " has been updated."); });

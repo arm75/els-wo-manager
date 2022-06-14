@@ -63,7 +63,7 @@ export class WorkOrderUsersTableComponent implements OnInit {
     this.loggedInRole = this.loggedInUser.role;
     this.nameToDisplay = this.loggedInUser!.firstName;
 
-    this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customer', 'location',  'status', 'virgin', 'actions'];
+    this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customerEntityName', 'locationEntityName', 'assignedUsersString', 'status', 'virgin', 'actions'];
   }
 
   ngOnInit() {

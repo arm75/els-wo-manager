@@ -55,105 +55,110 @@
 </div>
 
     <!-- tabs container -->
-    <form [formGroup]="editForm" class="example-form" (submit)="saveWorkOrder()">
+
     <div class="row els-custom-table-container">
       <mat-tab-group mat-stretch-tabs class="work-order-details-tab-group">
         <mat-tab label="Work Order Details">
+
+          <form [formGroup]="editForm" class="" (submit)="saveWorkOrder()">
+
           <div class="table-toolbar">
             <span><h2>Work Order Details</h2></span>
             <span class="example-fill-remaining-space"></span>
           </div>
 
-            <div class="containing-box">
-              <div class="row">
-                <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
-                  <mat-form-field class="example-full-width width-99" appearance="outline">
-                    <mat-label>Customer</mat-label>
-                    <mat-select #customerSelect [(value)]="customerSelected" (selectionChange)="customerSelectChange()" [compareWith]="compareObjects" formControlName="customer">
-                      <mat-option *ngFor="let customer of customerLoaded" [value]="customer">{{customer.entityName}}</mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="editForm.controls['customer'].hasError('required')">
-                      Customer is required
-                    </mat-error>
-                  </mat-form-field>
-                  <mat-form-field class="example-full-width width-99" appearance="outline">
-                    <mat-label>Location</mat-label>
-                    <mat-select #locationSelect [(value)]="locationSelected" (selectionChange)="locationSelectChange()" [compareWith]="compareObjects" formControlName="location">
-                      <mat-option *ngFor="let location of locationLoaded" [value]="location">{{location.entityName}}</mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="editForm.controls['location'].hasError('required')">
-                      Location is required
-                    </mat-error>
-                  </mat-form-field>
-                  <mat-chip-list #chipList aria-label="Assigned Users">
-                    <!--            <mat-chip *ngFor="let user of userData">{{user.username}}<button matChipRemove *ngIf="editFormEditMode" (click)="removeUserFromWorkOrder(user)"><mat-icon>cancel</mat-icon></button></mat-chip>-->
-                    <mat-chip *ngFor="let user of userData">{{user.username}}<button matChipRemove (click)="removeUserFromWorkOrder(user)"><mat-icon>cancel</mat-icon></button></mat-chip>
-                  </mat-chip-list>
-                  <mat-form-field class="width-70" appearance="outline">
-                    <mat-label>Assigned Users</mat-label>
-                    <mat-select #assignedUsersSelect [(value)]="assignedUsersSelected" (selectionChange)="assignedUsersSelectChange()" formControlName="assignedUsers">
-                      <mat-option *ngFor="let user of assignedUsersLoaded" [value]="user">{{user.username}}</mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="editForm.controls['assignedUsers'].hasError('required')">
-                      Assigned Users is required
-                    </mat-error>
-                  </mat-form-field>
-                  <span class="width-20"><button type="button" class="mat-flat-button mat-primary add-user-to-workorder" [disabled]="!assignedUsersSelected" (click)="addUserToWorkOrder()">Add User</button></span>
-                </div>
-                <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
-                  <mat-form-field class="width-99 els-form-fields-second-column" appearance="outline">
-                    <mat-label>Quick Description</mat-label>
-                    <input type="text" matInput autocomplete="off" formControlName="quickDescription">
-                    <mat-error *ngIf="editForm.controls['quickDescription'].hasError('required')">
-                      Quick Description is required
-                    </mat-error>
-                  </mat-form-field>
-                  <mat-form-field class="width-99 els-form-fields-second-column" appearance="outline">
-                    <mat-label>Description</mat-label>
-                    <textarea matInput [rows]="10" autocomplete="off" formControlName="description"></textarea>
-                  </mat-form-field>
-                </div>
-                <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
-                  <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
-                    <mat-label>Contact Name</mat-label>
-                    <input type="text" matInput autocomplete="off" formControlName="contactName">
-                  </mat-form-field>
-                  <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
-                    <mat-label>Contact Email</mat-label>
-                    <input type="text" matInput autocomplete="off" formControlName="contactEmail">
-                  </mat-form-field>
-                  <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
-                    <mat-label>Contact Phone Number</mat-label>
-                    <input type="text" matInput autocomplete="off" mask="(000)000-0000" formControlName="contactPhoneNumb">
-                  </mat-form-field>
-                  <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
-                    <mat-label>Contact Alt Phone NUmber</mat-label>
-                    <input type="text" matInput autocomplete="off" mask="(000)000-0000" formControlName="contactAltPhoneNumb">
-                  </mat-form-field>
-                  <mat-form-field class="width-99 els-form-fields-third-column" appearance="outline">
-                    <mat-label>Entry Instructions</mat-label>
-                    <textarea matInput [rows]="10" autocomplete="off" formControlName="entryInstruct"></textarea>
-                    <mat-error *ngIf="editForm.controls['entryInstruct'].hasError('required')">
-                      Entry Instructions is required
-                    </mat-error>
-                  </mat-form-field>
-                </div>
+          <div class="containing-box">
+            <div class="row">
+              <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                <mat-form-field class="example-full-width width-99" appearance="outline">
+                  <mat-label>Customer</mat-label>
+                  <mat-select #customerSelect [(value)]="customerSelected" (selectionChange)="customerSelectChange()" [compareWith]="compareObjects" formControlName="customer">
+                    <mat-option *ngFor="let customer of customerLoaded" [value]="customer">{{customer.entityName}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="editForm.controls['customer'].hasError('required')">
+                    Customer is required
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field class="example-full-width width-99" appearance="outline">
+                  <mat-label>Location</mat-label>
+                  <mat-select #locationSelect [(value)]="locationSelected" (selectionChange)="locationSelectChange()" [compareWith]="compareObjects" formControlName="location">
+                    <mat-option *ngFor="let location of locationLoaded" [value]="location">{{location.entityName}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="editForm.controls['location'].hasError('required')">
+                    Location is required
+                  </mat-error>
+                </mat-form-field>
+                <mat-chip-list #chipList aria-label="Assigned Users">
+                  <!--            <mat-chip *ngFor="let user of userData">{{user.username}}<button matChipRemove *ngIf="editFormEditMode" (click)="removeUserFromWorkOrder(user)"><mat-icon>cancel</mat-icon></button></mat-chip>-->
+                  <mat-chip *ngFor="let user of userData">{{user.username}}<button *ngIf="(entityData.status=='OPEN')" matChipRemove (click)="removeUserFromWorkOrder(user)"><mat-icon>cancel</mat-icon></button></mat-chip>
+                </mat-chip-list>
+                <mat-form-field class="width-70" appearance="outline">
+                  <mat-label>Assigned Users</mat-label>
+                  <mat-select #assignedUsersSelect [(value)]="assignedUsersSelected" (selectionChange)="assignedUsersSelectChange()" formControlName="assignedUsers">
+                    <mat-option *ngFor="let user of assignedUsersLoaded" [value]="user">{{user.username}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="editForm.controls['assignedUsers'].hasError('required')">
+                    Assigned Users is required
+                  </mat-error>
+                </mat-form-field>
+                <span class="width-20"><button type="button" class="mat-flat-button mat-primary add-user-to-workorder" [disabled]="!assignedUsersSelected" (click)="addUserToWorkOrder()">Add User</button></span>
               </div>
-              <div class="row">
-                <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                  <div><button type="button" class="mat-flat-button mat-primary" (click)="printPage()">Print Work Order</button></div>
-                  <!--          <div><button *ngIf="!editFormEditMode" class="mat-flat-button mat-primary" (click)="editModeToggle()">Edit Work Order Details</button></div>-->
-                  <div><button *ngIf="(entityData.status=='OPEN')" class="mat-flat-button edit-button-color" [disabled]="editForm.invalid" type="submit">Save Work Order Details</button></div>
-                  <!--          <div><button *ngIf="editFormEditMode" class="mat-raised-button" (click)="editModeToggle()">Cancel</button></div>-->
-                </div>
+              <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                <mat-form-field class="width-99 els-form-fields-second-column" appearance="outline">
+                  <mat-label>Quick Description</mat-label>
+                  <input type="text" matInput autocomplete="off" formControlName="quickDescription">
+                  <mat-error *ngIf="editForm.controls['quickDescription'].hasError('required')">
+                    Quick Description is required
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field class="width-99 els-form-fields-second-column" appearance="outline">
+                  <mat-label>Description</mat-label>
+                  <textarea matInput [rows]="10" autocomplete="off" formControlName="description"></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
+                  <mat-label>Contact Name</mat-label>
+                  <input type="text" matInput autocomplete="off" formControlName="contactName">
+                </mat-form-field>
+                <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
+                  <mat-label>Contact Email</mat-label>
+                  <input type="text" matInput autocomplete="off" formControlName="contactEmail">
+                </mat-form-field>
+                <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
+                  <mat-label>Contact Phone Number</mat-label>
+                  <input type="text" matInput autocomplete="off" mask="(000)000-0000" formControlName="contactPhoneNumb">
+                </mat-form-field>
+                <mat-form-field class="width-44 els-form-fields-third-column" appearance="outline">
+                  <mat-label>Contact Alt Phone NUmber</mat-label>
+                  <input type="text" matInput autocomplete="off" mask="(000)000-0000" formControlName="contactAltPhoneNumb">
+                </mat-form-field>
+                <mat-form-field class="width-99 els-form-fields-third-column" appearance="outline">
+                  <mat-label>Entry Instructions</mat-label>
+                  <textarea matInput [rows]="10" autocomplete="off" formControlName="entryInstruct"></textarea>
+                  <mat-error *ngIf="editForm.controls['entryInstruct'].hasError('required')">
+                    Entry Instructions is required
+                  </mat-error>
+                </mat-form-field>
               </div>
             </div>
+            <div class="row">
+              <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <div><button type="button" class="mat-flat-button mat-primary" (click)="printPage()">Print Work Order</button></div>
+                <!--          <div><button *ngIf="!editFormEditMode" class="mat-flat-button mat-primary" (click)="editModeToggle()">Edit Work Order Details</button></div>-->
+                <div><button *ngIf="(entityData.status=='OPEN')" class="mat-flat-button edit-button-color" [disabled]="editForm.invalid" type="submit">Save Work Order Details</button></div>
+                <!--          <div><button *ngIf="editFormEditMode" class="mat-raised-button" (click)="editModeToggle()">Cancel</button></div>-->
+              </div>
+            </div>
+          </div>
+          </form>
         </mat-tab>
         <mat-tab label="Inventory Items"><app-inventory-item-table (totalChangedEvent)="getNewInventoryTotal($event)" [passedWorkOrderId]="entityData.id" [passedWorkOrderStatus]="entityData.status"></app-inventory-item-table></mat-tab>
         <mat-tab label="Labor Items"><app-labor-item-table (totalChangedEvent)="getNewLaborTotal($event)" [passedWorkOrderId]="entityData.id" [passedWorkOrderStatus]="entityData.status"></app-labor-item-table></mat-tab>
         <mat-tab label="Subcontractor Items"><app-subcontractor-item-table (totalChangedEvent)="getNewSubcontractorTotal($event)" [passedWorkOrderId]="entityData.id" [passedWorkOrderStatus]="entityData.status"></app-subcontractor-item-table></mat-tab>
         <mat-tab label="Tool/Equipment Items"><app-tool-equipment-item-table (totalChangedEvent)="getNewToolEquipmentTotal($event)" [passedWorkOrderId]="entityData.id" [passedWorkOrderStatus]="entityData.status"></app-tool-equipment-item-table></mat-tab>
         <mat-tab label="Complete Work Order">
+          <form [formGroup]="editFormNotes" class="" (submit)="saveWorkOrderNotes()">
           <div class="table-toolbar">
             <span><h2>Work Order Notes</h2></span>
             <span class="example-fill-remaining-space"></span>
@@ -164,7 +169,7 @@
                   <mat-form-field class="width-99" appearance="outline">
                     <mat-label>Work Order Notes</mat-label>
                     <textarea matInput [rows]="15" autocomplete="off" value="" formControlName="notes"></textarea>
-                    <mat-error *ngIf="editForm.controls['notes'].hasError('required')">
+                    <mat-error *ngIf="editFormNotes.controls['notes'].hasError('required')">
                       Work Order Notes are required
                     </mat-error>
                   </mat-form-field>
@@ -179,7 +184,7 @@
               <div class="row">
                 <div class="bottom-button-row col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                   <!--        <div><button *ngIf="!editFormEditMode" [disabled]="!(this.entityData.status=='OPEN')" class="mat-flat-button mat-primary" (click)="editModeToggle()">Edit Work Order Notes</button></div>-->
-                  <div><button *ngIf="(entityData.status=='OPEN')" class="mat-flat-button edit-button-color" [disabled]="editForm.invalid" type="submit">Save Work Order Notes</button></div>
+                  <div><button *ngIf="(entityData.status=='OPEN')" class="mat-flat-button edit-button-color" [disabled]="editFormNotes.invalid" type="submit">Save Work Order Notes</button></div>
                   <!--        <div><button *ngIf="editFormEditMode" class="mat-raised-button" (click)="editModeToggle()">Cancel</button></div>-->
                 </div>
               </div>
@@ -212,11 +217,11 @@
                 </div>
               </div>
             </div>
+          </form>
         </mat-tab>
       </mat-tab-group>
     <!-- end everything whitespace -->
     </div>
-    </form>
 
     <!-- bottom money details and copyright -->
     <div class="bottom fixed-bottom els-custom-table-container">

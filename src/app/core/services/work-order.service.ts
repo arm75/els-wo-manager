@@ -31,6 +31,10 @@ export class WorkOrderService {
     return this.http.put(`${this.baseUrl}/update`, data);
   }
 
+  updateNotes(data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/update`, data);
+  }
+
   complete(data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/complete`, data);
   }
