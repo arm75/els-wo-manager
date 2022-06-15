@@ -22,6 +22,8 @@ import {WorkOrderReopenComponent} from "../../dialogs/work-order-reopen/work-ord
 import {AuthenticationService} from "../../../core/security/authentication.service";
 import {interval, Subscription} from "rxjs";
 import {environment} from "../../../../environments/environment";
+import {LocationService} from "../../../core/services/location.service";
+import {Customer} from "../../../core/models/customer";
 
 @Component({
   selector: 'app-work-order-table',
@@ -42,8 +44,8 @@ export class WorkOrderTableComponent implements OnInit {
 
   refreshTimer!: Subscription;
 
-  workOrderFilterSelected: any;
-  dropdownFilterArray: any;
+
+
 
   // @Output()
   // firstSubscribeReadyEvent: EventEmitter<number> = new EventEmitter();
@@ -57,12 +59,25 @@ export class WorkOrderTableComponent implements OnInit {
   @ViewChild(MatSort)
   sort: MatSort = new MatSort;
 
-  @ViewChild('workOrderFilterSelect')
-  workOrderFilterSelect!: MatSelect;
+  @ViewChild('customerFilterSelect')
+  customerFilterSelect!: MatSelect;
+  customerFilterSelected: any;
+  customerFilterLoaded: any;
+
+  @ViewChild('locationFilterSelect')
+  locationFilterSelect!: MatSelect;
+  locationFilterSelected: any;
+  locationFilterLoaded: any;
+
+  @ViewChild('statusFilterSelect')
+  statusFilterSelect!: MatSelect;
+  statusFilterSelected: any;
+  statusFilterLoaded: any;
 
   constructor(
     private entityService: WorkOrderService,
     private customerService: CustomerService,
+    private locationService: LocationService,
     private authenticationService: AuthenticationService,
     private dialog: MatDialog,
   ) {
@@ -72,8 +87,7 @@ export class WorkOrderTableComponent implements OnInit {
     this.nameToDisplay = this.loggedInUser!.firstName;
 
     this.displayedColumns = ['createdDate', 'id', 'quickDescription', 'customerEntityName', 'locationEntityName', 'assignedUsersString', 'status', 'workOrderTotal', 'actions'];
-    this.workOrderFilterSelected = 'ALL';
-    this.dropdownFilterArray = ElsWoManagerConstants.inProgressWorkOrderStatusFilterArray;
+
   }
 
   ngOnInit() {
@@ -82,10 +96,36 @@ export class WorkOrderTableComponent implements OnInit {
   }
 
   async setupComponent() {
+    await this.loadCustomerSelect();
+    await this.loadLocationSelect();
+    this.statusFilterSelected = 'ALL';
+    this.statusFilterLoaded = ElsWoManagerConstants.inProgressWorkOrderStatusFilterArray;
+    this.customerFilterSelected = 'ALL';
+    this.locationFilterSelected = 'ALL';
     // get the table..
     await this.buildTable();
     // configure table
     await this.configTable();
+  }
+
+  async loadCustomerSelect() {
+    await this.customerService.getAll().toPromise()
+      .then(data => { this.customerFilterLoaded = data; })
+      .finally(()=>{
+        this.customerFilterLoaded = this.customerFilterLoaded.sort((a: Customer, b: Customer) => { return a.entityName.toLocaleLowerCase().localeCompare(b.entityName.toLocaleLowerCase()) });
+      });
+  }
+
+  async loadLocationSelect(customerId?: number) {
+    if(customerId) {
+      await this.locationService.getAll().pipe(map(items => items.filter(item => (item.customer.id == customerId))))
+        .toPromise()
+        .then(data => { this.locationFilterLoaded = data; });
+    } else {
+      await this.locationService.getAll()
+        .toPromise()
+        .then(data => { this.locationFilterLoaded = data; });
+    }
   }
 
   async subscribeToRefreshEmitter(log?: boolean, tabName?: string) {
@@ -104,7 +144,7 @@ export class WorkOrderTableComponent implements OnInit {
   }
 
   async buildTable() {
-    switch(this.workOrderFilterSelected) {
+    switch(this.statusFilterSelected) {
       case 'ALL': {
         await this.entityService.getAll().pipe(map(items =>
             items.filter(item => ( (item.status == WorkOrderStatus.OPEN) || (item.status == WorkOrderStatus.PENDING) ))))
@@ -115,7 +155,7 @@ export class WorkOrderTableComponent implements OnInit {
       }
       default: {
         await this.entityService.getAll().pipe(map(items =>
-            items.filter(item => ((item.status == this.workOrderFilterSelected)))))
+            items.filter(item => ((item.status == this.statusFilterSelected)))))
           .toPromise()
           .then(data => { this.data = data })
           .finally( () => { this.dataSource = new MatTableDataSource(this.data) });
@@ -145,9 +185,25 @@ export class WorkOrderTableComponent implements OnInit {
     //this.dataSource.paginator = this.paginator;
   }
 
-  selectChange() {
+
+
+
+  async statusSelectChange() {
+    await this.buildTable();
+    await this.configTable();
+  }
+
+  async customerSelectChange() {
+    await this.loadLocationSelect(this.customerFilterSelected.id);
+    this.locationFilterSelected = 'ALL';
+    await this.buildTable();
+    await this.configTable();
+  }
+
+  async locationSelectChange() {
     this.setupComponent().finally(() => {});
   }
+
 
   applyFilter(event: Event) {
     const filterTarget = (event.target as HTMLInputElement).value;
@@ -157,8 +213,8 @@ export class WorkOrderTableComponent implements OnInit {
   clearFilter() {
     this.dataSource.filter = '';
     this.filter = '';
-    this.workOrderFilterSelected = 'ALL';
-    this.selectChange();
+    this.statusFilterSelected = 'ALL';
+    this.statusSelectChange();
   }
 
   async openAddDialog() {

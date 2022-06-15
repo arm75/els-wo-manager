@@ -14,6 +14,7 @@ import {WorkOrderStatus} from "../../../core/types/work-order-status";
 import {CustomerService} from "../../../core/services/customer.service";
 import {interval, Subscription} from "rxjs";
 import {environment} from "../../../../environments/environment";
+import {Customer} from "../../../core/models/customer";
 
 @Component({
   selector: 'app-location-table',
@@ -132,8 +133,10 @@ export class LocationTableComponent implements OnInit {
 
   async loadCustomerSelect() {
     await this.customerService.getAll().toPromise()
-      .then(data => { this.data = data })
-      .finally(() => { this.customerFilterArray = this.data });
+      .then(data => { this.customerFilterArray = data })
+      .finally(() => {
+        this.customerFilterArray = this.customerFilterArray.sort((a: Customer, b: Customer) => { return a.entityName.toLocaleLowerCase().localeCompare(b.entityName.toLocaleLowerCase()) });
+      });
   }
 
   selectChange() {

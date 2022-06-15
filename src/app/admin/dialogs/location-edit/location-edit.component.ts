@@ -7,6 +7,7 @@ import { MatSelect } from "@angular/material/select";
 import { CustomerService } from "../../../core/services/customer.service";
 import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
 import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
+import {Customer} from "../../../core/models/customer";
 
 @Component({
   selector: 'app-location-edit',
@@ -52,7 +53,7 @@ export class LocationEditComponent implements OnInit {
         })
         .finally( () => {
           this.dataLoaded = true;
-          this.loadCustomerSelect();
+          this.loadCustomerSelect().finally();
         }
       );
     }
@@ -65,13 +66,12 @@ export class LocationEditComponent implements OnInit {
   selectChange() {
   }
 
-  loadCustomerSelect() {
-    this.customerService.getAll().subscribe(
-      data => {
-        this.customerLoaded = data;
-      },error => {
-      }
-    );
+  async loadCustomerSelect() {
+    await this.customerService.getAll().toPromise()
+      .then(data => { this.customerLoaded = data; })
+      .finally(()=>{
+        this.customerLoaded = this.customerLoaded.sort((a: Customer, b: Customer) => { return a.entityName.toLocaleLowerCase().localeCompare(b.entityName.toLocaleLowerCase()) });
+      });
   }
 
   editEntity() {

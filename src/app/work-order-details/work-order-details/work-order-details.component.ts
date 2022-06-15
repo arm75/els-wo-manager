@@ -19,6 +19,8 @@ import {WorkOrderCloseComponent} from "../../admin/dialogs/work-order-close/work
 import {WorkOrderCancelComponent} from "../../admin/dialogs/work-order-cancel/work-order-cancel.component";
 import {WorkOrderReopenComponent} from "../../admin/dialogs/work-order-reopen/work-order-reopen.component";
 import {WorkOrderRetryComponent} from "../../admin/dialogs/work-order-retry/work-order-retry.component";
+import {Customer} from "../../core/models/customer";
+import {Location} from "../../core/models/location";
 
 @Component({
   selector: 'app-work-order-details',
@@ -264,7 +266,10 @@ export class WorkOrderDetailsComponent implements OnInit {
   async loadCustomerSelect() {
     await this.customerService.getAll()
       .toPromise()
-      .then(data => { this.customerLoaded = data; });
+      .then(data => { this.customerLoaded = data; })
+      .finally(()=>{
+        this.customerLoaded = this.customerLoaded.sort((a: Customer, b: Customer) => { return a.entityName.toLocaleLowerCase().localeCompare(b.entityName.toLocaleLowerCase()) });
+      });
   }
 
   async loadLocationSelect(passedCustomerId?: any) {
@@ -273,13 +278,17 @@ export class WorkOrderDetailsComponent implements OnInit {
         .toPromise()
         .then(data => { this.locationLoaded = data; })
         .catch(error =>  { })
-        .finally(()=>{});
+        .finally(()=>{
+          this.locationLoaded = this.locationLoaded.sort((a: Location, b: Location) => { return a.entityName.toLocaleLowerCase().localeCompare(b.entityName.toLocaleLowerCase())   });
+        });
     } else {
       await this.locationService.getAll()
         .toPromise()
         .then(data => { this.locationLoaded = data; })
         .catch(error =>  { })
-        .finally(()=>{});
+        .finally(()=>{
+          this.locationLoaded = this.locationLoaded.sort((a: Location, b: Location) => { return a.entityName.toLocaleLowerCase().localeCompare(b.entityName.toLocaleLowerCase())   });
+        });
     }
   }
 

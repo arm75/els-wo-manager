@@ -54,16 +54,20 @@ export class WorkOrdersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.workOrderUsersTableComponentRef.unsubscribeFromRefreshEmitter(true, "Your Work Orders");
-    this.toolEquipmentReturnTableComponentRef.unsubscribeFromRefreshEmitter(true, "Tool Equipment Return");
-    this.subcontractorCompletionTableComponentRef.unsubscribeFromRefreshEmitter(true, "Subcontractor Completion");
+    this.destroyComponent().finally( () => { this.dataLoaded = true; });
     console.log('all subs unsubbed in Wo-Comp');
   }
 
   async setupComponent() {
     setTimeout(async () =>{
       await this.firstSubscription();
-    }, 1000);
+    }, 3000);
+  }
+
+  async destroyComponent() {
+    await this.workOrderUsersTableComponentRef.unsubscribeFromRefreshEmitter(true, "Your Work Orders");
+    await this.toolEquipmentReturnTableComponentRef.unsubscribeFromRefreshEmitter(true, "Tool Equipment Return");
+    await this.subcontractorCompletionTableComponentRef.unsubscribeFromRefreshEmitter(true, "Subcontractor Completion");
   }
 
   async firstSubscription() {

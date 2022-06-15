@@ -78,26 +78,30 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.workOrderTableComponentRef.unsubscribeFromRefreshEmitter(true, "Work Order");
-    this.workOrderProcessingTableComponentRef.unsubscribeFromRefreshEmitter(true, "Work Order Processing");
-    this.workOrderHistoryTableComponentRef.unsubscribeFromRefreshEmitter(true, "Work Order History");
-    this.customerTableComponentRef.unsubscribeFromRefreshEmitter(true, "Customer");
-    this.locationTableComponentRef.unsubscribeFromRefreshEmitter(true, "Location");
-    this.inventoryTableComponentRef.unsubscribeFromRefreshEmitter(true, "Inventory");
-    this.inventoryGroupTableComponentRef.unsubscribeFromRefreshEmitter(true, "Inventory Group");
-    this.inventoryLocationTableComponentRef.unsubscribeFromRefreshEmitter(true, "Inventory Location");
-    this.subcontractorTableComponentRef.unsubscribeFromRefreshEmitter(true, "Subcontractor");
-    this.subcontractorGroupTableComponentRef.unsubscribeFromRefreshEmitter(true, "Subcontractor Group");
-    this.toolEquipmentTableComponentRef.unsubscribeFromRefreshEmitter(true, "Tool Equipment")
-    this.laborTableComponentRef.unsubscribeFromRefreshEmitter(true, "Labor");
-    this.userTableComponentRef.unsubscribeFromRefreshEmitter(true, "User");
+    this.destroyComponent().finally( () => { });
     console.log('all subs unsubbed in Admin');
   }
 
   async setupComponent() {
     setTimeout(async () =>{
       await this.firstSubscription();
-    }, 1000);
+    }, 3000);
+  }
+
+  async destroyComponent() {
+    await this.workOrderTableComponentRef.unsubscribeFromRefreshEmitter(true, "Work Order");
+    await this.workOrderProcessingTableComponentRef.unsubscribeFromRefreshEmitter(true, "Work Order Processing");
+    await this.workOrderHistoryTableComponentRef.unsubscribeFromRefreshEmitter(true, "Work Order History");
+    await this.customerTableComponentRef.unsubscribeFromRefreshEmitter(true, "Customer");
+    await this.locationTableComponentRef.unsubscribeFromRefreshEmitter(true, "Location");
+    await this.inventoryTableComponentRef.unsubscribeFromRefreshEmitter(true, "Inventory");
+    await this.inventoryGroupTableComponentRef.unsubscribeFromRefreshEmitter(true, "Inventory Group");
+    await this.inventoryLocationTableComponentRef.unsubscribeFromRefreshEmitter(true, "Inventory Location");
+    await this.subcontractorTableComponentRef.unsubscribeFromRefreshEmitter(true, "Subcontractor");
+    await this.subcontractorGroupTableComponentRef.unsubscribeFromRefreshEmitter(true, "Subcontractor Group");
+    await this.toolEquipmentTableComponentRef.unsubscribeFromRefreshEmitter(true, "Tool Equipment")
+    await this.laborTableComponentRef.unsubscribeFromRefreshEmitter(true, "Labor");
+    await this.userTableComponentRef.unsubscribeFromRefreshEmitter(true, "User");
   }
 
   async firstSubscription() {

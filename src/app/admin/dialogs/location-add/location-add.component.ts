@@ -6,6 +6,7 @@ import { MatSelect} from "@angular/material/select";
 import { CustomerService} from "../../../core/services/customer.service";
 import { ElsWoManagerConstants } from "../../../core/els-wo-manager-constants";
 import { GlobalSnackBarService } from "../../../shared/snackbar/global-snack-bar.service";
+import {Customer} from "../../../core/models/customer";
 
 @Component({
   selector: 'app-location-add',
@@ -34,19 +35,18 @@ export class LocationAddComponent implements OnInit {
       'customer': new FormControl('', [Validators.required]),
       'entityName': new FormControl('', [Validators.required])
     });
-    this.loadCustomerSelect();
+    this.loadCustomerSelect().finally();
   }
 
   selectChange() {
   }
 
-  loadCustomerSelect() {
-    this.customerService.getAll().subscribe(
-      data => {
-        this.customerLoaded = data;
-      },error => {
-      }
-    );
+  async loadCustomerSelect() {
+    await this.customerService.getAll().toPromise()
+      .then(data => { this.customerLoaded = data; })
+      .finally(()=>{
+        this.customerLoaded = this.customerLoaded.sort((a: Customer, b: Customer) => { return a.entityName.toLocaleLowerCase().localeCompare(b.entityName.toLocaleLowerCase()) });
+      });
   }
 
   addEntity() {
